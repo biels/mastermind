@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/mastermind.iml" filepath="$PROJECT_DIR$/.idea/modules/mastermind.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mastermind_main.iml" filepath="$PROJECT_DIR$/.idea/modules/mastermind_main.iml" group="mastermind" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mastermind_test.iml" filepath="$PROJECT_DIR$/.idea/modules/mastermind_test.iml" group="mastermind" />
     </modules>
   </component>
 </project>
