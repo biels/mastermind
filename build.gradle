@@ -1,6 +1,17 @@
 group 'com.mastermind'
 version '1.0-SNAPSHOT'
 
+buildscript {
+    dependencies {
+        classpath group: 'de.dynamicfiles.projects.gradle.plugins', name: 'javafx-gradle-plugin', version: '8.8.2'
+    }
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+}
+
 apply plugin: 'java'
 
 sourceCompatibility = 1.8
