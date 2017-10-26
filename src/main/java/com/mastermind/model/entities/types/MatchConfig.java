@@ -1,15 +1,17 @@
 package com.mastermind.model.entities.types;
 import com.mastermind.model.entities.base.Entity;
 
-public class GameConfig extends Entity {
+/**
+ * @deprecated Merge with Match class
+ */
+public class MatchConfig extends Entity {
     private int difficulty;
     private int colors;
     private int combinations;
     private int extension;
     private boolean repeat;
 
-    public GameConfig(int id) {
-        super(id);
+    public MatchConfig() {
         difficulty = 0;
         colors = 3;
         extension = 3;

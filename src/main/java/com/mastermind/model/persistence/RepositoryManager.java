@@ -1,22 +1,26 @@
 package com.mastermind.model.persistence;
 
 import com.mastermind.model.persistence.repositories.MatchRepository;
+import com.mastermind.model.persistence.repositories.PlayerRepository;
+import com.mastermind.model.persistence.repositories.impl.RepositoriesImpl;
+import com.mastermind.model.persistence.repositories.impl.inmemory.MatchRepositoryInMemoryImpl;
 
 public class RepositoryManager {
 
-    // TODO Getters for repository instances
-    static MatchRepository matchRepository;
+    private static RepositoriesImpl repositories;
 
     private RepositoryManager() {
     }
 
-
-
-    public static MatchRepository getMatchRepository() {
-        return matchRepository;
+    public static void attatchImplementation(RepositoriesImpl impl){
+        RepositoryManager.repositories = impl;
     }
 
-    public static void setMatchRepository(MatchRepository matchRepository) {
-        RepositoryManager.matchRepository = matchRepository;
+    public static MatchRepository getMatchRepository() {
+        return repositories.getMatchRepository();
+    }
+
+    public static PlayerRepository getPlayerRepository() {
+        return repositories.getPlayerRepository();
     }
 }

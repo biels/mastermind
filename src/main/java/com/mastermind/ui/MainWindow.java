@@ -1,5 +1,7 @@
 package com.mastermind.ui;
 
+import com.mastermind.model.persistence.RepositoryManager;
+import com.mastermind.model.persistence.repositories.impl.RepositoriesInMemoryImpl;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,9 +22,9 @@ public class MainWindow extends Application{
     }
 
     public static void main(String[] args){
+        // Initialize repositories with an in-memory implementation
+        RepositoryManager.attatchImplementation(new RepositoriesInMemoryImpl());
+        // Launch JavaFX application
         Application.launch(args);
     }
-
-    //JavaFX Code
-
 }
