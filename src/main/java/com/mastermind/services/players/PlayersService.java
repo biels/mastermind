@@ -7,14 +7,35 @@ import com.mastermind.model.entities.types.RandomAIPlayer;
 import com.mastermind.model.persistence.RepositoryManager;
 import com.mastermind.model.persistence.repositories.PlayerRepository;
 import com.mastermind.services.players.responses.CreatePlayerResponse;
+import com.mastermind.services.players.responses.ListPlayersResponse;
+import com.mastermind.services.players.responses.types.PlayerRowData;
 
 import java.text.MessageFormat;
+import java.util.stream.Collectors;
 
 /**
  * Service that takes care of actions performed from the players window
  */
 public class PlayersService {
     private PlayerRepository playerRepository = RepositoryManager.getPlayerRepository();
+
+    /**
+     * Lists the players registered in the system
+     * @return The list of players in the system
+     */
+    public ListPlayersResponse listPlayers(){
+        ListPlayersResponse response = new ListPlayersResponse();
+        playerRepository.findAll().stream()
+                .map(player -> {
+                    PlayerRowData data = new PlayerRowData();
+                    data.setName(player.getName());
+                    data.setHuman(player instanceof HumanPlayer);
+                    data.setType(player.getClass().getName());
+                    return data;
+                })
+                .collect(Collectors.toList());
+        return response;
+    }
 
     /**
      * Creates a human player. Called from a registration form.
@@ -87,4 +108,6 @@ public class PlayersService {
         }
         return false;
     }
+
+
 }
