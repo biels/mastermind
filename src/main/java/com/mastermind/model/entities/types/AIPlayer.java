@@ -1,4 +1,5 @@
 package com.mastermind.model.entities.types;
 
-public class Type1 {
+public class AIPlayer extends Player {
+
 }

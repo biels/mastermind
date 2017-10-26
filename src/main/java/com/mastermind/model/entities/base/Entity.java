@@ -1,17 +1,13 @@
 package com.mastermind.model.entities.base;
 
 public abstract class Entity {
-    private int id;
+    private Long id = null;
 
-    public Entity(int id) {
-        this.id = id;
-    }
-
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 }
