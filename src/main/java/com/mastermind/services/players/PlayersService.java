@@ -11,6 +11,7 @@ import com.mastermind.services.players.responses.ListPlayersResponse;
 import com.mastermind.services.players.responses.types.PlayerRowData;
 
 import java.text.MessageFormat;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -25,7 +26,7 @@ public class PlayersService {
      */
     public ListPlayersResponse listPlayers(){
         ListPlayersResponse response = new ListPlayersResponse();
-        playerRepository.findAll().stream()
+        getPlayerList().stream()
                 .map(player -> {
                     PlayerRowData data = new PlayerRowData();
                     data.setName(player.getName());
@@ -35,6 +36,19 @@ public class PlayersService {
                 })
                 .collect(Collectors.toList());
         return response;
+    }
+
+    /**
+     * Removes a player from the list of players, identified by its position on the list
+     * @param index The position of the player in the list.
+     */
+    public void removePlayer(int index){
+        Player target = getPlayerList().get(index);
+        playerRepository.delete(target);
+    }
+
+    private List<Player> getPlayerList() {
+        return playerRepository.findAll();
     }
 
     /**
@@ -108,6 +122,7 @@ public class PlayersService {
         }
         return false;
     }
+
 
 
 }
