@@ -4,6 +4,7 @@ import com.mastermind.model.persistence.RepositoryManager;
 import com.mastermind.model.persistence.repositories.impl.RepositoriesInMemoryImpl;
 import com.mastermind.services.players.PlayersService;
 
+import java.io.File;
 import java.util.Scanner;
 
 public class Main {
@@ -11,7 +12,7 @@ public class Main {
         RepositoryManager.attatchImplementation(new RepositoriesInMemoryImpl());
         PlayersService playersService = new PlayersService();
         Scanner scanner = new Scanner(System.in);
-
+        System.out.println(playersService.getClass().getName());
         DriverManager driverManager = new DriverManager();
 
         driverManager.interactiveMenu(scanner);

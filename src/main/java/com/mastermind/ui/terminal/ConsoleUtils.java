@@ -1,5 +1,6 @@
 package com.mastermind.ui.terminal;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public final class ConsoleUtils {
@@ -26,27 +27,62 @@ public final class ConsoleUtils {
     public static final String CYAN_BACKGROUND = "\u001B[46m";
     public static final String WHITE_BACKGROUND = "\u001B[47m";
 
-    public static Integer requestOption(Scanner sc, int count) {
+    public static void requestEnter(Scanner sc){
+        System.out.println("Press enter to continue...");
+        try {
+            System.in.read();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public static RequestOptionResult requestOption(Scanner sc, int count) {
+        RequestOptionResult result = new RequestOptionResult();
         Integer option = null;
         while (true) {
             String next = sc.next();
-            if(next.startsWith("q")) return null;
+            if(next.endsWith("q")) {
+                result.setAdditionalAction(RequestOptionResult.AdditionalAction.QUIT);
+                return result;
+            }
+            if(next.endsWith("d")) {
+                result.setAdditionalAction(RequestOptionResult.AdditionalAction.OPEN_JAVADOC);
+                next = next.substring(0, next.length() - 1);
+            }
             try {
                 option = Integer.parseUnsignedInt(next);
                 option--;
             } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
-            if (option == null) {
-                System.out.println("Enter a numeric value");
+                System.out.println("Enter a numeric value or an option character");
                 continue;
             }
             if (option >= count) {
                 System.out.println("Choose an option between 0 and " + (count - 1));
                 continue;
             }
-            return option;
+            result.setOption(option);
+            return result;
 
+        }
+    }
+    public static class RequestOptionResult{
+        enum AdditionalAction {NONE, OPEN_JAVADOC, QUIT}
+        private AdditionalAction additionalAction = AdditionalAction.NONE;
+        private Integer option = null;
+
+        public AdditionalAction getAdditionalAction() {
+            return additionalAction;
+        }
+
+        public void setAdditionalAction(AdditionalAction additionalAction) {
+            this.additionalAction = additionalAction;
+        }
+
+        public Integer getOption() {
+            return option;
+        }
+
+        public void setOption(Integer option) {
+            this.option = option;
         }
     }
 }

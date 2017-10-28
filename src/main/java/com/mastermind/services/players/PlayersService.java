@@ -6,6 +6,7 @@ import com.mastermind.model.entities.types.Player;
 import com.mastermind.model.entities.types.RandomAIPlayer;
 import com.mastermind.model.persistence.RepositoryManager;
 import com.mastermind.model.persistence.repositories.PlayerRepository;
+import com.mastermind.services.Service;
 import com.mastermind.services.players.responses.CreatePlayerResponse;
 import com.mastermind.services.players.responses.ListPlayersResponse;
 import com.mastermind.services.players.responses.types.PlayerRowData;
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
 /**
  * Service that takes care of actions performed from the players window
  */
-public class PlayersService {
+public class PlayersService implements Service {
     private PlayerRepository playerRepository = RepositoryManager.getPlayerRepository();
 
     /**

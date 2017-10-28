@@ -24,6 +24,14 @@ public class DriverManager {
     }
 
     public void interactiveMenu(Scanner sc) {
+        String b = ConsoleUtils.BOLD;
+        String r = ConsoleUtils.RESET;
+        System.out.println("DRIVER INTERACTIVE CLI");
+        System.out.println("Usage (all menus):");
+        System.out.println(" " + b + "<option>" + r + ": choose option");
+        System.out.println(" " + b + "d" + r + ": open documentation");
+        System.out.println(" " + b + "<option>d" + r + ": open documentation for option");
+        System.out.println(" " + b + "q" + r + ": quit or go back");
         while (true) {
             System.out.println("Choose a driver: (q to quit)");
             List<Driver> drivers = driverList;
@@ -32,11 +40,17 @@ public class DriverManager {
                 System.out.println(MessageFormat.format(
                         " " + ConsoleUtils.RESET + "{0})" + ConsoleUtils.BOLD + " {1}" + ConsoleUtils.RESET, i+1, driver.getName()));
             }
-            Integer option = ConsoleUtils.requestOption(sc, drivers.size());
-            if(option == null)return;
-            Driver driver = drivers.get(option);
-            driver.instantiateService();
-            driver.interactiveMenu(sc);
+            ConsoleUtils.RequestOptionResult result = ConsoleUtils.requestOption(sc, drivers.size());
+            if(result.getAdditionalAction() == ConsoleUtils.RequestOptionResult.AdditionalAction.QUIT)return;
+            if(result.getOption() != null){
+                Driver driver = drivers.get(result.getOption());
+                if(result.getAdditionalAction() == ConsoleUtils.RequestOptionResult.AdditionalAction.OPEN_JAVADOC){
+                    DocumentationUtils.openDocumentationFor(driver.getClazz());
+                    continue;
+                }
+                driver.instantiateService();
+                driver.interactiveMenu(sc);
+            }
         }
     }
 
