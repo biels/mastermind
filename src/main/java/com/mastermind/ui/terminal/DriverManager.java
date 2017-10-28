@@ -27,10 +27,10 @@ public class DriverManager {
         while (true) {
             System.out.println("Choose a driver: (q to quit)");
             List<Driver> drivers = driverList;
-            for (int i = 1; i < drivers.size(); i++) {
+            for (int i = 0; i < drivers.size(); i++) {
                 Driver driver = drivers.get(i);
                 System.out.println(MessageFormat.format(
-                        " " + ConsoleUtils.RESET + "{0})" + ConsoleUtils.BOLD + " {1}", i, driver.getName()));
+                        " " + ConsoleUtils.RESET + "{0})" + ConsoleUtils.BOLD + " {1}" + ConsoleUtils.RESET, i+1, driver.getName()));
             }
             Integer option = ConsoleUtils.requestOption(sc, drivers.size());
             if(option == null)return;

@@ -29,10 +29,10 @@ public class Driver {
             System.out.println(MessageFormat.format("Driver for {0}{1}{2}: (q to quit)",
                     "", clazz.getSimpleName(), ConsoleUtils.RESET));
             Method[] methods = clazz.getDeclaredMethods();
-            for (int i = 1; i < methods.length; i++) {
+            for (int i = 0; i < methods.length; i++) {
                 Method method = methods[i];
-                System.out.println(MessageFormat.format(" " + ConsoleUtils.RESET + "{0})" + ConsoleUtils.BOLD + " {1}",
-                        i, method.getName()));
+                System.out.println(MessageFormat.format(" " + ConsoleUtils.RESET + "{0})" + ConsoleUtils.BOLD + " {1}" + ConsoleUtils.RESET,
+                        i+1, method.getName()));
             }
             Integer option = ConsoleUtils.requestOption(sc, methods.length);
             if(option == null)return;
