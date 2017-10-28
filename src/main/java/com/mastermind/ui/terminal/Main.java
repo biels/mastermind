@@ -10,11 +10,9 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args){
         RepositoryManager.attatchImplementation(new RepositoriesInMemoryImpl());
-        PlayersService playersService = new PlayersService();
         Scanner scanner = new Scanner(System.in);
-        System.out.println(playersService.getClass().getName());
         DriverManager driverManager = new DriverManager();
-
+        ConsoleUtils.printBanner();
         driverManager.interactiveMenu(scanner);
     }
 }

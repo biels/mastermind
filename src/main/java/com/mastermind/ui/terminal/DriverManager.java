@@ -27,7 +27,7 @@ public class DriverManager {
         boolean needReprint = true;
         String b = ConsoleUtils.BOLD;
         String r = ConsoleUtils.RESET;
-        System.out.println("DRIVER INTERACTIVE CLI");
+        System.out.println("Mastermind driver CLI v" + "1.0");
         System.out.println("Usage (all menus):");
         System.out.println(" " + b + "<option>" + r + ": choose option");
         System.out.println(" " + b + "d" + r + ": open documentation");

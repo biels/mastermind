@@ -33,10 +33,10 @@ public class Driver {
         String r = ConsoleUtils.RESET;
         while (true) {
             Method[] methods = new Method[0];
+            methods = clazz.getDeclaredMethods();
             if (needReprint) {
                 System.out.println(MessageFormat.format("Driver for {0}{1}{2}: (q to quit)",
                         "", clazz.getSimpleName(), ConsoleUtils.RESET));
-                methods = clazz.getDeclaredMethods();
                 for (int i = 0; i < methods.length; i++) {
                     Method method = methods[i];
                     System.out.println(MessageFormat.format(" " + ConsoleUtils.RESET + "{0})" + ConsoleUtils.BOLD + " {1}" + ConsoleUtils.RESET,
