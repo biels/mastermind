@@ -44,6 +44,10 @@ public final class ConsoleUtils {
                 result.setAdditionalAction(RequestOptionResult.AdditionalAction.QUIT);
                 return result;
             }
+            if(next.equals("d")) {
+                result.setAdditionalAction(RequestOptionResult.AdditionalAction.OPEN_JAVADOC);
+                return result;
+            }
             if(next.endsWith("d")) {
                 result.setAdditionalAction(RequestOptionResult.AdditionalAction.OPEN_JAVADOC);
                 next = next.substring(0, next.length() - 1);

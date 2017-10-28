@@ -24,6 +24,7 @@ public class DriverManager {
     }
 
     public void interactiveMenu(Scanner sc) {
+        boolean needReprint = true;
         String b = ConsoleUtils.BOLD;
         String r = ConsoleUtils.RESET;
         System.out.println("DRIVER INTERACTIVE CLI");
@@ -33,12 +34,15 @@ public class DriverManager {
         System.out.println(" " + b + "<option>d" + r + ": open documentation for option");
         System.out.println(" " + b + "q" + r + ": quit or go back");
         while (true) {
-            System.out.println("Choose a driver: (q to quit)");
-            List<Driver> drivers = driverList;
-            for (int i = 0; i < drivers.size(); i++) {
-                Driver driver = drivers.get(i);
-                System.out.println(MessageFormat.format(
-                        " " + ConsoleUtils.RESET + "{0})" + ConsoleUtils.BOLD + " {1}" + ConsoleUtils.RESET, i+1, driver.getName()));
+            List<Driver> drivers = null;
+            drivers = driverList;
+            if (needReprint) {
+                System.out.println("Choose a driver: (q to quit)");
+                for (int i = 0; i < drivers.size(); i++) {
+                    Driver driver = drivers.get(i);
+                    System.out.println(MessageFormat.format(
+                            " " + ConsoleUtils.RESET + "{0})" + ConsoleUtils.BOLD + " {1}" + ConsoleUtils.RESET, i+1, driver.getName()));
+                }
             }
             ConsoleUtils.RequestOptionResult result = ConsoleUtils.requestOption(sc, drivers.size());
             if(result.getAdditionalAction() == ConsoleUtils.RequestOptionResult.AdditionalAction.QUIT)return;
@@ -46,10 +50,18 @@ public class DriverManager {
                 Driver driver = drivers.get(result.getOption());
                 if(result.getAdditionalAction() == ConsoleUtils.RequestOptionResult.AdditionalAction.OPEN_JAVADOC){
                     DocumentationUtils.openDocumentationFor(driver.getClazz());
+                    needReprint = false;
                     continue;
                 }
                 driver.instantiateService();
+                needReprint = true;
                 driver.interactiveMenu(sc);
+            }else {
+                if(result.getAdditionalAction() == ConsoleUtils.RequestOptionResult.AdditionalAction.OPEN_JAVADOC){
+                    System.out.println("No documentation for context. Try <option>d.");
+                    needReprint = false;
+                    continue;
+                }
             }
         }
     }
