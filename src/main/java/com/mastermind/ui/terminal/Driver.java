@@ -1,15 +1,10 @@
 package com.mastermind.ui.terminal;
 
-import com.mastermind.ui.terminal.ConsoleUtils;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-
-import java.io.File;
 import java.io.Serializable;
 import java.lang.reflect.*;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Driver {
     private Class<?> clazz;
@@ -119,31 +114,53 @@ public class Driver {
         if(depth > 4)return object.toString();
         Class<?> c = object.getClass();
         if(c.isPrimitive()) return object.toString();
-        if(object instanceof Collection || object instanceof Serializable) return object.toString();
+        if(object instanceof Collection)  {
+            Object cString = ((Collection) object).stream().map(o -> {
+                try {
+                    return getStringRepresentation(o, 0);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+                return "";
+            }).reduce((s1, s2) -> s1 + ", " + s2).orElse("");
+            String lines;
+            if (cString.equals("")) return  "[]";
+            else lines = "[\n" + cString;
+            return indent(lines) + "]";
+        }
+        if(object instanceof Serializable) return object.toString();
         //if(c == Integer.class || c == Double.class || c == Long.class || c == Boolean) return object.toString();
         if(Arrays.stream(c.getDeclaredFields())
                 .filter(field -> !Modifier.isStatic(field.getModifiers()))
                 .count() <= 0) return object.toString();
         String header = c.getSimpleName() + " {\n";
         String footer = "}";
-        String indent = "  ";
+
         List<Field> fields = getAllFields(c);
         String resultRepresentation = header;
         for (int i = 0; i < fields.size(); i++) {
             Field field = fields.get(i);
             if(Modifier.isStatic(field.getModifiers()))continue;
             field.setAccessible(true);
-            resultRepresentation += indent + field.getName() + " = ";
+            resultRepresentation += INDENT + field.getName() + " = ";
             String stringRepresentation = getStringRepresentation(field.get(object), depth + 1);
-            String[] split = stringRepresentation.split("\n");
-
-            for (int j = 0; j < split.length; j++) {
-                resultRepresentation += (j != 0 ? indent : "")  + split[j] + "\n";
-            }
+            resultRepresentation += indent(stringRepresentation);
         }
         resultRepresentation += footer;
         return resultRepresentation;
     }
+    final static String INDENT = "  ";
+    private static String indent(String lines) {
+
+        String result = "";
+        String[] split = lines.split("\n");
+
+        for (int j = 0; j < split.length; j++) {
+            result += (j != 0 ? INDENT : "")  + split[j] + "\n";
+        }
+        return result;
+    }
+
     public static List<Field> getAllFields(Class<?> type) {
         List<Field> fields = new ArrayList<Field>();
         for (Class<?> c = type; c != null; c = c.getSuperclass()) {
