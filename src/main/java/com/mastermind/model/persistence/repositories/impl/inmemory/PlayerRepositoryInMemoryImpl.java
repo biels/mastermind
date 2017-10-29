@@ -15,8 +15,7 @@ public class PlayerRepositoryInMemoryImpl extends CrudRepositoryInMemoryImpl<Pla
 
     @Override
     public Optional<Player> findByMatch(Long matchId) {
-        Match match = RepositoryManager.getMatchRepository().findOne(matchId);
-        if(match == null) return Optional.empty();
-        return Optional.of(match.getPlayer());
+        Optional<Match> match = RepositoryManager.getMatchRepository().findOne(matchId);
+        return match.map(Match::getPlayer);
     }
 }

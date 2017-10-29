@@ -28,7 +28,7 @@ public class GameService implements Service {
     }
 
     /**
-     * Places a color into the current uncomitted trial.
+     * Places a color into the current uncommitted trial.
      * Called on drag and drop into the combination box.
      * @param colorId The identifier of the color to place
      * @param position The target position within the combination

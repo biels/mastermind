@@ -27,7 +27,7 @@ public class PlayersService implements Service {
      */
     public ListPlayersResponse listPlayers(){
         ListPlayersResponse response = new ListPlayersResponse();
-        getPlayerList().stream()
+        response.setPlayerRows(getPlayerList().stream()
                 .map(player -> {
                     PlayerRowData data = new PlayerRowData();
                     data.setName(player.getName());
@@ -35,7 +35,7 @@ public class PlayersService implements Service {
                     data.setType(player.getClass().getName());
                     return data;
                 })
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
         return response;
     }
 
