@@ -45,11 +45,11 @@ public class Driver {
             }
             ConsoleUtils.RequestOptionResult result = ConsoleUtils.requestOption(sc, methods.size());
             if (result.getAdditionalAction() == ConsoleUtils.RequestOptionResult.AdditionalAction.QUIT) return;
-            if(result.getAdditionalAction() == ConsoleUtils.RequestOptionResult.AdditionalAction.OPEN_JAVADOC) {
+            if (result.getAdditionalAction() == ConsoleUtils.RequestOptionResult.AdditionalAction.OPEN_JAVADOC) {
                 needReprint = false;
                 DocumentationUtils.openDocumentationFor(clazz);
             }
-            if(result.getOption() != null){
+            if (result.getOption() != null) {
                 Method selected = methods.get(result.getOption());
                 Parameter[] parameters = selected.getParameters();
                 Optional<String> parameterString = Arrays.stream(parameters)
@@ -64,19 +64,19 @@ public class Driver {
                     boolean requested = false;
                     while (true) {
                         try {
-                            System.out.print(parameter.getType().getSimpleName() + " "+ parameter.getName() + ": ");
+                            System.out.print(parameter.getType().getSimpleName() + " " + parameter.getName() + ": ");
                             res = null;
                             type = parameter.getType();
                             requested = false;
-                            if(type == int.class || type == Integer.class){
+                            if (type == int.class || type == Integer.class) {
                                 requested = true;
                                 res = sc.nextInt();
                             }
-                            if (type == long.class || type == Long.class){
+                            if (type == long.class || type == Long.class) {
                                 requested = true;
                                 res = sc.nextBigInteger().longValue();
                             }
-                            if(type == String.class){
+                            if (type == String.class) {
                                 requested = true;
                                 res = sc.next();
                             }
@@ -86,16 +86,22 @@ public class Driver {
                             System.out.println(" > Not a " + parameter.getType().getSimpleName());
                         }
                     }
-                    if(!requested)
+                    if (!requested)
                         System.out.println("(No input method for " + type.getSimpleName() + ")");
                     resolvedParams[i] = res;
                 }
                 try {
                     Object invokeResult = selected.invoke(service, resolvedParams);
-                    System.out.println(getStringRepresentation(invokeResult, 0));
+                    if (selected.getReturnType().equals(Void.TYPE)) {
+                        System.out.println("Executed (void)");
+                    } else {
+                        System.out.println("Result (" + selected.getReturnType() + "):");
+                        System.out.println(getStringRepresentation(invokeResult, 0));
+                    }
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 } catch (InvocationTargetException e) {
+                    System.out.println("Result: (a " + e.getTargetException().getClass().getSimpleName() + " was thrown)");
                     e.getTargetException().printStackTrace();
                 }
 
@@ -120,12 +126,13 @@ public class Driver {
     public Class<?> getClazz() {
         return clazz;
     }
+
     public static String getStringRepresentation(Object object, int depth) throws IllegalAccessException {
-        if(object == null) return "null";
-        if(depth > 4)return object.toString();
+        if (object == null) return "null";
+        if (depth > 6) return object.toString();
         Class<?> c = object.getClass();
-        if(c.isPrimitive()) return object.toString();
-        if(object instanceof Collection)  {
+        if (c.isPrimitive()) return object.toString();
+        if (object instanceof Collection) {
             Object cString = ((Collection) object).stream().map(o -> {
                 try {
                     return getStringRepresentation(o, 0);
@@ -135,13 +142,13 @@ public class Driver {
                 return "";
             }).reduce((s1, s2) -> s1 + ", " + s2).orElse("");
             String lines;
-            if (cString.equals("")) return  "[]";
+            if (cString.equals("")) return "[]";
             else lines = "[\n" + cString;
             return indent(lines) + "]";
         }
-        if(object instanceof Serializable) return object.toString();
+        if (object instanceof Serializable) return object.toString();
         //if(c == Integer.class || c == Double.class || c == Long.class || c == Boolean) return object.toString();
-        if(Arrays.stream(c.getDeclaredFields())
+        if (Arrays.stream(c.getDeclaredFields())
                 .filter(field -> !Modifier.isStatic(field.getModifiers()))
                 .count() <= 0) return object.toString();
         String header = c.getSimpleName() + " {\n";
@@ -151,7 +158,7 @@ public class Driver {
         String resultRepresentation = header;
         for (int i = 0; i < fields.size(); i++) {
             Field field = fields.get(i);
-            if(Modifier.isStatic(field.getModifiers()))continue;
+            if (Modifier.isStatic(field.getModifiers())) continue;
             field.setAccessible(true);
             resultRepresentation += INDENT + field.getName() + " = ";
             String stringRepresentation = getStringRepresentation(field.get(object), depth + 1);
@@ -160,14 +167,16 @@ public class Driver {
         resultRepresentation += footer;
         return resultRepresentation;
     }
+
     final static String INDENT = "  ";
+
     private static String indent(String lines) {
 
         String result = "";
         String[] split = lines.split("\n");
 
         for (int j = 0; j < split.length; j++) {
-            result += (j != 0 ? INDENT : "")  + split[j] + "\n";
+            result += (j != 0 ? INDENT : "") + split[j] + "\n";
         }
         return result;
     }
