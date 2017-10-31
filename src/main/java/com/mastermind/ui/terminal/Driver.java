@@ -59,21 +59,32 @@ public class Driver {
                 Object[] resolvedParams = new Object[parameters.length];
                 for (int i = 0; i < parameters.length; i++) {
                     Parameter parameter = parameters[i];
-                    System.out.print(parameter.toString() + ": ");
                     Object res = null;
-                    Class<?> type = parameter.getType();
+                    Class<?> type = null;
                     boolean requested = false;
-                    if(type == int.class || type == Integer.class){
-                        requested = true;
-                        res = sc.nextInt();
-                    }
-                    if (type == long.class || type == Long.class){
-                        requested = true;
-                        res = sc.nextBigInteger().longValue();
-                    }
-                    if(type == String.class){
-                        requested = true;
-                        res = sc.next();
+                    while (true) {
+                        try {
+                            System.out.print(parameter.getType().getSimpleName() + " "+ parameter.getName() + ": ");
+                            res = null;
+                            type = parameter.getType();
+                            requested = false;
+                            if(type == int.class || type == Integer.class){
+                                requested = true;
+                                res = sc.nextInt();
+                            }
+                            if (type == long.class || type == Long.class){
+                                requested = true;
+                                res = sc.nextBigInteger().longValue();
+                            }
+                            if(type == String.class){
+                                requested = true;
+                                res = sc.next();
+                            }
+                            break;
+                        } catch (InputMismatchException e) {
+                            sc.next();
+                            System.out.println(" > Not a " + parameter.getType().getSimpleName());
+                        }
                     }
                     if(!requested)
                         System.out.println("(No input method for " + type.getSimpleName() + ")");
