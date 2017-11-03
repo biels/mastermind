@@ -51,8 +51,7 @@ public abstract class CrudRepositoryInMemoryImpl<T extends Entity> implements Cr
     public void delete(T entity) {
         //This will be implemented using ids instead of object references in SQL
         Optional<T> foundEntity = findOne(entity.getId());
-        if(foundEntity.isPresent())
-            collection.remove(foundEntity);
+        foundEntity.ifPresent(t -> collection.remove(t));
     }
 
     @Override

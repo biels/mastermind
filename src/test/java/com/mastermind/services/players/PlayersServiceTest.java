@@ -31,7 +31,7 @@ public class PlayersServiceTest {
         ListPlayersResponse response = service.listPlayers();
         List<PlayerRowData> playerRows = response.getPlayerRows();
         assertNotNull(playerRows);
-        assertEquals(playerRows.size(), 0);
+        assertEquals(0, playerRows.size());
     }
 
     @Test
@@ -43,8 +43,8 @@ public class PlayersServiceTest {
         HumanPlayer createdPlayer = response.getCreatedPlayer();
         assertNotNull(createdPlayer);
         assertNotNull(createdPlayer.getId());
-        assertEquals(createdPlayer.getName(), name);
-        assertEquals(createdPlayer.getPassword(), password);
+        assertEquals(name, createdPlayer.getName());
+        assertEquals(password, createdPlayer.getPassword());
     }
 
     @Test
@@ -63,8 +63,8 @@ public class PlayersServiceTest {
         RandomAIPlayer createdPlayer = response.getCreatedPlayer();
         assertNotNull(createdPlayer);
         assertNotNull(createdPlayer.getId());
-        assertEquals(createdPlayer.getName(), name);
-        assertEquals(createdPlayer.getSeed(), seed);
+        assertEquals(name, createdPlayer.getName());
+        assertEquals(seed, createdPlayer.getSeed());
     }
 
     @Test
@@ -76,8 +76,8 @@ public class PlayersServiceTest {
         MinimaxAIPlayer createdPlayer = response.getCreatedPlayer();
         assertNotNull(createdPlayer);
         assertNotNull(createdPlayer.getId());
-        assertEquals(createdPlayer.getName(), name);
-        assertEquals(createdPlayer.getDepth(), depth);
+        assertEquals(name, createdPlayer.getName());
+        assertEquals(depth, createdPlayer.getDepth());
 
     }
     @Test
@@ -87,5 +87,17 @@ public class PlayersServiceTest {
         CreatePlayerResponse<MinimaxAIPlayer> response= service.createMinmiaxAIPlayer(name, depth);
         assertFalse(response.isSuccess());
         assertNull(response.getCreatedPlayer());
+    }
+    @Test
+    void useCaseCreateListRemove(){
+        // Create
+        CreatePlayerResponse<HumanPlayer> response = service.createHumanPlayer("human-player-name-2", "123456");
+        assertTrue(response.isSuccess());
+        // List
+        assertEquals(1, service.listPlayers().getPlayerRows().size());
+        // Remove
+        service.removePlayer(0);
+        //List
+        assertEquals(0, service.listPlayers().getPlayerRows().size());
     }
 }
