@@ -80,7 +80,6 @@ public class GameService implements Service {
         // Access repositories and fill response
         return response;
     }
-
     /**
      * Removes a game from the list of saved games, identified by its position on the list
      * @param index The position of the game in the list of saved games.
