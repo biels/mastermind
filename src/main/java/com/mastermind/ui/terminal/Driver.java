@@ -27,6 +27,7 @@ public class Driver {
 
     public void interactiveMenu(Scanner sc) {
         boolean needReprint = true;
+        boolean needPause = true;
         String b = ConsoleUtils.BOLD;
         String r = ConsoleUtils.RESET;
         while (true) {
@@ -93,6 +94,7 @@ public class Driver {
                 try {
                     Object invokeResult = selected.invoke(service, resolvedParams);
                     if (selected.getReturnType().equals(Void.TYPE)) {
+                        needPause = false;
                         System.out.println("Executed (void)");
                     } else {
                         System.out.println("Result (" + selected.getReturnType() + "):");
@@ -113,7 +115,8 @@ public class Driver {
                 }
 
                 needReprint = true;
-                ConsoleUtils.requestEnter(sc);
+                if(needPause) ConsoleUtils.requestEnter(sc);
+                needPause = true;
             }
 
 //        try {
