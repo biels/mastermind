@@ -96,13 +96,20 @@ public class Driver {
                         System.out.println("Executed (void)");
                     } else {
                         System.out.println("Result (" + selected.getReturnType() + "):");
+                        System.out.print(ConsoleUtils.BOLD);
                         System.out.println(getStringRepresentation(invokeResult, 0));
+                        System.out.print(ConsoleUtils.RESET);
                     }
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 } catch (InvocationTargetException e) {
                     System.out.println("Result: (a " + e.getTargetException().getClass().getSimpleName() + " was thrown)");
                     e.getTargetException().printStackTrace();
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e1) {
+                        e1.printStackTrace();
+                    }
                 }
 
                 needReprint = true;
