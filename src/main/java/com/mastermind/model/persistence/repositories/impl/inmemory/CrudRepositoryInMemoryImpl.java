@@ -3,10 +3,12 @@ package com.mastermind.model.persistence.repositories.impl.inmemory;
 import com.mastermind.model.entities.base.Entity;
 import com.mastermind.model.persistence.repositories.types.CrudRepository;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public abstract class CrudRepositoryInMemoryImpl<T extends Entity> implements CrudRepository<T>{
-    protected List<T> collection;
+    protected List<T> collection = new ArrayList<>();
     Long lastAutoIncremental = 0L;
 
     private Long getNextAutoIncremental(){
@@ -18,8 +20,8 @@ public abstract class CrudRepositoryInMemoryImpl<T extends Entity> implements Cr
         Long id = entity.getId();
         if(id == null)id = getNextAutoIncremental();
         entity.setId(id);
-        T findResult = findOne(id);
-        if (findResult != null){
+        Optional<T> findResult = findOne(id);
+        if (findResult.isPresent()){
             collection.remove(findResult);
         }
         boolean addded = collection.add(entity);
@@ -27,12 +29,12 @@ public abstract class CrudRepositoryInMemoryImpl<T extends Entity> implements Cr
     }
 
     @Override
-    public T findOne(Long primaryKey) {
+    public Optional<T> findOne(Long primaryKey) {
         for (T e : collection){
             Long id = e.getId();
-            if (id.equals(primaryKey))return e;
+            if (id.equals(primaryKey))return Optional.of(e);
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override
@@ -48,7 +50,9 @@ public abstract class CrudRepositoryInMemoryImpl<T extends Entity> implements Cr
     @Override
     public void delete(T entity) {
         //This will be implemented using ids instead of object references in SQL
-        collection.remove(findOne(entity.getId()));
+        Optional<T> foundEntity = findOne(entity.getId());
+        if(foundEntity.isPresent())
+            collection.remove(foundEntity);
     }
 
     @Override

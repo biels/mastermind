@@ -1,4 +1,4 @@
-package com.mastermind.ui;
+package com.mastermind.ui.javafx;
 
 import com.mastermind.model.persistence.RepositoryManager;
 import com.mastermind.model.persistence.repositories.impl.RepositoriesInMemoryImpl;

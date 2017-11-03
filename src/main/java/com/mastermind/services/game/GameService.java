@@ -1,5 +1,6 @@
 package com.mastermind.services.game;
 
+import com.mastermind.services.Service;
 import com.mastermind.services.game.responses.*;
 import com.mastermind.services.game.responses.types.*;
 
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 /**
  * Service that takes care of actions performed from the game window
  */
-public class GameService {
+public class GameService implements Service {
 
     /**
      * Called from a new game button
@@ -27,8 +28,8 @@ public class GameService {
     }
 
     /**
-     * Places a color into the current uncomitted trial.
-     * Called on drag & drop into the combination box.
+     * Places a color into the current uncommitted trial.
+     * Called on drag and drop into the combination box.
      * @param colorId The identifier of the color to place
      * @param position The target position within the combination
      */

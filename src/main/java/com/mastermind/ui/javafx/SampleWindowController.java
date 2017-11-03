@@ -1,4 +1,4 @@
-package com.mastermind.ui;
+package com.mastermind.ui.javafx;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

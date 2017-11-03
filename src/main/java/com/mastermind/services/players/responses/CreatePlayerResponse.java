@@ -32,4 +32,13 @@ public class CreatePlayerResponse<T extends Player> {
     public void setCreatedPlayer(T createdPlayer) {
         this.createdPlayer = createdPlayer;
     }
+
+    @Override
+    public String toString() {
+        return "CreatePlayerResponse{" +
+                "success=" + success +
+                ", messages=" + messages +
+                ", createdPlayer=" + createdPlayer +
+                '}';
+    }
 }
