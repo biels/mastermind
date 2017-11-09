@@ -1,9 +1,8 @@
-package com.mastermind.services.players.responses.types;
+package com.mastermind.services.game.responses.types;
 
-public class PlayerRowData {
+public class AIPlayerRowData {
     private String name;
     private String type;
-    private boolean human;
 
     public String getName() {
         return name;
@@ -19,13 +18,5 @@ public class PlayerRowData {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public boolean isHuman() {
-        return human;
-    }
-
-    public void setHuman(boolean human) {
-        this.human = human;
     }
 }

@@ -1,12 +1,17 @@
 package com.mastermind.logic;
 
-import com.mastermind.model.entities.types.Combination;
-import com.mastermind.model.entities.types.Round;
+import com.mastermind.model.entities.types.Match;
 
 public class MinimaxAlgorithmComponent extends AlgorithmComponent {
 
+
     @Override
-    Combination nextTrial(Round round) {
-        return null;
+    public void playAsCodemaker(Match match) {
+
+    }
+
+    @Override
+    public void playAsCodebreaker(Match match) {
+
     }
 }

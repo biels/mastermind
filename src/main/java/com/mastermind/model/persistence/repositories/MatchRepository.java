@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface MatchRepository extends CrudRepository<Match> {
     List<Match> findByPlayer(Long playerId);
+
+    List<Match> findByPlayerAndFinishedFalse(Long playerId);
 }

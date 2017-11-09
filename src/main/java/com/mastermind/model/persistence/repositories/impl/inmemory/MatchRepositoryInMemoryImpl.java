@@ -12,7 +12,14 @@ public class MatchRepositoryInMemoryImpl extends CrudRepositoryInMemoryImpl<Matc
     @Override
     public List<Match> findByPlayer(Long playerId) {
         return RepositoryManager.getMatchRepository().findAll().stream()
-                .filter(match -> match.getPlayer().getId().equals(playerId))
+                .filter(match -> match.getLocalPlayer().getId().equals(playerId))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Match> findByPlayerAndFinishedFalse(Long playerId) {
+        return findByPlayer(playerId).stream()
+                .filter(match -> !match.isFinished())
                 .collect(Collectors.toList());
     }
 }

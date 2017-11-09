@@ -7,32 +7,32 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class CrudRepositoryInMemoryImpl<T extends Entity> implements CrudRepository<T>{
-    protected List<T> collection = new ArrayList<>();
-    Long lastAutoIncremental = 0L;
+public abstract class CrudRepositoryInMemoryImpl<T extends Entity> implements CrudRepository<T> {
+    List<T> collection = new ArrayList<>();
+    private Long lastAutoIncremental = 0L;
 
-    private Long getNextAutoIncremental(){
+    private Long getNextAutoIncremental() {
         return lastAutoIncremental++;
     }
 
     @Override
     public <S extends T> S save(S entity) {
         Long id = entity.getId();
-        if(id == null)id = getNextAutoIncremental();
+        if (id == null) id = getNextAutoIncremental();
         entity.setId(id);
         Optional<T> findResult = findOne(id);
-        if (findResult.isPresent()){
+        if (findResult.isPresent()) {
             collection.remove(findResult);
         }
-        boolean addded = collection.add(entity);
-        return (addded ? entity : null);
+        boolean added = collection.add(entity);
+        return (added ? entity : null);
     }
 
     @Override
     public Optional<T> findOne(Long primaryKey) {
-        for (T e : collection){
+        for (T e : collection) {
             Long id = e.getId();
-            if (id.equals(primaryKey))return Optional.of(e);
+            if (id.equals(primaryKey)) return Optional.of(e);
         }
         return Optional.empty();
     }

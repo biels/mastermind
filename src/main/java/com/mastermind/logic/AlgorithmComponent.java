@@ -1,8 +1,9 @@
 package com.mastermind.logic;
 
-import com.mastermind.model.entities.types.Combination;
-import com.mastermind.model.entities.types.Round;
+import com.mastermind.model.entities.types.Match;
 
 public abstract class AlgorithmComponent {
-    abstract Combination nextTrial(Round round);
+    public abstract void playAsCodemaker(Match match);
+
+    public abstract void playAsCodebreaker(Match match);
 }

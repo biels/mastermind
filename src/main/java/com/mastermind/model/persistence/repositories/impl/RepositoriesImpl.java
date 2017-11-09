@@ -4,8 +4,8 @@ import com.mastermind.model.persistence.repositories.MatchRepository;
 import com.mastermind.model.persistence.repositories.PlayerRepository;
 
 public abstract class RepositoriesImpl {
-    protected MatchRepository matchRepository;
-    protected PlayerRepository playerRepository;
+    MatchRepository matchRepository;
+    PlayerRepository playerRepository;
 
     public MatchRepository getMatchRepository() {
         return matchRepository;

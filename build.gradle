@@ -13,11 +13,11 @@ buildscript {
     }
 }
 
-ext.junit4Version        = '4.12'
-ext.junitVintageVersion  = '4.12.1'
+ext.junit4Version = '4.12'
+ext.junitVintageVersion = '4.12.1'
 ext.junitPlatformVersion = '1.0.1'
-ext.junitJupiterVersion  = '5.0.1'
-ext.log4jVersion         = '2.9.0'
+ext.junitJupiterVersion = '5.0.1'
+ext.log4jVersion = '2.9.0'
 
 apply plugin: 'java'
 apply plugin: 'org.junit.platform.gradle.plugin'
@@ -27,6 +27,7 @@ targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 junitPlatform {
     // platformVersion '1.0.1'
@@ -61,6 +62,9 @@ dependencies {
     // To use Log4J's LogManager
     testRuntime("org.apache.logging.log4j:log4j-core:${log4jVersion}")
     testRuntime("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
+
+    // Mockito
+    testCompile "org.mockito:mockito-core:2.+"
 }
 compileTestJava {
     options.compilerArgs += '-parameters'

@@ -10,11 +10,13 @@ import com.mastermind.services.ranking.responses.ListPositionsResponse;
  */
 public class RankingService implements Service {
     private MatchRepository matchRepository = RepositoryManager.getMatchRepository();
+
     /**
      * Lists the positions in the ranking
+     *
      * @return The list of positions in the ranking
      */
-    public ListPositionsResponse listPositions(){
+    public ListPositionsResponse listPositions() {
         ListPositionsResponse response = new ListPositionsResponse();
 
         return response;
@@ -24,7 +26,7 @@ public class RankingService implements Service {
      * Clears all the positions in the ranking.
      * This action should require confirmation.
      */
-    public void resetRanking(){
+    public void resetRanking() {
 
     }
 }

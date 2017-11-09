@@ -1,40 +1,107 @@
 package com.mastermind.model.entities.types;
+
 import com.mastermind.model.entities.base.Entity;
 
-/**
- * @deprecated Merge with Match class
- */
+import java.util.Objects;
+
 public class MatchConfig extends Entity {
-    private int difficulty;
-    private int colors;
-    private int combinations;
-    private int extension;
-    private boolean repeat;
+    private int roundCount;
+    private int colorCount;
+    private int slotCount;
+    private int maxTrialCount;
+    private boolean allowRepetition;
+    private boolean localStartsMakingCode;
 
     public MatchConfig() {
-        difficulty = 0;
-        colors = 3;
-        extension = 3;
-        colors = 8;
-        repeat = false;
+        roundCount = 4;
+        colorCount = 5;
+        slotCount = 4;
+        maxTrialCount = 10;
+        allowRepetition = true;
+        localStartsMakingCode = true;
     }
-    public void changeDificulty(int newDifficulty){
-        difficulty = newDifficulty;
-    }
-    public void changeColors(int newColors){
-        if(newColors < extension && !repeat) System.out.println("No es pot tindre tants pocs colors amb una extensio tan gran i repeat desactivat");
-        else colors = newColors;
-    }
-    public void changeCombinations(int newCombinations){
-        combinations = newCombinations;
 
+    public MatchConfig(int roundCount, int colorCount, int slotCount, int maxTrialCount, boolean allowRepetition, boolean localStartsMakingCode) {
+        this.roundCount = roundCount;
+        this.colorCount = colorCount;
+        this.slotCount = slotCount;
+        this.maxTrialCount = maxTrialCount;
+        this.allowRepetition = allowRepetition;
+        this.localStartsMakingCode = localStartsMakingCode;
     }
-    public void changeExtension(int newExtension){
-        if(newExtension>colors && !repeat) System.out.println("No es pot tindre una convinacio tan gran amb tan pocs colors i repeat off");
-        else extension = newExtension;
+
+    public MatchConfig(MatchConfig template) {
+        roundCount = template.getRoundCount();
+        colorCount = template.getColorCount();
+        slotCount = template.getSlotCount();
+        maxTrialCount = template.getMaxTrialCount();
+        allowRepetition = template.isAllowRepetition();
+        localStartsMakingCode = template.isLocalStartsMakingCode();
     }
-    public void repeatSetter(){
-        if(extension>colors) System.out.println("no pots desactivar repetir amb aquesta configuracio de colors i extensio ja que no es podria plenar la  convinacio de colors");
-        else repeat = !repeat;
+
+    public int getRoundCount() {
+        return roundCount;
+    }
+
+    public void setRoundCount(int roundCount) {
+        this.roundCount = roundCount;
+    }
+
+    public int getColorCount() {
+        return colorCount;
+    }
+
+    public void setColorCount(int colorCount) {
+        this.colorCount = colorCount;
+    }
+
+    public int getSlotCount() {
+        return slotCount;
+    }
+
+    public void setSlotCount(int slotCount) {
+        this.slotCount = slotCount;
+    }
+
+    public int getMaxTrialCount() {
+        return maxTrialCount;
+    }
+
+    public void setMaxTrialCount(int maxTrialCount) {
+        this.maxTrialCount = maxTrialCount;
+    }
+
+    private boolean isAllowRepetition() {
+        return allowRepetition;
+    }
+
+    public void setAllowRepetition(boolean allowRepetition) {
+        this.allowRepetition = allowRepetition;
+    }
+
+    public boolean isLocalStartsMakingCode() {
+        return localStartsMakingCode;
+    }
+
+    public void setLocalStartsMakingCode(boolean localStartsMakingCode) {
+        this.localStartsMakingCode = localStartsMakingCode;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MatchConfig that = (MatchConfig) o;
+        return roundCount == that.roundCount &&
+                colorCount == that.colorCount &&
+                slotCount == that.slotCount &&
+                maxTrialCount == that.maxTrialCount &&
+                allowRepetition == that.allowRepetition &&
+                localStartsMakingCode == that.localStartsMakingCode;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(roundCount, colorCount, slotCount, maxTrialCount, allowRepetition, localStartsMakingCode);
     }
 }

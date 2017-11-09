@@ -14,6 +14,10 @@ public abstract class Player extends Entity {
 
     private List<Match> matches;
 
+    public Player(String name) {
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }
@@ -31,7 +35,7 @@ public abstract class Player extends Entity {
     }
 
     public List<Match> getMatches() {
-        if(matches == null) matches = RepositoryManager.getMatchRepository().findByPlayer(getId());
+        if (matches == null) matches = RepositoryManager.getMatchRepository().findByPlayer(getId());
         return matches;
     }
 

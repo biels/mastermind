@@ -2,10 +2,10 @@ package com.mastermind.services.game.responses.types;
 
 public class SavedGameRowData {
     private String name;
-    private String colorCount;
-    private String slotCount;
-    private String trials;
-    private String maxTrials;
+    private int colorCount;
+    private int slotCount;
+    private int trials;
+    private int maxTrials;
     private String user;
 
     public String getName() {
@@ -16,35 +16,35 @@ public class SavedGameRowData {
         this.name = name;
     }
 
-    public String getColorCount() {
+    public int getColorCount() {
         return colorCount;
     }
 
-    public void setColorCount(String colorCount) {
+    public void setColorCount(int colorCount) {
         this.colorCount = colorCount;
     }
 
-    public String getSlotCount() {
+    public int getSlotCount() {
         return slotCount;
     }
 
-    public void setSlotCount(String slotCount) {
+    public void setSlotCount(int slotCount) {
         this.slotCount = slotCount;
     }
 
-    public String getTrials() {
+    public int getTrials() {
         return trials;
     }
 
-    public void setTrials(String trials) {
+    public void setTrials(int trials) {
         this.trials = trials;
     }
 
-    public String getMaxTrials() {
+    public int getMaxTrials() {
         return maxTrials;
     }
 
-    public void setMaxTrials(String maxTrials) {
+    public void setMaxTrials(int maxTrials) {
         this.maxTrials = maxTrials;
     }
 

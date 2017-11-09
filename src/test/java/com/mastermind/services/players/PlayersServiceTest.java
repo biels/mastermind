@@ -9,10 +9,8 @@ import com.mastermind.services.players.responses.CreatePlayerResponse;
 import com.mastermind.services.players.responses.ListPlayersResponse;
 import com.mastermind.services.players.responses.types.PlayerRowData;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.beans.Transient;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,7 +20,7 @@ public class PlayersServiceTest {
 
     @BeforeEach
     void setUp() {
-        RepositoryManager.attatchImplementation(new RepositoriesInMemoryImpl());
+        RepositoryManager.attachImplementation(new RepositoriesInMemoryImpl());
         service = new PlayersService();
     }
 
@@ -68,10 +66,10 @@ public class PlayersServiceTest {
     }
 
     @Test
-    void createMinimaxAIPlayerCorrect(){
+    void createMinimaxAIPlayerCorrect() {
         String name = "name";
         int depth = 12;
-        CreatePlayerResponse<MinimaxAIPlayer> response= service.createMinmiaxAIPlayer(name, depth);
+        CreatePlayerResponse<MinimaxAIPlayer> response = service.createMinmiaxAIPlayer(name, depth);
         assertTrue(response.isSuccess());
         MinimaxAIPlayer createdPlayer = response.getCreatedPlayer();
         assertNotNull(createdPlayer);
@@ -80,16 +78,18 @@ public class PlayersServiceTest {
         assertEquals(depth, createdPlayer.getDepth());
 
     }
+
     @Test
-    void createMinimaxAIPlayerIncorrect(){
+    void createMinimaxAIPlayerIncorrect() {
         String name = "name";
         int depth = 15;
-        CreatePlayerResponse<MinimaxAIPlayer> response= service.createMinmiaxAIPlayer(name, depth);
+        CreatePlayerResponse<MinimaxAIPlayer> response = service.createMinmiaxAIPlayer(name, depth);
         assertFalse(response.isSuccess());
         assertNull(response.getCreatedPlayer());
     }
+
     @Test
-    void useCaseCreateListRemove(){
+    void useCaseCreateListRemove() {
         // Create
         CreatePlayerResponse<HumanPlayer> response = service.createHumanPlayer("human-player-name-2", "123456");
         assertTrue(response.isSuccess());

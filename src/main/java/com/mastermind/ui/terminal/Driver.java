@@ -54,7 +54,7 @@ public class Driver {
                 Method selected = methods.get(result.getOption());
                 Parameter[] parameters = selected.getParameters();
                 Optional<String> parameterString = Arrays.stream(parameters)
-                        .map(parameter -> parameter.toString())
+                        .map(Parameter::toString)
                         .reduce((s1, s2) -> s1 + ", " + s2);
                 System.out.println("Parameters: " + parameterString);
                 Object[] resolvedParams = new Object[parameters.length];
@@ -115,7 +115,7 @@ public class Driver {
                 }
 
                 needReprint = true;
-                if(needPause) ConsoleUtils.requestEnter(sc);
+                if (needPause) ConsoleUtils.requestEnter(sc);
                 needPause = true;
             }
 
@@ -192,7 +192,7 @@ public class Driver {
     }
 
     public static List<Field> getAllFields(Class<?> type) {
-        List<Field> fields = new ArrayList<Field>();
+        List<Field> fields = new ArrayList<>();
         for (Class<?> c = type; c != null; c = c.getSuperclass()) {
             fields.addAll(Arrays.asList(c.getDeclaredFields()));
         }

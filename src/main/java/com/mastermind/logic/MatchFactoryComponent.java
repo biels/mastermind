@@ -13,7 +13,8 @@ import com.mastermind.model.persistence.repositories.MatchRepository;
  */
 public class MatchFactoryComponent {
     private MatchRepository matchRepository = RepositoryManager.getMatchRepository();
-    public Match getMatch(MatchConfig matchConfig){
+
+    public Match getMatch(MatchConfig matchConfig) {
         return matchRepository.save(new Match());
     }
 }

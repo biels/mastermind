@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 public class DriverManager {
 
     private final List<Driver> driverList;
+
     public DriverManager() {
         driverList = Stream.of(
                 PlayersService.class,
@@ -41,14 +42,14 @@ public class DriverManager {
                 for (int i = 0; i < drivers.size(); i++) {
                     Driver driver = drivers.get(i);
                     System.out.println(MessageFormat.format(
-                            " " + ConsoleUtils.RESET + "{0})" + ConsoleUtils.BOLD + " {1}" + ConsoleUtils.RESET, i+1, driver.getName()));
+                            " " + ConsoleUtils.RESET + "{0})" + ConsoleUtils.BOLD + " {1}" + ConsoleUtils.RESET, i + 1, driver.getName()));
                 }
             }
             ConsoleUtils.RequestOptionResult result = ConsoleUtils.requestOption(sc, drivers.size());
-            if(result.getAdditionalAction() == ConsoleUtils.RequestOptionResult.AdditionalAction.QUIT)return;
-            if(result.getOption() != null){
+            if (result.getAdditionalAction() == ConsoleUtils.RequestOptionResult.AdditionalAction.QUIT) return;
+            if (result.getOption() != null) {
                 Driver driver = drivers.get(result.getOption());
-                if(result.getAdditionalAction() == ConsoleUtils.RequestOptionResult.AdditionalAction.OPEN_JAVADOC){
+                if (result.getAdditionalAction() == ConsoleUtils.RequestOptionResult.AdditionalAction.OPEN_JAVADOC) {
                     DocumentationUtils.openDocumentationFor(driver.getClazz());
                     needReprint = false;
                     continue;
@@ -56,8 +57,8 @@ public class DriverManager {
                 driver.instantiateService();
                 needReprint = true;
                 driver.interactiveMenu(sc);
-            }else {
-                if(result.getAdditionalAction() == ConsoleUtils.RequestOptionResult.AdditionalAction.OPEN_JAVADOC){
+            } else {
+                if (result.getAdditionalAction() == ConsoleUtils.RequestOptionResult.AdditionalAction.OPEN_JAVADOC) {
                     System.out.println("No documentation for context. Try <option>d.");
                     needReprint = false;
                     continue;
