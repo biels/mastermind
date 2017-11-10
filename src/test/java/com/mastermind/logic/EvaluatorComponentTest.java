@@ -73,4 +73,22 @@ class EvaluatorComponentTest {
                         4
                 ));
     }
+    @Test
+    void evaluate7() {
+        assertEquals(new TrialEvaluation(3, 0),
+                evaluatorComponent.evaluate(
+                        new Combination(1, 1, 1, 3),
+                        new Combination(1, 1, 1, 1),
+                        4
+                ));
+    }
+    @Test
+    void evaluate8() {
+        assertEquals(new TrialEvaluation(2, 2),
+                evaluatorComponent.evaluate(
+                        new Combination(1, 1, 1, 3),
+                        new Combination(3, 1, 1, 1),
+                        4
+                ));
+    }
 }
