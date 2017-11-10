@@ -27,7 +27,7 @@ class EvaluatorComponentTest {
 
     @Test
     void evaluate2() {
-        assertEquals(new TrialEvaluation(0, 2),
+        assertEquals(new TrialEvaluation(0, 4),
                 evaluatorComponent.evaluate(
                         new Combination(1, 1, 0, 0),
                         new Combination(0, 0, 1, 1),
@@ -37,7 +37,7 @@ class EvaluatorComponentTest {
 
     @Test
     void evaluate3() {
-        assertEquals(new TrialEvaluation(0, 2),
+        assertEquals(new TrialEvaluation(0, 3),
                 evaluatorComponent.evaluate(
                         new Combination(0, 1, 2, 2),
                         new Combination(2, 0, 1, 3),
@@ -62,6 +62,15 @@ class EvaluatorComponentTest {
                         new Combination(0, 6, 1, 4, 4, 3, 1, 7, 2),
                         new Combination(6, 1, 1, 4, 0, 2, 7, 7, 2),
                         8
+                ));
+    }
+    @Test
+    void evaluate6() {
+        assertEquals(new TrialEvaluation(2, 1),
+                evaluatorComponent.evaluate(
+                        new Combination(2, 1, 0, 3),
+                        new Combination(2, 0, 0, 1),
+                        4
                 ));
     }
 }

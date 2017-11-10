@@ -15,10 +15,14 @@ public class EvaluatorComponent {
         int slotCount = code.getSize();
         int correctPlaceAndColorCount = 0;
         int correctColorCount = 0;
+        List<Integer> visited = new ArrayList<>();
         for (int i = 0; i < slotCount; i++) {
             Integer codeElement = code.getElements().get(i);
             Integer trialElement = trial.getElements().get(i);
-            if (codeElement.equals(trialElement)) correctPlaceAndColorCount++;
+            if (codeElement.equals(trialElement)) {
+                visited.add(i);
+                correctPlaceAndColorCount++;
+            }
         }
         Function<Combination, List<Integer>> combinationCount = (Combination c) -> {
             List<Integer> elementCount = new ArrayList<>(Collections.nCopies(colorCount, 0));
