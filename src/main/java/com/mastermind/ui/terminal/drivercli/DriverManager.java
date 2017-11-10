@@ -1,9 +1,10 @@
-package com.mastermind.ui.terminal;
+package com.mastermind.ui.terminal.drivercli;
 
 import com.mastermind.services.game.GameService;
 import com.mastermind.services.login.LoginService;
 import com.mastermind.services.players.PlayersService;
 import com.mastermind.services.ranking.RankingService;
+import com.mastermind.ui.terminal.ConsoleUtils;
 
 import java.text.MessageFormat;
 import java.util.List;

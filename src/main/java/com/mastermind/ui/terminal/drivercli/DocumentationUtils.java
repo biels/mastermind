@@ -1,4 +1,4 @@
-package com.mastermind.ui.terminal;
+package com.mastermind.ui.terminal.drivercli;
 
 import java.awt.*;
 import java.io.File;

@@ -72,7 +72,7 @@ public final class ConsoleUtils {
     }
 
     public static class RequestOptionResult {
-        enum AdditionalAction {NONE, OPEN_JAVADOC, QUIT}
+        public enum AdditionalAction {NONE, OPEN_JAVADOC, QUIT}
 
         private AdditionalAction additionalAction = AdditionalAction.NONE;
         private Integer option = null;

@@ -92,15 +92,16 @@ public class GameService implements Service {
      * @param position The target position within the combination
      * @param colorId  The identifier of the color to place
      */
-    public void placeColor(int position, int colorId) {
+    public UserGameState placeColor(int position, int colorId) {
         requireActiveMatch();
         getActiveMatch().setElement(position, colorId);
         getState().saveActiveMatch();
+        return getUserGameState();
     }
     /**
      * Copies the combination from the previous trial into the current one
      */
-    public void duplicatePreviousTrial() {
+    public UserGameState duplicatePreviousTrial() {
         requireActiveMatch();
         Trial lastCommittedTrial = getActiveMatch().getCurrentRound().getLastCommittedTrial();
         Combination combination = lastCommittedTrial.getCombination();
@@ -108,6 +109,7 @@ public class GameService implements Service {
             getActiveMatch().getCurrentRound().setElement(i, combination.getElements().get(i));
         }
         getState().saveActiveMatch();
+        return getUserGameState();
     }
 
     /**

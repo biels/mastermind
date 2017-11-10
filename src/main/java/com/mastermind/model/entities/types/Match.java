@@ -17,7 +17,6 @@ public class Match extends Entity {
     private Player localPlayer;
     private Player enemyPlayer;
     private int finishedRoundIndex = -1;
-    private Boolean turnActive;
 
     public Match() {
         config = new MatchConfig();
@@ -40,7 +39,7 @@ public class Match extends Entity {
     private void newRound() {
         if (!hasNextRound()) throw new RuntimeException("Match has reached the maximum number of rounds.");
         Round round = new Round(this);
-        if ((rounds.size()) % 2 == (config.isLocalStartsMakingCode() ? 0 : 1)) {
+        if ((rounds.size()) % 2 == (config.isLocalStartsMakingCode() ? 1 : 0)) {
             round.setCodemaker(localPlayer);
             round.setCodebreaker(enemyPlayer);
         } else {
@@ -87,20 +86,8 @@ public class Match extends Entity {
         return finished;
     }
 
-    public Boolean isTurnActive() {
-        return turnActive;
-    }
-
-    public void beginTurn() {
-        turnActive = true;
-    }
-
     public List<Round> getRounds() {
         return rounds;
-    }
-
-    public void setRounds(List<Round> rounds) {
-        this.rounds = rounds;
     }
 
     public Player getLocalPlayer() {
@@ -133,7 +120,7 @@ public class Match extends Entity {
     /**
      * @return Whether the current round has a next trial
      */
-    public boolean hasNextTrial() {
+    protected boolean hasNextTrial() {
         if (!isInitialized()) return true;
         return getCurrentRound().hasNextTrial();
     }
@@ -141,7 +128,7 @@ public class Match extends Entity {
     /**
      * Creates a new trial for the current round
      */
-    public void newTrial() {
+    protected void newTrial() {
         getCurrentRound().newTrial();
     }
 

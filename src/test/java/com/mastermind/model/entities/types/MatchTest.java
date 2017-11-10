@@ -66,4 +66,5 @@ class MatchTest {
         assertEquals(roundCount / 2, codebreakerPlayCount);
         assertEquals(roundCount / 2, codemakerPlayCount);
     }
+
 }

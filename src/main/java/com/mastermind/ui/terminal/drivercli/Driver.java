@@ -1,4 +1,6 @@
-package com.mastermind.ui.terminal;
+package com.mastermind.ui.terminal.drivercli;
+
+import com.mastermind.ui.terminal.ConsoleUtils;
 
 import java.io.Serializable;
 import java.lang.reflect.*;

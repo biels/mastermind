@@ -15,7 +15,7 @@ public class RandomAlgorithmComponent extends AlgorithmComponent {
 
     @Override
     public void playAsCodebreaker(Match match) {
-        while (!match.isCurrentRoundFinished()) {
+        while (match.isCodebrekerTurn()) {
             TrialEvaluation lastCommittedTrialEvaluation = match.getLastCommittedTrialEvaluation();
             match.setElement(0, 0);
             match.setElement(1, 1);
