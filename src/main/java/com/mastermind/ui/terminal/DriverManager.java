@@ -1,6 +1,7 @@
 package com.mastermind.ui.terminal;
 
 import com.mastermind.services.game.GameService;
+import com.mastermind.services.login.LoginService;
 import com.mastermind.services.players.PlayersService;
 import com.mastermind.services.ranking.RankingService;
 
@@ -18,7 +19,8 @@ public class DriverManager {
         driverList = Stream.of(
                 PlayersService.class,
                 GameService.class,
-                RankingService.class
+                RankingService.class,
+                LoginService.class
         )
                 .map(Driver::new)
                 .collect(Collectors.toList());

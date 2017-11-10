@@ -35,4 +35,10 @@ public class ServiceManager {
     public static void initState() {
         ServiceManager.state = new ServiceState();
     }
+    public static void restart(){
+        playersService = new PlayersService();
+        gameService = new GameService();
+        loginService = new LoginService();
+        initState();
+    }
 }

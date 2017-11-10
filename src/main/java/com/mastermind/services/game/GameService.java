@@ -8,6 +8,9 @@ import com.mastermind.services.Service;
 import com.mastermind.services.ServiceManager;
 import com.mastermind.services.ServiceState;
 import com.mastermind.services.game.responses.ListSavedGamesResponse;
+import com.mastermind.services.game.responses.exceptions.MatchNotYoursException;
+import com.mastermind.services.game.responses.exceptions.NoActiveMatchException;
+import com.mastermind.services.game.responses.exceptions.UserNotLoggedInException;
 import com.mastermind.services.game.responses.types.*;
 
 import java.text.MessageFormat;
@@ -42,6 +45,7 @@ public class GameService implements Service {
      * Called from a new game button. Should require confirmation.
      */
     public UserGameState newGame(int enemyPlayerIndex) {
+        requireLogin();
         Match activeMatch = getActiveMatch();
         Match newMatch = new Match(activeMatch == null ? new MatchConfig() : activeMatch.getConfig());
         newMatch.setLocalPlayer(getState().getLoggedInPlayer());
@@ -50,22 +54,35 @@ public class GameService implements Service {
         return getUserGameState();
     }
 
+    private void requireLogin() {
+        if(getState().getLoggedInPlayer() == null) throw new UserNotLoggedInException();
+    }
+
     private ServiceState getState() {
         return ServiceManager.getState();
     }
 
 
     /**
-     * Called from a restart game button
+     * Called from a repeat game button
      * Restarts game with the same settings and combination
      */
-    public UserGameState restartGame() {
+    public UserGameState repeatGame() {
+        requireActiveMatch();
         Match oldMatch = getState().getActiveMatch();
         Match newMatch = new Match(oldMatch.getConfig());
         newMatch.setLocalPlayer(oldMatch.getLocalPlayer());
         newMatch.setEnemyPlayer(oldMatch.getEnemyPlayer());
         getState().setActiveMatch(newMatch);
         return getUserGameState();
+    }
+
+    private void requireActiveMatch() {
+        requireLogin();
+        Match activeMatch = getState().getActiveMatch();
+        if(activeMatch == null || activeMatch.getEnemyPlayer() == null) throw new NoActiveMatchException();
+        if(!activeMatch.getLocalPlayer().equals(getState().getLoggedInPlayer()))
+            throw new MatchNotYoursException(activeMatch, getState().getLoggedInPlayer());
     }
 
     /**
@@ -76,18 +93,21 @@ public class GameService implements Service {
      * @param colorId  The identifier of the color to place
      */
     public void placeColor(int position, int colorId) {
+        requireActiveMatch();
         getActiveMatch().setElement(position, colorId);
+        getState().saveActiveMatch();
     }
-
     /**
      * Copies the combination from the previous trial into the current one
      */
     public void duplicatePreviousTrial() {
+        requireActiveMatch();
         Trial lastCommittedTrial = getActiveMatch().getCurrentRound().getLastCommittedTrial();
         Combination combination = lastCommittedTrial.getCombination();
         for (int i = 0; i < combination.getSize(); i++) {
             getActiveMatch().getCurrentRound().setElement(i, combination.getElements().get(i));
         }
+        getState().saveActiveMatch();
     }
 
     /**
@@ -96,7 +116,9 @@ public class GameService implements Service {
      * @return The evaluations of the committed trial and whether the game has finished or not
      */
     public UserGameState commitTrial() {
+        requireActiveMatch();
         getActiveMatch().commitTrial();
+        getState().saveActiveMatch();
         return getUserGameState();
     }
 
@@ -110,6 +132,7 @@ public class GameService implements Service {
      * @return The list of saved games.
      */
     public ListSavedGamesResponse listSavedGames() {
+        requireLogin();
         ListSavedGamesResponse response = new ListSavedGamesResponse();
         // Access repositories and fill response
         getSavedGamesList().forEach(match -> {
@@ -125,6 +148,7 @@ public class GameService implements Service {
     }
 
     private List<Match> getSavedGamesList() {
+        requireLogin();
         return matchRepository.findByPlayerAndFinishedFalse(getState().getLoggedInPlayer().getId());
     }
 
@@ -160,18 +184,18 @@ public class GameService implements Service {
         state.setMaxTrialCount(match.getConfig().getMaxTrialCount());
         state.setTotalRoundCount(match.getConfig().getRoundCount());
 
+        state.setLocalPlayerName(match.getLocalPlayer().getName());
+        state.setEnemyPlayerName(match.getEnemyPlayer().getName());
+        state.setLocalPlayerRole(match.getConfig().isLocalStartsMakingCode() ? UserGameState.Role.CODEMAKER : UserGameState.Role.CODEBREAKER);
         if (!match.isInitialized()) {
             state.setMatchStatus(UserGameState.MatchStatus.NOT_STARTED);
             return state;
         }
         state.setMatchStatus(UserGameState.MatchStatus.IN_PROGRESS);
-        // Code
-
-        state.setLocalPlayerName(match.getLocalPlayer().getName());
-        state.setEnemyPlayerName(match.getEnemyPlayer().getName());
         UserGameState.Role localPlayerRole = round.getCodemaker().getId().equals(match.getLocalPlayer().getId()) ?
                 UserGameState.Role.CODEMAKER : UserGameState.Role.CODEBREAKER;
         state.setLocalPlayerRole(localPlayerRole);
+        // Code
         if (round.getCode() != null) {
             CombinationData code = new CombinationData();
             code.setElements(new ArrayList<>(round.getCode().getElements()));

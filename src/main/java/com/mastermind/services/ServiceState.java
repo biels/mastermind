@@ -3,6 +3,7 @@ package com.mastermind.services;
 import com.mastermind.model.entities.types.Match;
 import com.mastermind.model.entities.types.MatchConfig;
 import com.mastermind.model.entities.types.Player;
+import com.mastermind.model.persistence.RepositoryManager;
 
 public class ServiceState {
     private Match activeMatch = new Match();
@@ -15,6 +16,10 @@ public class ServiceState {
 
     public void setActiveMatch(Match activeMatch) {
         this.activeMatch = activeMatch;
+    }
+
+    public void saveActiveMatch(){
+        activeMatch = RepositoryManager.getMatchRepository().save(activeMatch);
     }
 
     public Player getLoggedInPlayer() {

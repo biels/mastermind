@@ -28,6 +28,7 @@ class MatchTest {
         assertNull(match.getCurrentRound());
         assertNull(match.getLastFinishedRound());
         assertTrue(match.hasNextRound());
+        assertNotNull(match.getLocalPlayer());
     }
 
     @Test

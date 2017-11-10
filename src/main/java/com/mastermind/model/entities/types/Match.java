@@ -40,7 +40,7 @@ public class Match extends Entity {
     private void newRound() {
         if (!hasNextRound()) throw new RuntimeException("Match has reached the maximum number of rounds.");
         Round round = new Round(this);
-        if (getRoundIndex() % 2 == (config.isLocalStartsMakingCode() ? 0 : 1)) {
+        if ((rounds.size()) % 2 == (config.isLocalStartsMakingCode() ? 0 : 1)) {
             round.setCodemaker(localPlayer);
             round.setCodebreaker(enemyPlayer);
         } else {
