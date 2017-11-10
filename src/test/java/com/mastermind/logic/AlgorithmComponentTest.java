@@ -37,10 +37,10 @@ abstract class AlgorithmComponentTest<T extends AlgorithmComponent> {
     @Test
     void playsAsCodebreaker() {
         component.playAsCodebreaker(match);
-        while (!match.isCurrentRoundFinished()) {
-            IntStream.range(0, match.getConfig().getSlotCount())
-                    .forEach(j -> verify(match).setElement(eq(j), anyInt()));
-            verify(match).commitTrial();
-        }
+
+        IntStream.range(0, match.getConfig().getSlotCount())
+                .forEach(j -> verify(match).setElement(eq(j), anyInt()));
+        verify(match).commitTrial();
+
     }
 }
