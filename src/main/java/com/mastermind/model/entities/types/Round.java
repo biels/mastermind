@@ -29,13 +29,16 @@ public class Round extends Entity {
         return trials.size() < match.getConfig().getMaxTrialCount();
     }
 
-    public void newTrial() {
+    private void newTrial() {
         if (!hasNextTrial()) throw new RuntimeException("Round has already reached the maximum number of trials.");
         Trial newTrial = new Trial(this);
         trials.add(newTrial);
     }
 
-    void commitTrial() {
+    /**
+     * Commits the code if playing as a codemaker or the current trial if playing as codebreaker
+     */
+    void commitMove() {
         if (isActivePlayerCodemaker()) {
             isActivePlayerCodemaker = false;
             return;
@@ -73,7 +76,7 @@ public class Round extends Entity {
     }
 
     public Trial getLastCommittedTrial() {
-        if (committedTrialIndex < 1) return null;
+        if (committedTrialIndex < 0) return null;
         return trials.get(committedTrialIndex);
     }
 
@@ -119,6 +122,7 @@ public class Round extends Entity {
 
     // Current trial delegates
     public boolean isCurrentTrialCommitted() {
+        if(isActivePlayerCodemaker) return false;
         return committedTrialIndex == getTrialIndex();
     }
 
@@ -127,6 +131,7 @@ public class Round extends Entity {
     }
 
     public Integer setElement(int index, Integer element) {
+        if(isCurrentTrialCommitted()) newTrial();
         Combination combination = getFocusedCombination();
         return combination.setElement(index, element);
     }

@@ -125,13 +125,6 @@ public class Match extends Entity {
         return getCurrentRound().hasNextTrial();
     }
 
-    /**
-     * Creates a new trial for the current round
-     */
-    protected void newTrial() {
-        getCurrentRound().newTrial();
-    }
-
     public Optional<Player> getCurrentRoundWinner() {
         return getCurrentRound().getWinner();
     }
@@ -175,13 +168,11 @@ public class Match extends Entity {
                 throw new RuntimeException("Match has reached the maximum number of rounds.");
             newRound();
         }
-        if (getCurrentRound().isCurrentTrialCommitted())
-            getCurrentRound().newTrial();
         return getCurrentRound().setElement(index, element);
     }
 
     public void commitTrial() {
-        getCurrentRound().commitTrial();
+        getCurrentRound().commitMove();
         checkFinishRound();
         // Next player if it is AI
         playAITurn();
