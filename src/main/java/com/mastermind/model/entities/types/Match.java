@@ -204,6 +204,7 @@ public class Match extends Entity {
     }
 
     public boolean isCurrentRoundFinished() {
+        if(getCurrentRound() == null)return false;
         return getCurrentRound().isFinished();
     }
 
