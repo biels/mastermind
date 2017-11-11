@@ -165,7 +165,6 @@ public class Match extends Entity {
      * @throws RuntimeException if a new trial needs to be created, but there are no trials left
      */
     public Integer setElement(int index, Integer element) {
-//        if(!turnActive) throw new RuntimeException("Tried to set an element without an active turn");
         if (getCurrentRound() == null || getCurrentRound().isFinished()) {
             if (!hasNextRound())
                 throw new RuntimeException("Match has reached the maximum number of rounds.");
@@ -204,7 +203,7 @@ public class Match extends Entity {
     }
 
     public boolean isCurrentRoundFinished() {
-        if(getCurrentRound() == null)return false;
+        if(getCurrentRound() == null) throw new RuntimeException("There is no current round");
         return getCurrentRound().isFinished();
     }
 

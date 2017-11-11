@@ -70,6 +70,22 @@ class MatchTest {
 
     }
 
+    @Test
+    void setElement() {
+        assertNull(match.getCurrentRound());
+        //Play all rounds
+        for (int i = 0; i < match.getConfig().getRoundCount(); i++) {
+            // Play round
+            match.setElement(0, 0);
+            while (!match.isCurrentRoundFinished()){
+                // 2 to ensure it does not match
+                setAllElements(2);
+                match.commitMove();
+            }
+        }
+        assertThrows(RuntimeException.class, () -> match.setElement(0, 0));
+    }
+
     private void setAllElements() {
         setAllElements(0);
     }
