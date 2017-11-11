@@ -6,7 +6,7 @@ import com.mastermind.model.entities.types.Player;
 import com.mastermind.model.persistence.RepositoryManager;
 
 public class ServiceState {
-    private Match activeMatch = new Match();
+    private Match activeMatch;
     private Player loggedInPlayer;
     private MatchConfig enviromentConfig = new MatchConfig();
 

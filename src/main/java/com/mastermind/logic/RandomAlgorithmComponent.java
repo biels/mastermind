@@ -10,7 +10,7 @@ public class RandomAlgorithmComponent extends AlgorithmComponent {
         match.setElement(1, 0);
         match.setElement(2, 1);
         match.setElement(3, 0);
-        match.commitTrial();
+        match.commitMove();
     }
 
     @Override
@@ -21,7 +21,7 @@ public class RandomAlgorithmComponent extends AlgorithmComponent {
             match.setElement(1, 1);
             match.setElement(2, 2);
             match.setElement(3, 0);
-            match.commitTrial();
+            match.commitMove();
         }
     }
 }

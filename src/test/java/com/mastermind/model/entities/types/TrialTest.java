@@ -17,7 +17,7 @@ class TrialTest {
     void setUp() {
         round = mock(Round.class);
         matchConfig = new MatchConfig();
-        when(round.getMatch()).thenReturn(new Match(matchConfig));
+        when(round.getMatch()).thenReturn(new Match(new HumanPlayer("human1", "1234"), new FillAIPlayer(), matchConfig));
         trial = new Trial(round);
     }
 

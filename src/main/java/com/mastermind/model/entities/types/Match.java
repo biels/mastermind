@@ -17,19 +17,22 @@ public class Match extends Entity {
     private Player localPlayer;
     private Player enemyPlayer;
     private int finishedRoundIndex = -1;
+    // Add playAITurnIfNeeded to begin games when AI goes first
 
-    public Match() {
-        config = new MatchConfig();
+    public Match(Player localPlayer, Player enemyPlayer) {
+        this(localPlayer, enemyPlayer, new MatchConfig());
     }
 
-    public Match(MatchConfig config) {
+    public Match(Player localPlayer, Player enemyPlayer, MatchConfig config) {
+        this.localPlayer = localPlayer;
+        this.enemyPlayer = enemyPlayer;
         this.config = new MatchConfig(config);
     }
 
     /**
      * @return Whether there are still rounds left to create in the match
      */
-    public boolean hasNextRound() {
+    private boolean hasNextRound() {
         return rounds.size() < config.getRoundCount();
     }
 
@@ -99,7 +102,7 @@ public class Match extends Entity {
         return localPlayer;
     }
 
-    public void setLocalPlayer(Player localPlayer) {
+    private void setLocalPlayer(Player localPlayer) {
         this.localPlayer = localPlayer;
     }
 
@@ -107,7 +110,7 @@ public class Match extends Entity {
         return enemyPlayer;
     }
 
-    public void setEnemyPlayer(Player enemyPlayer) {
+    private void setEnemyPlayer(Player enemyPlayer) {
         this.enemyPlayer = enemyPlayer;
     }
 
@@ -120,7 +123,7 @@ public class Match extends Entity {
     /**
      * @return Whether the current round has a next trial
      */
-    protected boolean hasNextTrial() {
+    private boolean hasNextTrial() {
         if (!isInitialized()) return true;
         return getCurrentRound().hasNextTrial();
     }
@@ -148,7 +151,7 @@ public class Match extends Entity {
         return getCurrentRound().getCode();
     }
 
-    public void setCode(Combination code) {
+    private void setCode(Combination code) {
         if (getCurrentRound() == null) {
             newRound();
         }
@@ -171,14 +174,14 @@ public class Match extends Entity {
         return getCurrentRound().setElement(index, element);
     }
 
-    public void commitTrial() {
+    public void commitMove() {
         getCurrentRound().commitMove();
         checkFinishRound();
         // Next player if it is AI
-        playAITurn();
+        playAITurnIfNeeded();
     }
 
-    private void playAITurn() {
+    private void playAITurnIfNeeded() {
         if (!isFinished()) {
             if (isCodemakerTurn()) {
                 Player codemaker = getCurrentRound().getCodemaker();

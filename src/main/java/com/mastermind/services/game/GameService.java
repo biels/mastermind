@@ -47,9 +47,9 @@ public class GameService implements Service {
     public UserGameState newGame(int enemyPlayerIndex) {
         requireLogin();
         Match activeMatch = getActiveMatch();
-        Match newMatch = new Match(activeMatch == null ? new MatchConfig() : activeMatch.getConfig());
-        newMatch.setLocalPlayer(getState().getLoggedInPlayer());
-        newMatch.setEnemyPlayer(getChooseEnemyPlayerList().get(enemyPlayerIndex));
+        Match newMatch = new Match(getState().getLoggedInPlayer(),
+                getChooseEnemyPlayerList().get(enemyPlayerIndex),
+                activeMatch == null ? new MatchConfig() : activeMatch.getConfig());
         getState().setActiveMatch(newMatch);
         return getUserGameState();
     }
@@ -70,9 +70,7 @@ public class GameService implements Service {
     public UserGameState repeatGame() {
         requireActiveMatch();
         Match oldMatch = getState().getActiveMatch();
-        Match newMatch = new Match(oldMatch.getConfig());
-        newMatch.setLocalPlayer(oldMatch.getLocalPlayer());
-        newMatch.setEnemyPlayer(oldMatch.getEnemyPlayer());
+        Match newMatch = new Match(oldMatch.getLocalPlayer(), oldMatch.getEnemyPlayer(), oldMatch.getConfig());
         getState().setActiveMatch(newMatch);
         return getUserGameState();
     }
@@ -80,7 +78,7 @@ public class GameService implements Service {
     private void requireActiveMatch() {
         requireLogin();
         Match activeMatch = getState().getActiveMatch();
-        if(activeMatch == null || activeMatch.getEnemyPlayer() == null) throw new NoActiveMatchException();
+        if(activeMatch == null) throw new NoActiveMatchException();
         if(!activeMatch.getLocalPlayer().equals(getState().getLoggedInPlayer()))
             throw new MatchNotYoursException(activeMatch, getState().getLoggedInPlayer());
     }
@@ -119,7 +117,7 @@ public class GameService implements Service {
      */
     public UserGameState commitTrial() {
         requireActiveMatch();
-        getActiveMatch().commitTrial();
+        getActiveMatch().commitMove();
         getState().saveActiveMatch();
         return getUserGameState();
     }

@@ -31,7 +31,7 @@ abstract class AlgorithmComponentTest<T extends AlgorithmComponent> {
         component.playAsCodemaker(match);
         IntStream.range(0, match.getConfig().getSlotCount())
                 .forEach(i -> verify(match).setElement(eq(i), anyInt()));
-        verify(match).commitTrial();
+        verify(match).commitMove();
     }
 
     @Test
@@ -40,7 +40,7 @@ abstract class AlgorithmComponentTest<T extends AlgorithmComponent> {
 
         IntStream.range(0, match.getConfig().getSlotCount())
                 .forEach(j -> verify(match).setElement(eq(j), anyInt()));
-        verify(match).commitTrial();
+        verify(match).commitMove();
 
     }
 }
