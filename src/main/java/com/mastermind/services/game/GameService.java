@@ -15,6 +15,7 @@ import com.mastermind.services.game.responses.types.*;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,7 +56,7 @@ public class GameService implements Service {
     }
 
     private void requireLogin() {
-        if(getState().getLoggedInPlayer() == null) throw new UserNotLoggedInException();
+        if (getState().getLoggedInPlayer() == null) throw new UserNotLoggedInException();
     }
 
     private ServiceState getState() {
@@ -78,8 +79,8 @@ public class GameService implements Service {
     private void requireActiveMatch() {
         requireLogin();
         Match activeMatch = getState().getActiveMatch();
-        if(activeMatch == null) throw new NoActiveMatchException();
-        if(!activeMatch.getLocalPlayer().equals(getState().getLoggedInPlayer()))
+        if (activeMatch == null) throw new NoActiveMatchException();
+        if (!activeMatch.getLocalPlayer().equals(getState().getLoggedInPlayer()))
             throw new MatchNotYoursException(activeMatch, getState().getLoggedInPlayer());
     }
 
@@ -96,6 +97,7 @@ public class GameService implements Service {
         getState().saveActiveMatch();
         return getUserGameState();
     }
+
     /**
      * Copies the combination from the previous trial into the current one
      */
@@ -135,15 +137,17 @@ public class GameService implements Service {
         requireLogin();
         ListSavedGamesResponse response = new ListSavedGamesResponse();
         // Access repositories and fill response
-        getSavedGamesList().forEach(match -> {
-            SavedGameRowData rowData = new SavedGameRowData();
-            rowData.setColorCount(match.getConfig().getColorCount());
-            rowData.setMaxTrials(match.getConfig().getMaxTrialCount());
-            rowData.setName(MessageFormat.format("{0} vs {1}", match.getLocalPlayer().getName(), match.getEnemyPlayer().getName()));
-            rowData.setSlotCount(match.getConfig().getSlotCount());
-            rowData.setTrials(match.getConfig().getMaxTrialCount());
-            rowData.setUser(match.getLocalPlayer().getName());
-        });
+        response.setSavedGameRows(getSavedGamesList().stream()
+                .map(match -> {
+                    SavedGameRowData rowData = new SavedGameRowData();
+                    rowData.setColorCount(match.getConfig().getColorCount());
+                    rowData.setMaxTrials(match.getConfig().getMaxTrialCount());
+                    rowData.setName(MessageFormat.format("{0} vs {1}", match.getLocalPlayer().getName(), match.getEnemyPlayer().getName()));
+                    rowData.setSlotCount(match.getConfig().getSlotCount());
+                    rowData.setTrials(match.getConfig().getMaxTrialCount());
+                    rowData.setUser(match.getLocalPlayer().getName());
+                    return rowData;
+                }).collect(Collectors.toList()));
         return response;
     }
 

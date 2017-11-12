@@ -6,6 +6,7 @@ import com.mastermind.services.game.GameService;
 import com.mastermind.services.game.responses.exceptions.NoActiveMatchException;
 import com.mastermind.services.game.responses.exceptions.UserNotLoggedInException;
 import com.mastermind.services.game.responses.types.AIPlayerRowData;
+import com.mastermind.services.game.responses.types.SavedGameRowData;
 import com.mastermind.services.game.responses.types.UserGameState;
 import com.mastermind.services.login.LoginService;
 import com.mastermind.services.login.responses.LoginResponse;
@@ -168,4 +169,18 @@ class GameServiceTest {
 
     }
 
+    @Test
+    void listSavedGames() {
+        createLocalPlayerAndLogIn();
+        createSampleEnemy();
+        service.newGame(0);
+        List<SavedGameRowData> savedGameRows = service.listSavedGames().getSavedGameRows();
+        assertNotNull(savedGameRows);
+        assertEquals(0, savedGameRows.size());
+        for (int i = 0; i < service.getUserGameState().getSlotCount(); i++) {
+            service.placeColor(i, 0);
+        }
+        savedGameRows = service.listSavedGames().getSavedGameRows();
+        assertEquals(1, savedGameRows.size());
+    }
 }

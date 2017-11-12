@@ -18,23 +18,21 @@ public abstract class CrudRepositoryInMemoryImpl<T extends Entity> implements Cr
     @Override
     public <S extends T> S save(S entity) {
         Long id = entity.getId();
-        if (id == null) id = getNextAutoIncremental();
-        entity.setId(id);
-        Optional<T> findResult = findOne(id);
-        if (findResult.isPresent()) {
-            collection.remove(findResult);
+        if (id == null) {
+            id = getNextAutoIncremental();
+            entity.setId(id);
         }
+        Optional<T> findResult = findOne(id);
+        findResult.ifPresent(t -> collection.remove(t));
         boolean added = collection.add(entity);
         return (added ? entity : null);
     }
 
     @Override
     public Optional<T> findOne(Long primaryKey) {
-        for (T e : collection) {
-            Long id = e.getId();
-            if (id.equals(primaryKey)) return Optional.of(e);
-        }
-        return Optional.empty();
+        return collection.stream()
+                .filter(t -> t.getId() == primaryKey)
+                .findFirst();
     }
 
     @Override
