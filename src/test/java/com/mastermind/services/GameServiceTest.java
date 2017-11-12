@@ -156,12 +156,15 @@ class GameServiceTest {
                 state = service.getUserGameState();
                 int trialsBeforeCommit = state.getTrials().size();
                 state = check(service.commitMove());
-                assertEquals(trialsBeforeCommit + 1, state.getTrials().size());
-                assertEquals(UserGameState.MatchStatus.IN_PROGRESS, state.getMatchStatus());
+                if (trialsBeforeCommit < state.getMaxTrialCount())
+                    assertEquals(trialsBeforeCommit, state.getTrials().size());
+                if (trialsBeforeCommit < state.getMaxTrialCount())
+                    assertEquals(UserGameState.MatchStatus.IN_PROGRESS, state.getMatchStatus());
 
             }
         }
         assertEquals(state.getMaxTrialCount(), state.getTrials().size());
+        assertEquals(UserGameState.MatchStatus.FINISHED, state.getMatchStatus());
 
     }
 

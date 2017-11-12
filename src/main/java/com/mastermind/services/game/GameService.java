@@ -187,6 +187,7 @@ public class GameService implements Service {
         state.setLocalPlayerName(match.getLocalPlayer().getName());
         state.setEnemyPlayerName(match.getEnemyPlayer().getName());
         state.setLocalPlayerRole(match.getConfig().isLocalStartsMakingCode() ? UserGameState.Role.CODEMAKER : UserGameState.Role.CODEBREAKER);
+        state.setCurrentRound(match.getRounds().size() - 1);
         if (!match.isModified()) {
             state.setMatchStatus(UserGameState.MatchStatus.NOT_STARTED);
             return state;
