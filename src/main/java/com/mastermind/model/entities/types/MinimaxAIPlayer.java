@@ -19,12 +19,12 @@ public class MinimaxAIPlayer extends AIPlayer {
     }
 
     @Override
-    public void playAsCodemaker(Match match) {
+    public void playAsCodemaker(Round match) {
         ComponentManager.getMinimaxAlgorithmComponent().playAsCodemaker(match);
     }
 
     @Override
-    public void playAsCodebreaker(Match match) {
+    public void playAsCodebreaker(Round match) {
         ComponentManager.getMinimaxAlgorithmComponent().playAsCodebreaker(match);
     }
 }

@@ -41,9 +41,9 @@ public class TrialEvaluation extends Entity {
 
     @Override
     public String toString() {
-        return "TrialEvaluation{" +
-                "correctPlaceAndColorCount=" + correctPlaceAndColorCount +
-                ", correctColorCount=" + correctColorCount +
+        return "E{" +
+                "" + correctPlaceAndColorCount +
+                ", " + correctColorCount +
                 '}';
     }
 }

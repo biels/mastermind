@@ -1,10 +1,11 @@
-package com.mastermind.services.players;
+package com.mastermind.services;
 
 import com.mastermind.model.entities.types.HumanPlayer;
 import com.mastermind.model.entities.types.MinimaxAIPlayer;
 import com.mastermind.model.entities.types.RandomAIPlayer;
 import com.mastermind.model.persistence.RepositoryManager;
 import com.mastermind.model.persistence.repositories.impl.RepositoriesInMemoryImpl;
+import com.mastermind.services.players.PlayersService;
 import com.mastermind.services.players.responses.CreatePlayerResponse;
 import com.mastermind.services.players.responses.ListPlayersResponse;
 import com.mastermind.services.players.responses.types.PlayerRowData;

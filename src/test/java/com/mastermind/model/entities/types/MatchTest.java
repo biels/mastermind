@@ -10,42 +10,86 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class MatchTest {
     private Match match;
+    private MatchConfig config;
 
     @BeforeEach
     void setUp() {
-        HumanPlayer local = new HumanPlayer("Human", "1234");
-        FillAIPlayer enemy = new FillAIPlayer();
-        MatchConfig config = new MatchConfig();
+        config = new MatchConfig();
         config.setLocalStartsMakingCode(false);
-        match = new Match(local, enemy, config);
+        FillAIPlayer enemyPlayer = new FillAIPlayer();
+        HumanPlayer localPlayer = new HumanPlayer();
+        match = new Match(localPlayer, enemyPlayer, config);
     }
 
     @Test
-    void isInitialized() {
-        assertFalse(match.isInitialized());
+    void isModified() {
+        assertFalse(match.isModified());
         match.setElement(0, 0);
-        assertTrue(match.isInitialized());
+        assertTrue(match.isModified());
     }
 
     @Test
-    void getCurrentRound() {
-        Round r = match.getCurrentRound();
-        assertNull(r);
-        // Should be starting as codebreaker
-        while (!match.isCurrentRoundFinished()){
+    void getCurrentRoundStartCM() {
+        config.setLocalStartsMakingCode(true);
+        FillAIPlayer enemyPlayer = new FillAIPlayer(0, 0);
+        HumanPlayer localPlayer = new HumanPlayer();
+        match = new Match(localPlayer, enemyPlayer, config);
+        Round r1 = match.getCurrentRound();
+        assertNotNull(r1);
+        //First round should be as CM
+        assertTrue(r1.isActivePlayerCodemaker());
+        setAllElements(2);
+        match.commitMove();
+        // Winner should be human
+        assertTrue(match.getLastFinishedRoundWinner().isPresent());
+        assertSame(localPlayer, match.getLastFinishedRoundWinner().get());
+        //Now human should take codebreaker turn
+        assertTrue(match.isCodebreakerTurn());
+        while (match.isCodebreakerTurn()){
             // 1 to ensure it does not match the code
             setAllElements(1);
             match.commitMove();
-            assertNotSame(r, match.getCurrentRound());
+            assertNotSame(r1, match.getCurrentRound());
         }
-        // The winner of the round should not be null
-        assertNotNull(match.getCurrentRound().getWinner());
+        // The winner of the round should be enemy
+        assertTrue(match.getLastFinishedRoundWinner().isPresent());
+        assertSame(enemyPlayer, match.getLastFinishedRoundWinner().get());
         // At the end of the round, the currentRound should be finished
-        assertTrue(match.isCurrentRoundFinished());
+        assertTrue(r1.isFinished());
         Round r2 = match.getCurrentRound();
-        // Set some elements to begin a new round
-        setAllElements();
-        assertNotSame(r2, r);
+        // r2 should be a new round
+        assertNotSame(r2, r1);
+        // And it should be waiting for the code to be set
+        assertTrue(r2.isActivePlayerCodemaker());
+    }
+    @Test
+    void getCurrentRoundStartCB() {
+        config.setLocalStartsMakingCode(false);
+        FillAIPlayer enemyPlayer = new FillAIPlayer(0, 0);
+        HumanPlayer localPlayer = new HumanPlayer();
+        match = new Match(localPlayer, enemyPlayer, config);
+        Round r1 = match.getCurrentRound();
+        assertNotNull(r1);
+        //First round should be as CB
+        assertFalse(r1.isActivePlayerCodemaker());
+        //Now human should take codebreaker turn
+        assertTrue(match.isCodebreakerTurn());
+        while (match.isCodebreakerTurn()){
+            // 1 to ensure it does not match the code
+            setAllElements(0);
+            match.commitMove();
+            assertNotSame(r1, match.getCurrentRound());
+        }
+        // The winner of the round should be human
+        assertTrue(match.getLastFinishedRoundWinner().isPresent());
+        assertSame(localPlayer, match.getLastFinishedRoundWinner().get());
+        // At the end of the round, the currentRound should be finished
+        assertTrue(r1.isFinished());
+        Round r2 = match.getCurrentRound();
+        // r2 should be a new round
+        assertNotSame(r2, r1);
+        // And it should be waiting for the code to be set
+        assertTrue(r2.isActivePlayerCodemaker());
     }
 
     @Test
@@ -56,7 +100,8 @@ class MatchTest {
         assertNotNull(match.getCurrentRound());
         assertNull(match.getLastFinishedRound());
         // Finish the round losing
-        while (!match.isCurrentRoundFinished()){
+        Round currentRound = match.getCurrentRound();
+        while (currentRound.hasNextTrial()){
             setAllElements(1);
             match.commitMove();
         }
@@ -72,18 +117,49 @@ class MatchTest {
 
     @Test
     void setElement() {
-        assertNull(match.getCurrentRound());
+        assertNotNull(match.getCurrentRound());
         //Play all rounds
         for (int i = 0; i < match.getConfig().getRoundCount(); i++) {
             // Play round
-            match.setElement(0, 0);
-            while (!match.isCurrentRoundFinished()){
+            Round round = match.getCurrentRound();
+            while (!round.isFinished()){
                 // 2 to ensure it does not match
                 setAllElements(2);
                 match.commitMove();
             }
         }
         assertThrows(RuntimeException.class, () -> match.setElement(0, 0));
+    }
+    @Test
+    void playAllVsAI(){
+        playVsAI(false, 3, 4);
+        playVsAI(true, 4, 4);
+        playVsAI(true, 7, 10);
+        playVsAI(false, 3, 1);
+        playVsAI(false, 1, 4);
+        playVsAI(false, 1, 1);
+    }
+
+    private void playVsAI(boolean localStartsMakingCode, int roundCount, int maxTrialCount){
+        config = new MatchConfig();
+        config.setLocalStartsMakingCode(localStartsMakingCode);
+        config.setMaxTrialCount(maxTrialCount);
+        config.setRoundCount(roundCount);
+        FillAIPlayer enemyPlayer = new FillAIPlayer();
+        HumanPlayer localPlayer = new HumanPlayer();
+        match = new Match(localPlayer, enemyPlayer, config);
+        int playCountCm = 0;
+        int playCountCb = 0;
+        while (!match.isFinished()){
+            // 3 to ensure it does not match
+            int e = 4;//playCountCm % 3;
+            setAllElements(e);
+            if (match.getCurrentRound().isActivePlayerCodemaker()) playCountCm++;
+            else playCountCb++;
+            match.commitMove();
+        }
+        if(roundCount % 2 == 0)
+        assertEquals(playCountCm * maxTrialCount, playCountCb);
     }
 
     private void setAllElements() {
@@ -94,63 +170,5 @@ class MatchTest {
                 .forEach(i -> match.setElement(i, e));
     }
 
-    @Nested
-    class Gameplay {
-        @BeforeEach
-        void setUp() {
-
-            MatchConfig config = new MatchConfig();
-            config.setSlotCount(4);
-            config.setColorCount(4);
-            config.setMaxTrialCount(3);
-            config.setAllowRepetition(true);
-            match = new Match(new HumanPlayer("human1", "1234"), new FillAIPlayer());
-        }
-
-        @Test
-        void initialState() {
-            assertFalse(match.isInitialized());
-            assertNull(match.getCurrentRound());
-            assertNull(match.getLastFinishedRound());
-            assertNotNull(match.getLocalPlayer());
-        }
-
-        @Test
-        void playMatch1() {
-            int codebreakerPlayCount = 0;
-            int codemakerPlayCount = 0;
-            while (!match.isFinished()) {
-                //match.beginTurn();
-                if (match.isCodemakerTurn()) {
-                    // Playing round as codemaker
-                    match.setElement(0, 1);
-                    match.setElement(1, 1);
-                    match.setElement(2, 2);
-                    match.setElement(3, 2);
-                    match.commitMove();
-                    assertFalse(match.isCodemakerTurn());
-                    codemakerPlayCount++;
-                }
-                if (match.isCodebrekerTurn()) {
-                    // Playing round as codebreaker
-                    //assertFalse(match.isActivePlayerCodemaker());
-                    while (match.isCodebrekerTurn()) {
-                        match.setElement(0, 0);
-                        match.setElement(1, 0);
-                        match.setElement(2, 1);
-                        match.setElement(3, 1);
-                        match.commitMove();
-                    }
-                    assertFalse(false);
-                    codebreakerPlayCount++;
-                }
-            }
-            int roundCount = match.getConfig().getRoundCount();
-            assertEquals(roundCount, match.getRounds().size());
-            assertEquals(roundCount / 2, codebreakerPlayCount);
-            assertEquals(roundCount / 2, codemakerPlayCount);
-        }
-
-    }
 
 }

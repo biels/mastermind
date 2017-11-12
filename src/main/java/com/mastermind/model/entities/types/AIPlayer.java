@@ -6,7 +6,7 @@ public abstract class AIPlayer extends Player {
         super(name);
     }
 
-    public abstract void playAsCodemaker(Match match);
+    public abstract void playAsCodemaker(Round match);
 
-    public abstract void playAsCodebreaker(Match match);
+    public abstract void playAsCodebreaker(Round match);
 }

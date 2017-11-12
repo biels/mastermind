@@ -36,4 +36,8 @@ public class Trial extends Entity {
         return trialEvaluation != null;
     }
 
+    @Override
+    public String toString() {
+        return "T{" + combination + ", " + trialEvaluation + "}";
+    }
 }

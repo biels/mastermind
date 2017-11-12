@@ -17,21 +17,22 @@ public class FillAIPlayer extends AIPlayer {
     }
 
     @Override
-    public void playAsCodemaker(Match match) {
+    public void playAsCodemaker(Round match) {
         setAllElements(match, codeElement);
         match.commitMove();
     }
 
     @Override
-    public void playAsCodebreaker(Match match) {
-        while (match.isCodebrekerTurn()) {
-            setAllElements(match, trialElement);
-            match.commitMove();
+    public void playAsCodebreaker(Round round) {
+        while (round.hasNextTrial()) {
+            setAllElements(round, trialElement);
+            round.commitMove();
         }
     }
 
-    private void setAllElements(Match match, int e) {
-        IntStream.range(0, match.getConfig().getSlotCount())
-                .forEach(i -> match.setElement(i, e));
+    private void setAllElements(Round round, int e) {
+        MatchConfig config = round.getMatch().getConfig();
+        IntStream.range(0, config.getSlotCount())
+                .forEach(i -> round.setElement(i, e));
     }
 }

@@ -19,12 +19,12 @@ public class RandomAIPlayer extends AIPlayer {
     }
 
     @Override
-    public void playAsCodemaker(Match match) {
+    public void playAsCodemaker(Round match) {
         ComponentManager.getRandomAlgorithmComponent().playAsCodemaker(match);
     }
 
     @Override
-    public void playAsCodebreaker(Match match) {
+    public void playAsCodebreaker(Round match) {
         ComponentManager.getRandomAlgorithmComponent().playAsCodebreaker(match);
     }
 }

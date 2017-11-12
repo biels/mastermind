@@ -115,7 +115,7 @@ public class GameService implements Service {
      *
      * @return The evaluations of the committed trial and whether the game has finished or not
      */
-    public UserGameState commitTrial() {
+    public UserGameState commitMove() {
         requireActiveMatch();
         getActiveMatch().commitMove();
         getState().saveActiveMatch();
@@ -187,7 +187,7 @@ public class GameService implements Service {
         state.setLocalPlayerName(match.getLocalPlayer().getName());
         state.setEnemyPlayerName(match.getEnemyPlayer().getName());
         state.setLocalPlayerRole(match.getConfig().isLocalStartsMakingCode() ? UserGameState.Role.CODEMAKER : UserGameState.Role.CODEBREAKER);
-        if (!match.isInitialized()) {
+        if (!match.isModified()) {
             state.setMatchStatus(UserGameState.MatchStatus.NOT_STARTED);
             return state;
         }

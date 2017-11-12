@@ -1,9 +1,7 @@
-package com.mastermind.services.game;
+package com.mastermind.services;
 
 import com.mastermind.model.persistence.RepositoryManager;
 import com.mastermind.model.persistence.repositories.impl.RepositoriesInMemoryImpl;
-import com.mastermind.services.Service;
-import com.mastermind.services.ServiceManager;
 import com.mastermind.services.game.GameService;
 import com.mastermind.services.game.responses.exceptions.NoActiveMatchException;
 import com.mastermind.services.game.responses.exceptions.UserNotLoggedInException;
@@ -13,7 +11,6 @@ import com.mastermind.services.login.LoginService;
 import com.mastermind.services.login.responses.LoginResponse;
 import com.mastermind.services.players.PlayersService;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -34,8 +31,9 @@ class GameServiceTest {
         playersService = ServiceManager.getPlayersService();
         loginService = ServiceManager.getLoginService();
     }
+
     @Test
-    void listEnemyPlayers(){
+    void listEnemyPlayers() {
         assertNotNull(service.listEnemyPlayers());
         assertEquals(0, service.listEnemyPlayers().size());
         createSampleEnemy();
@@ -78,6 +76,7 @@ class GameServiceTest {
         assertTrue(human.isSuccess());
         assertNotNull(ServiceManager.getState().getLoggedInPlayer());
     }
+
     @Test
     void newGame() {
         createLocalPlayerAndLogIn();
@@ -86,8 +85,9 @@ class GameServiceTest {
         assertEquals(ServiceManager.getState().getLoggedInPlayer().getName(), state.getLocalPlayerName());
         check(state);
     }
+
     @Test
-    void repeatGame(){
+    void repeatGame() {
         createLocalPlayerAndLogIn();
         createSampleEnemy();
         service.newGame(0);
@@ -99,8 +99,9 @@ class GameServiceTest {
 
 
     }
+
     @Test
-    void placeColor(){
+    void placeColor() {
         assertThrows(UserNotLoggedInException.class, () -> service.placeColor(0, 1));
         createLocalPlayerAndLogIn();
         assertThrows(NoActiveMatchException.class, () -> service.placeColor(0, 1));
@@ -113,16 +114,17 @@ class GameServiceTest {
         state = service.getUserGameState();
         check(state);
         assertEquals(UserGameState.MatchStatus.IN_PROGRESS, state.getMatchStatus());
-        if(state.getLocalPlayerRole() == UserGameState.Role.CODEMAKER){
+        if (state.getLocalPlayerRole() == UserGameState.Role.CODEMAKER) {
             assertNotNull(state.getCode().getElements());
-            assertEquals(1, (int)state.getCode().getElements().get(0));
+            assertEquals(1, (int) state.getCode().getElements().get(0));
         }
-        if(state.getLocalPlayerRole() == UserGameState.Role.CODEBREAKER){
+        if (state.getLocalPlayerRole() == UserGameState.Role.CODEBREAKER) {
             assertNotNull(state.getTrials().get(0).getCombinationData().getElements());
-            assertEquals(1, (int)state.getTrials().get(0).getCombinationData().getElements().get(0));
+            assertEquals(1, (int) state.getTrials().get(0).getCombinationData().getElements().get(0));
         }
 
     }
+
     @Test
     void playSampleGame() {
         createLocalPlayerAndLogIn();
@@ -141,8 +143,8 @@ class GameServiceTest {
                 service.placeColor(2, 1);
                 service.placeColor(3, 2);
                 int roundBeforeCommit = state.getCurrentRound();
-                state = check(service.commitTrial());
-                //  assertEquals(roundBeforeCommit + 1, state.getCurrentRound());
+                state = check(service.commitMove());
+                assertEquals(roundBeforeCommit + 1, state.getCurrentRound());
             } else {
                 // Break combination
 
@@ -153,9 +155,9 @@ class GameServiceTest {
                 service.placeColor(3, 2);
                 state = service.getUserGameState();
                 int trialsBeforeCommit = state.getTrials().size();
-                state = check(service.commitTrial());
-//                    assertEquals(trialsBeforeCommit + 1, state.getTrials().size());
-//                    assertEquals(UserGameState.MatchStatus.IN_PROGRESS, state.getMatchStatus());
+                state = check(service.commitMove());
+                assertEquals(trialsBeforeCommit + 1, state.getTrials().size());
+                assertEquals(UserGameState.MatchStatus.IN_PROGRESS, state.getMatchStatus());
 
             }
         }

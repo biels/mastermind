@@ -11,30 +11,38 @@ import static org.junit.jupiter.api.Assertions.*;
 class RoundTest {
     Round round;
     MatchConfig matchConfig;
+    private Match matchMock;
 
     @BeforeEach
     void setUp() {
-        Match match = mock(Match.class);
+        matchMock = mock(Match.class);
         matchConfig = new MatchConfig();
-        when(match.getConfig()).thenReturn(matchConfig);
-        round = new Round(match);
+        when(matchMock.getConfig()).thenReturn(matchConfig);
     }
 
     @Test
-    void hasNextTrial() {
+    void hasNextTrialCM() {
+        round = new Round(matchMock, new HumanPlayer("human"), new FillAIPlayer());
         assertTrue(round.hasNextTrial());
-        setAllElements(1);
+        setAllElements(2);
         round.commitMove();
+        assertFalse(round.hasNextTrial());
+    }
+    @Test
+    void hasNextTrialCB() {
+        round = new Round(matchMock, new FillAIPlayer(), new HumanPlayer("human"));
+        assertTrue(round.hasNextTrial());
         IntStream.range(0, matchConfig.getMaxTrialCount())
                 .forEach(i -> {
-                    setAllElements();
+                    setAllElements(3);
                     round.commitMove();
                 });
         assertFalse(round.hasNextTrial());
     }
 
     @Test
-    void commitMove() {
+    void commitMoveHvsH() {
+        round = new Round(matchMock, new HumanPlayer("human"), new HumanPlayer("human"));
         // Set and commit the code
         setAllElements(1);
         // The current trial should be null
@@ -56,12 +64,14 @@ class RoundTest {
 
 
     @Test
-    void isFinished() {
-
+    void isFinishedAIvsAI() {
+        round = new Round(matchMock, new FillAIPlayer(), new FillAIPlayer());
+        assertTrue(round.isFinished());
     }
 
     @Test
-    void getCurrentTrial() {
+    void getCurrentTrialHvsH() {
+        round = new Round(matchMock, new HumanPlayer("human"), new HumanPlayer("human"));
         assertNull(round.getCurrentTrial());
         // Set the code
         setAllElements(1);
@@ -88,17 +98,54 @@ class RoundTest {
         assertNotSame(t1, round.getCurrentTrial());
         round.commitMove();
     }
+    @Test
+    void getCurrentTrialCM() {
+        round = new Round(matchMock, new HumanPlayer("human"), new FillAIPlayer());
+        assertNull(round.getCurrentTrial());
+        // Set the code
+        setAllElements(1);
+        // Current trial should still be null after setting code elements
+        assertNull(round.getCurrentTrial());
+        round.commitMove();
+        assertTrue(round.isFinished());
+        assertNotNull(round.getLastCommittedTrial());
+        assertSame(round.getLastCommittedTrial(), round.getCurrentTrial());
+    }
+    @Test
+    void getCurrentTrialCB() {
+        round = new Round(matchMock, new FillAIPlayer(), new HumanPlayer("human"));
+        // The current trial should still be null
+        assertNull(round.getCurrentTrial());
+        // Create the first trial
+        setAllElements();
+        // It should now return the first trial
+        Trial t1 = round.getCurrentTrial();
+        assertNotNull(t1);
+        // And should continue to be the same trial after setting elements
+        setAllElements(2);
+        Trial t2 = round.getCurrentTrial();
+        assertSame(t1, t2);
+        round.commitMove();
+        // And still after committing
+        Trial t3 = round.getCurrentTrial();
+        assertSame(t1, t3);
+        // But no longer after starting a new trial
+        setAllElements(2);
+        assertNotSame(t1, round.getCurrentTrial());
+        round.commitMove();
+    }
 
     @Test
-    void getLastCommittedTrial() {
+    void getLastCommittedTrialHvsH() {
+        round = new Round(matchMock, new HumanPlayer("human1"), new HumanPlayer("human2"));
         // Set the code
         assertNull(round.getLastCommittedTrial());
-        setAllElements();
+        setAllElements(0);
         round.commitMove();
         // For the moment only the code was set
         assertNull(round.getLastCommittedTrial());
         // Set and commit first trial
-        setAllElements();
+        setAllElements(1);
         // She first trial is still uncommitted...
         assertNull(round.getLastCommittedTrial());
         Trial t1 = round.getCurrentTrial();
@@ -110,13 +157,19 @@ class RoundTest {
         assertSame(t1, t2);
         // It should still be the same trial since no new one has started
         assertSame(t1, round.getCurrentTrial());
-        setAllElements();
+        setAllElements(0);
         // It should now be the next one
         assertNotSame(t1, round.getCurrentTrial());
+        round.commitMove();
+        // Codebreaker should have won now
+        assertTrue(round.isFinished());
+        assertTrue(round.getWinner().isPresent());
+        assertEquals("human2", round.getWinner().get().getName());
     }
 
     @Test
-    void isCurrentTrialCommitted() {
+    void isCurrentTrialCommittedHvsH() {
+        round = new Round(matchMock, new HumanPlayer("human"), new HumanPlayer("human"));
         assertFalse(round.isCurrentTrialCommitted());
         setAllElements(1);
         assertFalse(round.isCurrentTrialCommitted());

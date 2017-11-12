@@ -17,6 +17,7 @@ public class Match extends Entity {
     private Player localPlayer;
     private Player enemyPlayer;
     private int finishedRoundIndex = -1;
+    private boolean modified = false;
     // Add playAITurnIfNeeded to begin games when AI goes first
 
     public Match(Player localPlayer, Player enemyPlayer) {
@@ -27,6 +28,7 @@ public class Match extends Entity {
         this.localPlayer = localPlayer;
         this.enemyPlayer = enemyPlayer;
         this.config = new MatchConfig(config);
+        newRound();
     }
 
     /**
@@ -41,13 +43,11 @@ public class Match extends Entity {
      */
     private void newRound() {
         if (!hasNextRound()) throw new RuntimeException("Match has reached the maximum number of rounds.");
-        Round round = new Round(this);
-        if ((rounds.size()) % 2 == (config.isLocalStartsMakingCode() ? 1 : 0)) {
-            round.setCodemaker(localPlayer);
-            round.setCodebreaker(enemyPlayer);
+        Round round;
+        if ((rounds.size()) % 2 == (config.isLocalStartsMakingCode() ? 0 : 1)) {
+            round = new Round(this, localPlayer, enemyPlayer);
         } else {
-            round.setCodemaker(enemyPlayer);
-            round.setCodebreaker(localPlayer);
+            round = new Round(this, enemyPlayer, localPlayer);
         }
         this.rounds.add(round);
     }
@@ -65,15 +65,10 @@ public class Match extends Entity {
         return rounds.size() - 1;
     }
 
-    public boolean isInitialized() {
-        return getRoundIndex() >= 0;
-    }
-
     /**
      * @return The current uncommitted round or null if there is no such round.
      */
     public Round getCurrentRound() {
-        if (!isInitialized()) return null;
         return rounds.get(getRoundIndex());
     }
 
@@ -118,18 +113,21 @@ public class Match extends Entity {
         return config;
     }
 
-    // Current round delegates
+    public boolean isModified() {
+        return modified;
+    }
+// Current round delegates
 
     /**
      * @return Whether the current round has a next trial
      */
     private boolean hasNextTrial() {
-        if (!isInitialized()) return true;
         return getCurrentRound().hasNextTrial();
     }
 
-    public Optional<Player> getCurrentRoundWinner() {
-        return getCurrentRound().getWinner();
+    public Optional<Player> getLastFinishedRoundWinner() {
+        if(getLastFinishedRound() == null) return Optional.empty();
+        return getLastFinishedRound().getWinner();
     }
 
     /**
@@ -165,6 +163,7 @@ public class Match extends Entity {
      * @throws RuntimeException if a new trial needs to be created, but there are no trials left
      */
     public Integer setElement(int index, Integer element) {
+        modified = true;
         if (getCurrentRound() == null || getCurrentRound().isFinished()) {
             if (!hasNextRound())
                 throw new RuntimeException("Match has reached the maximum number of rounds.");
@@ -174,61 +173,36 @@ public class Match extends Entity {
     }
 
     public void commitMove() {
+        boolean wasCodemakerTurn = getCurrentRound().isActivePlayerCodemaker();
         getCurrentRound().commitMove();
         checkFinishRound();
+        if(isFinished())
+            return;
         // Next player if it is AI
-        playAITurnIfNeeded();
-    }
-
-    private void playAITurnIfNeeded() {
-        if (!isFinished()) {
-            if (isCodemakerTurn()) {
-                Player codemaker = getCurrentRound().getCodemaker();
-                if (codemaker instanceof AIPlayer) {
-                    ((AIPlayer) codemaker).playAsCodemaker(this);
-                }
-            }
-            if (isCodebrekerTurn()) {
-                Player codebreaker = getCurrentRound().getCodebreaker();
-                if (codebreaker instanceof AIPlayer) {
-                    ((AIPlayer) codebreaker).playAsCodebreaker(this);
-                }
-            }
-        }
+        boolean wasRoundFinished = getCurrentRound().isFinished();
+        if(getCurrentRound().isFinished())
+            newRound();
     }
 
     public TrialEvaluation getLastCommittedTrialEvaluation() {
         if (getCurrentRound().getLastCommittedTrial() == null) return null;
         return getCurrentRound().getLastCommittedTrial().getTrialEvaluation();
     }
-
+    //TODO Implement as next round with no committed trials
     public boolean isCurrentRoundFinished() {
         if(getCurrentRound() == null) throw new RuntimeException("There is no current round");
         return getCurrentRound().isFinished();
     }
 
     private boolean isActivePlayerCodemaker() {
-        if (!isInitialized()) {
-            return getConfig().isLocalStartsMakingCode();
-        }
-        if (getCurrentRound().isFinished()) return true;
         return getCurrentRound().isActivePlayerCodemaker();
     }
 
     public boolean isCodemakerTurn() {
-        if (!isInitialized()) {
-            return getConfig().isLocalStartsMakingCode();
-        }
-        if (isFinished()) return false;
         return isActivePlayerCodemaker();
     }
 
-    public boolean isCodebrekerTurn() {
-        if (!isInitialized()) {
-            return !getConfig().isLocalStartsMakingCode();
-        }
-        if (isFinished()) return false;
-        if (getCurrentRound().isFinished()) return false;
+    public boolean isCodebreakerTurn() {
         return !isActivePlayerCodemaker();
     }
 

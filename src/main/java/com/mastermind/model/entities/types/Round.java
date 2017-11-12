@@ -20,17 +20,23 @@ public class Round extends Entity {
     private boolean isActivePlayerCodemaker = true;
     private List<Trial> trials = new ArrayList<>();
 
-    Round(Match match) {
+    Round(Match match, Player codemaker, Player codebreaker) {
         this.match = match;
+        this.codemaker = codemaker;
+        this.codebreaker = codebreaker;
         code = new Combination(getMatch().getConfig().getSlotCount());
+        // Play AI as codemaker if needed
+        playAITurnCM();
     }
 
     public boolean hasNextTrial() {
+        if(isFinished()) return false;
         return trials.size() < match.getConfig().getMaxTrialCount();
     }
 
     private void newTrial() {
         if (!hasNextTrial()) throw new RuntimeException("Round has already reached the maximum number of trials.");
+        if (isFinished()) throw new RuntimeException("Round has already finished.");
         Trial newTrial = new Trial(this);
         trials.add(newTrial);
     }
@@ -38,19 +44,42 @@ public class Round extends Entity {
     /**
      * Commits the code if playing as a codemaker or the current trial if playing as codebreaker
      */
-    void commitMove() {
+    public void commitMove() {
         if (isActivePlayerCodemaker()) {
+            // It is code
             isActivePlayerCodemaker = false;
+            playAITurnCB();
             return;
         }
+        // It is a trial
         getCurrentTrial().evaluate();
+        // Actually commit
         committedTrialIndex++;
+        // Check winner
+        checkWinner();
+    }
+
+    private void checkWinner() {
         if (getLastCommittedTrial() != null && getLastCommittedTrial().getTrialEvaluation().getCorrectPlaceAndColorCount() == match.getConfig().getSlotCount()) {
             winner = codebreaker;
             return;
         }
         if (!hasNextTrial()) {
             winner = codemaker;
+        }
+    }
+
+    private void playAITurnCB() {
+        Player codebreaker = getCodebreaker();
+        if (codebreaker instanceof AIPlayer) {
+            ((AIPlayer) codebreaker).playAsCodebreaker(this);
+        }
+    }
+
+    private void playAITurnCM() {
+        Player codemaker = getCodemaker();
+        if (codemaker instanceof AIPlayer) {
+            ((AIPlayer) codemaker).playAsCodemaker(this);
         }
     }
 

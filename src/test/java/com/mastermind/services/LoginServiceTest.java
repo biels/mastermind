@@ -1,8 +1,9 @@
-package com.mastermind.services.login;
+package com.mastermind.services;
 
 import com.mastermind.model.persistence.RepositoryManager;
 import com.mastermind.model.persistence.repositories.impl.RepositoriesInMemoryImpl;
 import com.mastermind.services.ServiceManager;
+import com.mastermind.services.login.LoginService;
 import com.mastermind.services.login.responses.LoginResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
