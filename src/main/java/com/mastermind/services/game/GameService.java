@@ -162,7 +162,7 @@ public class GameService implements Service {
      * @param index The position of the game in the list of saved games.
      * @return The data needed to load the game and continue playing
      */
-    public UserGameState loadSavedGameFromList(int index) {
+    public UserGameState loadSavedGame(int index) {
         Match match = getSavedGamesList().get(index);
         getState().setActiveMatch(match);
         return getUserGameState();

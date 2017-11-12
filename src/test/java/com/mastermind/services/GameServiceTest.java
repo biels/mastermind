@@ -15,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -127,6 +128,22 @@ class GameServiceTest {
     }
 
     @Test
+    void duplicatePreviousTrial() {
+        createLocalPlayerAndLogIn();
+        createSampleEnemy();
+        service.newGame(0);
+        IntStream.range(0, service.getUserGameState().getSlotCount())
+                .forEach(i -> service.placeColor(i, 1));
+        service.commitMove();
+        IntStream.range(0, service.getUserGameState().getSlotCount())
+                .forEach(i -> service.placeColor(i, 2));
+        service.commitMove();
+        service.duplicatePreviousTrial();
+        assertEquals(2, service.getUserGameState().getTrials().size());
+        assertEquals(2, service.getUserGameState().getTrials().get(1).getCombinationData().getElements().get(0).intValue());
+    }
+
+    @Test
     void playSampleGame() {
         createLocalPlayerAndLogIn();
         createSampleEnemy();
@@ -177,10 +194,46 @@ class GameServiceTest {
         List<SavedGameRowData> savedGameRows = service.listSavedGames().getSavedGameRows();
         assertNotNull(savedGameRows);
         assertEquals(0, savedGameRows.size());
-        for (int i = 0; i < service.getUserGameState().getSlotCount(); i++) {
-            service.placeColor(i, 0);
-        }
-        savedGameRows = service.listSavedGames().getSavedGameRows();
-        assertEquals(1, savedGameRows.size());
+        IntStream.range(0, service.getUserGameState().getSlotCount())
+                .forEach(i -> service.placeColor(i, 0));
+        assertEquals(1, service.listSavedGames().getSavedGameRows().size());
+        service.newGame(0);
+        service.placeColor(0, 0);
+        assertEquals(2, service.listSavedGames().getSavedGameRows().size());
+    }
+
+    @Test
+    void removeSavedGame() {
+        createLocalPlayerAndLogIn();
+        createSampleEnemy();
+        service.newGame(0);
+        service.placeColor(0, 0);
+        service.newGame(0);
+        service.placeColor(0, 1);
+        service.newGame(0);
+        service.placeColor(0, 2);
+        assertEquals(3, service.listSavedGames().getSavedGameRows().size());
+        service.removeSavedGame(1);
+        assertEquals(2, service.listSavedGames().getSavedGameRows().size());
+        service.loadSavedGame(1);
+        assertEquals(2, service.getUserGameState().getCode().getElements().get(0).intValue());
+    }
+
+    @Test
+    void loadSavedGame() {
+        createLocalPlayerAndLogIn();
+        createSampleEnemy();
+        String playerName = "random-ai-2";
+        playersService.createRandomAIPlayer(playerName, 0x88AAAL);
+        service.newGame(1);
+        service.placeColor(0, 1);
+        service.newGame(0);
+        service.placeColor(0, 0);
+        service.loadSavedGame(0);
+        UserGameState state = check(service.getUserGameState());
+        assertEquals(playerName, state.getEnemyPlayerName());
+        assertEquals(1, service.getUserGameState().getCode().getElements().get(0).intValue());
+
+
     }
 }
