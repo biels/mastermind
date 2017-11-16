@@ -15,7 +15,6 @@ import com.mastermind.services.game.responses.types.*;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -195,6 +194,9 @@ public class GameService implements Service {
         if (!match.isModified()) {
             state.setMatchStatus(UserGameState.MatchStatus.NOT_STARTED);
             return state;
+        }
+        if(match.getLastFinishedRound() != null && match.getLastFinishedRoundWinner().isPresent()){
+            state.setLastFinishedRoundWinner(match.getLastFinishedRoundWinner().get().getName());
         }
         state.setMatchStatus(UserGameState.MatchStatus.IN_PROGRESS);
         UserGameState.Role localPlayerRole = round.getCodemaker().getId().equals(match.getLocalPlayer().getId()) ?

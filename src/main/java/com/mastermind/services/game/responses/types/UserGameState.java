@@ -21,6 +21,7 @@ public class UserGameState {
     private String enemyPlayerName; // AI
     private Boolean localWins;
     private MatchStatus matchStatus;
+    private String lastFinishedRoundWinner;
 
     public int getCurrentRound() {
         return currentRound;
@@ -144,5 +145,13 @@ public class UserGameState {
 
     public void setAllowRepetition(boolean allowRepetition) {
         this.allowRepetition = allowRepetition;
+    }
+
+    public String getLastFinishedRoundWinner() {
+        return lastFinishedRoundWinner;
+    }
+
+    public void setLastFinishedRoundWinner(String lastFinishedRoundWinner) {
+        this.lastFinishedRoundWinner = lastFinishedRoundWinner;
     }
 }
