@@ -36,6 +36,7 @@ public class Driver {
             List<Method> methods;
             methods = Arrays.stream(clazz.getDeclaredMethods())
                     .filter(method -> Modifier.isPublic(method.getModifiers()))
+                    .sorted(Comparator.comparing(Method::getName))
                     .collect(Collectors.toList());
             if (needReprint) {
                 System.out.println(MessageFormat.format("Driver for {0}{1}{2}: (q to quit)",
