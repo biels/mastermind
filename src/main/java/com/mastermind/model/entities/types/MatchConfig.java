@@ -71,7 +71,7 @@ public class MatchConfig extends Entity {
         this.maxTrialCount = maxTrialCount;
     }
 
-    private boolean isAllowRepetition() {
+    public boolean isAllowRepetition() {
         return allowRepetition;
     }
 

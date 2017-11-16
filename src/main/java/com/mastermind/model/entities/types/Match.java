@@ -237,7 +237,6 @@ public class Match extends Entity {
         if(getCurrentRound().isFinished())
             newRound();
     }
-
     public TrialEvaluation getLastCommittedTrialEvaluation() {
         if (getCurrentRound().getLastCommittedTrial() == null) return null;
         return getCurrentRound().getLastCommittedTrial().getTrialEvaluation();

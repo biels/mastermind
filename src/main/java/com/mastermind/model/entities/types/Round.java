@@ -46,6 +46,7 @@ public class Round extends Entity {
      * Commits the code if playing as a codemaker or the current trial if playing as codebreaker
      */
     public void commitMove() {
+        enforceMoveCorrectness();
         if (isActivePlayerCodemaker()) {
             // It is code
             isActivePlayerCodemaker = false;
@@ -59,7 +60,14 @@ public class Round extends Entity {
         // Check winner
         checkWinner();
     }
-
+    private void enforceMoveCorrectness(){
+        Combination combination = getFocusedCombination();
+        if (!combination.isComplete()) throw new RuntimeException("Combination must not have empty slots");
+        if(!getMatch().getConfig().isAllowRepetition()){
+            if(combination.getElements().stream().distinct().count() != combination.getElements().stream().count())
+                throw new RuntimeException("Repeated elements are not allowed in this match");
+        }
+    }
     private void checkWinner() {
         if (getLastCommittedTrial() != null && getLastCommittedTrial().getTrialEvaluation().getCorrectPlaceAndColorCount() == match.getConfig().getSlotCount()) {
             winner = codebreaker;
