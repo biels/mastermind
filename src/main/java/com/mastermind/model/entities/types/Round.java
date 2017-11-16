@@ -15,6 +15,7 @@ public class Round extends Entity {
     private Player codemaker;
     private Player codebreaker;
     private Player winner;
+    private Integer winScore;
     private Combination code;
     private int committedTrialIndex = -1;
     private boolean isActivePlayerCodemaker = true;
@@ -62,10 +63,12 @@ public class Round extends Entity {
     private void checkWinner() {
         if (getLastCommittedTrial() != null && getLastCommittedTrial().getTrialEvaluation().getCorrectPlaceAndColorCount() == match.getConfig().getSlotCount()) {
             winner = codebreaker;
+            winScore = (getMatch().getConfig().getMaxTrialCount() - getTrials().size()) * 4 + getMatch().getConfig().getColorCount();
             return;
         }
         if (!hasNextTrial()) {
             winner = codemaker;
+            winScore = getTrials().size() - getMatch().getConfig().getMaxTrialCount();
         }
     }
 
@@ -89,6 +92,10 @@ public class Round extends Entity {
 
     public Optional<Player> getWinner() {
         return Optional.ofNullable(winner);
+    }
+
+    public Integer getWinScore() {
+        return winScore;
     }
 
     private int getTrialIndex() {

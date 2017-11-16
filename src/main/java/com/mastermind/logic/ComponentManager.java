@@ -4,6 +4,7 @@ public class ComponentManager {
     private static EvaluatorComponent evaluatorComponent;
     private static MinimaxAlgorithmComponent minimaxAlgorithmComponent;
     private static RandomAlgorithmComponent randomAlgorithmComponent;
+    private static EloExchangerComponent eloExchangerComponent;
 
     public static EvaluatorComponent getEvaluatorComponent() {
         if (evaluatorComponent == null) evaluatorComponent = new EvaluatorComponent();
@@ -18,5 +19,10 @@ public class ComponentManager {
     public static RandomAlgorithmComponent getRandomAlgorithmComponent() {
         if (randomAlgorithmComponent == null) randomAlgorithmComponent = new RandomAlgorithmComponent();
         return randomAlgorithmComponent;
+    }
+
+    public static EloExchangerComponent getEloExchangerComponent(){
+        if(eloExchangerComponent == null) eloExchangerComponent = new EloExchangerComponent();
+        return eloExchangerComponent;
     }
 }

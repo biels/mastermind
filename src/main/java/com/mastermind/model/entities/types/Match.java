@@ -1,11 +1,15 @@
 package com.mastermind.model.entities.types;
 
+import com.mastermind.logic.ComponentManager;
+import com.mastermind.logic.EloExchangerComponent;
+import com.mastermind.logic.types.Pair;
 import com.mastermind.model.entities.base.Entity;
 import com.mastermind.model.persistence.RepositoryManager;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 /**
  * Represents a game between a localPlayer and the AI
@@ -16,7 +20,9 @@ public class Match extends Entity {
     private MatchConfig config;
     private Player localPlayer;
     private Player enemyPlayer;
+    private Double totalEloExchange;
     private int finishedRoundIndex = -1;
+    private Player winner = null;
     private boolean modified = false;
     // Add playAITurnIfNeeded to begin games when AI goes first
 
@@ -57,10 +63,58 @@ public class Match extends Entity {
             finishedRoundIndex++;
             if (!hasNextRound()) {
                 finished = true;
+                determineWinner();
+                exchangeElo();
             }
         }
     }
+    private void determineWinner(){
+        Predicate<Round> localPlayerFilter = round -> round.getWinner().get().equals(localPlayer);
+        Predicate<Round> enemyPlayerFilter = round -> round.getWinner().get().equals(enemyPlayer);
+        long localPlayerWins = rounds.stream()
+                .filter(localPlayerFilter)
+                .count();
+        long enemyPlayerWins = rounds.stream()
+                .filter(enemyPlayerFilter)
+                .count();
+        if(localPlayerWins == enemyPlayerWins){
+            int localPlayerWinScore = rounds.stream()
+                    .filter(localPlayerFilter)
+                    .mapToInt(Round::getWinScore)
+                    .sum();
+            int enemyPlayerWinScore = rounds.stream()
+                    .filter(enemyPlayerFilter)
+                    .mapToInt(Round::getWinScore)
+                    .sum();
+            if (localPlayerWinScore <= enemyPlayerWinScore){
+                winner = localPlayer;
+            }else{
+                winner = enemyPlayer;
+            }
+            return;
+        }
+        winner = localPlayerWins < enemyPlayerWins ? localPlayer : enemyPlayer;
 
+    }
+    private void exchangeElo(){
+        EloExchangerComponent eloExchanger = ComponentManager.getEloExchangerComponent();
+        Pair<Double, Double> exchangeAmount = eloExchanger.calculateExchangeAmount
+                (getWinner().getElo(), getLoser().getElo(), 1, getK(), false);
+        totalEloExchange = exchangeAmount.getFirst() + exchangeAmount.getSecond();
+        getWinner().incrementElo(exchangeAmount.getFirst());
+        getLoser().incrementElo(exchangeAmount.getSecond());
+    }
+
+    private double getK() {
+        return 32D;
+    }
+
+    public Player getWinner() {
+        return winner;
+    }
+    public Player getLoser(){
+        return (localPlayer == winner ? enemyPlayer : localPlayer);
+    }
     private int getRoundIndex() {
         return rounds.size() - 1;
     }

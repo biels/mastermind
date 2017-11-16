@@ -150,6 +150,7 @@ class MatchTest {
         match = new Match(localPlayer, enemyPlayer, config);
         int playCountCm = 0;
         int playCountCb = 0;
+        double localEloBefore = localPlayer.getElo();
         while (!match.isFinished()){
             // 3 to ensure it does not match
             int e = 4;//playCountCm % 3;
@@ -158,8 +159,14 @@ class MatchTest {
             else playCountCb++;
             match.commitMove();
         }
+        double localEloAfter = localPlayer.getElo();
         if(roundCount % 2 == 0)
         assertEquals(playCountCm * maxTrialCount, playCountCb);
+        if(match.getWinner().equals(localPlayer)){
+            assertTrue(localEloBefore < localEloAfter);
+        }else{
+            assertTrue(localEloBefore > localEloAfter);
+        }
     }
 
     private void setAllElements() {
