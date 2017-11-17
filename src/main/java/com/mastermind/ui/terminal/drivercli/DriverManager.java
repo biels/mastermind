@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class DriverManager {
-
     private final List<Driver> driverList;
 
     public DriverManager() {
@@ -28,6 +27,7 @@ public class DriverManager {
     }
 
     public void interactiveMenu(Scanner sc) {
+        boolean interactive = true;
         boolean needReprint = true;
         String b = ConsoleUtils.BOLD;
         String r = ConsoleUtils.RESET;
@@ -37,6 +37,7 @@ public class DriverManager {
         System.out.println(" " + b + "d" + r + ": open documentation");
         System.out.println(" " + b + "<option>d" + r + ": open documentation for option");
         System.out.println(" " + b + "q" + r + ": quit or go back");
+        System.out.println(" " + b + "ni" + r + ": enable non-interactive mode");
         while (true) {
             List<Driver> drivers = null;
             drivers = driverList;
@@ -50,8 +51,13 @@ public class DriverManager {
             }
             ConsoleUtils.RequestOptionResult result = ConsoleUtils.requestOption(sc, drivers.size());
             if (result.getAdditionalAction() == ConsoleUtils.RequestOptionResult.AdditionalAction.QUIT) return;
+            if (result.getAdditionalAction() == ConsoleUtils.RequestOptionResult.AdditionalAction.ENABLE_NON_INTERACTIVE_MODE) {
+                interactive = false;
+                System.out.println("Now running in non-interactive mode.");
+            }
             if (result.getOption() != null) {
                 Driver driver = drivers.get(result.getOption());
+
                 if (result.getAdditionalAction() == ConsoleUtils.RequestOptionResult.AdditionalAction.OPEN_JAVADOC) {
                     DocumentationUtils.openDocumentationFor(driver.getClazz());
                     needReprint = false;
@@ -59,7 +65,7 @@ public class DriverManager {
                 }
                 driver.instantiateService();
                 needReprint = true;
-                driver.interactiveMenu(sc);
+                driver.interactiveMenu(sc, interactive);
             } else {
                 if (result.getAdditionalAction() == ConsoleUtils.RequestOptionResult.AdditionalAction.OPEN_JAVADOC) {
                     System.out.println("No documentation for context. Try <option>d.");

@@ -27,7 +27,7 @@ public class Driver {
         }
     }
 
-    public void interactiveMenu(Scanner sc) {
+    public void interactiveMenu(Scanner sc, boolean interactive) {
         boolean needReprint = true;
         boolean needPause = true;
         String b = ConsoleUtils.BOLD;
@@ -122,7 +122,7 @@ public class Driver {
                 }
 
                 needReprint = true;
-                if (needPause) ConsoleUtils.requestEnter(sc);
+                if (needPause && interactive) ConsoleUtils.requestEnter(sc);
                 needPause = true;
             }
 

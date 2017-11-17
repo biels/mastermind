@@ -50,6 +50,10 @@ public final class ConsoleUtils {
                 result.setAdditionalAction(RequestOptionResult.AdditionalAction.OPEN_JAVADOC);
                 return result;
             }
+            if (next.equals("ni")) {
+                result.setAdditionalAction(RequestOptionResult.AdditionalAction.ENABLE_NON_INTERACTIVE_MODE);
+                return result;
+            }
             if (next.endsWith("d")) {
                 result.setAdditionalAction(RequestOptionResult.AdditionalAction.OPEN_JAVADOC);
                 next = next.substring(0, next.length() - 1);
@@ -72,7 +76,7 @@ public final class ConsoleUtils {
     }
 
     public static class RequestOptionResult {
-        public enum AdditionalAction {NONE, OPEN_JAVADOC, QUIT}
+        public enum AdditionalAction {NONE, OPEN_JAVADOC, ENABLE_NON_INTERACTIVE_MODE, QUIT}
 
         private AdditionalAction additionalAction = AdditionalAction.NONE;
         private Integer option = null;
