@@ -14,11 +14,11 @@ public class MatchConfig extends Entity {
 
     public MatchConfig() {
         roundCount = 4;
-        colorCount = 5;
+        colorCount = 6;
         slotCount = 4;
         maxTrialCount = 10;
         allowRepetition = true;
-        localStartsMakingCode = true;
+        localStartsMakingCode = false;
     }
 
     public MatchConfig(int roundCount, int colorCount, int slotCount, int maxTrialCount, boolean allowRepetition, boolean localStartsMakingCode) {
