@@ -10,14 +10,13 @@ import java.util.stream.IntStream;
 
 import static org.mockito.Mockito.*;
 
-class MinimaxAlgorithmComponentTest {
-    MinimaxAlgorithmComponent component;
+class MinimaxAlgorithmComponentTest extends AlgorithmComponentTest<MinimaxAlgorithmComponent> {
+    MinimaxAlgorithmComponent component = new MinimaxAlgorithmComponent();
 
-    @BeforeEach
-    void setUp() {
-        component = ComponentManager.getMinimaxAlgorithmComponent();
+    @Override
+    MinimaxAlgorithmComponent getInstance() {
+        return component;
     }
-
     @Test
     void getAllPossibilitiesRepetition() {
         ArrayList<int[]> list = component.getAllPossibilities
@@ -56,7 +55,7 @@ class MinimaxAlgorithmComponentTest {
         MatchConfig config = new MatchConfig();
         config.setAllowRepetition(allowRepetition);
         config.setLocalStartsMakingCode(true);
-        config.setMaxTrialCount(maxTrialsToWin);
+        config.setMaxTrialCount(400);
         config.setColorCount(colorCount);
         config.setSlotCount(code.getSize());
         when(match.getConfig()).thenReturn(config);

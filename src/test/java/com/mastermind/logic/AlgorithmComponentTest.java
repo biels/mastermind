@@ -1,8 +1,6 @@
 package com.mastermind.logic;
 
-import com.mastermind.model.entities.types.Match;
-import com.mastermind.model.entities.types.MatchConfig;
-import com.mastermind.model.entities.types.Round;
+import com.mastermind.model.entities.types.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -43,6 +41,10 @@ abstract class AlgorithmComponentTest<T extends AlgorithmComponent> {
     void playsAsCodebreaker() {
         // Simulate it ends at 3rd trial
         when(round.hasNextTrial()).thenReturn(true, true, true, false);
+
+        Trial trial = mock(Trial.class);
+        when(trial.getTrialEvaluation()).thenReturn(new TrialEvaluation(1, 1));
+        when(round.getLastCommittedTrial()).thenReturn(trial);
         component.playAsCodebreaker(round);
 
         IntStream.range(0, config.getSlotCount())
