@@ -5,6 +5,10 @@ import com.mastermind.logic.ComponentManager;
 public class MinimaxAIPlayer extends AIPlayer {
     private int depth;
 
+    public MinimaxAIPlayer() {
+        this("minimax-ai", 1);
+    }
+
     public MinimaxAIPlayer(String name, int depth) {
         super(name);
         this.depth = depth;

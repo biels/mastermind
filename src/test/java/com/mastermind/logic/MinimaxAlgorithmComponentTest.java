@@ -1,12 +1,15 @@
 package com.mastermind.logic;
 
+import com.mastermind.model.entities.types.*;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.stream.IntStream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class MinimaxAlgorithmComponentTest {
     MinimaxAlgorithmComponent component;
@@ -36,5 +39,29 @@ class MinimaxAlgorithmComponentTest {
         System.out.println(list.size());
 
     }
+    @Test
+    void playAsCodebreaker1() {
+        playAsCodebreaker(new Combination(1, 2, 3, 0, 3), true, 7);
+    }
 
+    void playAsCodebreaker(Combination code, boolean allowRepetition, int maxTrialsToWin) {
+        Match match = mock(Match.class);
+        MatchConfig config = new MatchConfig();
+        config.setAllowRepetition(allowRepetition);
+        config.setLocalStartsMakingCode(true);
+        config.setMaxTrialCount(400);
+        config.setSlotCount(code.getSize());
+        when(match.getConfig()).thenReturn(config);
+        Round round = new Round(match, new HumanPlayer(), new MinimaxAIPlayer());
+        IntStream.range(0, config.getSlotCount())
+                .forEach(i -> round.setElement(i, code.getElements().get(i)));
+        round.commitMove();
+        round.getTrials().stream()
+                .map(Trial::toString)
+                .forEachOrdered(System.out::println);
+        int trialsUsed = round.getTrials().size();
+        System.out.println("Trials: " + trialsUsed + "/" + maxTrialsToWin);
+        Assertions.assertTrue(trialsUsed < maxTrialsToWin,
+                "It took " + trialsUsed + " to win, but was expected to win in at most " + maxTrialsToWin + " trials");
+    }
 }

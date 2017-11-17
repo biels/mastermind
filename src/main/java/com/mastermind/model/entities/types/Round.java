@@ -21,7 +21,7 @@ public class Round extends Entity {
     private boolean isActivePlayerCodemaker = true;
     private List<Trial> trials = new ArrayList<>();
 
-    Round(Match match, Player codemaker, Player codebreaker) {
+    public Round(Match match, Player codemaker, Player codebreaker) {
         this.match = match;
         this.codemaker = codemaker;
         this.codebreaker = codebreaker;
