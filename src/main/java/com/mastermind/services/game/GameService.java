@@ -49,7 +49,7 @@ public class GameService implements Service {
         Match activeMatch = getActiveMatch();
         Match newMatch = new Match(getState().getLoggedInPlayer(),
                 getChooseEnemyPlayerList().get(enemyPlayerIndex),
-                activeMatch == null ? getState().getEnviromentConfig() : activeMatch.getConfig());
+                new MatchConfig(getState().getEnviromentConfig()));
         getState().setActiveMatch(newMatch);
         return getUserGameState();
     }
@@ -241,8 +241,7 @@ public class GameService implements Service {
     }
 
     private MatchConfig getTargetConfig() {
-        if(getActiveMatch() == null) return getState().getEnviromentConfig();
-        return getActiveMatch().getConfig();
+        return getState().getEnviromentConfig();
     }
 
     /**
