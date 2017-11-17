@@ -20,6 +20,7 @@ public class MinimaxAlgorithmComponent extends AlgorithmComponent {
         for (int i = 0; i < slotCount; i++) {
             round.setElement(i, i % colorCount);
         }
+        round.commitMove();
     }
 
     @Override
