@@ -108,8 +108,10 @@ class GameServiceTest {
         createLocalPlayerAndLogIn();
         assertThrows(NoActiveMatchException.class, () -> service.placeColor(0, 1));
         createSampleEnemy();
-        service.newGame(0);
         UserGameState state = service.getUserGameState();
+        assertEquals(UserGameState.MatchStatus.NOT_CREATED, state.getMatchStatus());
+        service.newGame(0);
+        state = service.getUserGameState();
         assertEquals(UserGameState.MatchStatus.NOT_STARTED, state.getMatchStatus());
         check(state);
         service.placeColor(0, 1);
@@ -235,5 +237,26 @@ class GameServiceTest {
         assertEquals(1, service.getUserGameState().getCode().getElements().get(0).intValue());
 
 
+    }
+
+    @Test
+    void configEditing() {
+        createLocalPlayerAndLogIn();
+        createSampleEnemy();
+        service.setColorCount(3);
+        assertEquals(3, service.getUserGameState().getColorCount());
+        service.setAllowRepetition(false);
+        assertFalse(service.getUserGameState().isAllowRepetition());
+        service.setLocalStartsMakingCode(false);
+        assertFalse(service.getUserGameState().isLocalStartsMakingCode());
+        service.newGame(0);
+        assertEquals(3, service.getUserGameState().getColorCount());
+        assertFalse(service.getUserGameState().isAllowRepetition());
+        assertFalse(service.getUserGameState().isLocalStartsMakingCode());
+        service.setColorCount(4);
+        service.setMaxTrialCount(5);
+        assertEquals(4, service.getUserGameState().getColorCount());
+        assertEquals(5, service.getUserGameState().getMaxTrialCount());
+        // Create a game
     }
 }

@@ -49,7 +49,7 @@ public class GameService implements Service {
         Match activeMatch = getActiveMatch();
         Match newMatch = new Match(getState().getLoggedInPlayer(),
                 getChooseEnemyPlayerList().get(enemyPlayerIndex),
-                activeMatch == null ? new MatchConfig() : activeMatch.getConfig());
+                activeMatch == null ? getState().getEnviromentConfig() : activeMatch.getConfig());
         getState().setActiveMatch(newMatch);
         return getUserGameState();
     }
@@ -179,14 +179,21 @@ public class GameService implements Service {
     public UserGameState getUserGameState() {
         UserGameState state = new UserGameState();
         Match match = getActiveMatch();
-        Round round = match.getCurrentRound();
+
 
         // Config
-        state.setColorCount(match.getConfig().getColorCount());
-        state.setSlotCount(match.getConfig().getSlotCount());
-        state.setMaxTrialCount(match.getConfig().getMaxTrialCount());
-        state.setTotalRoundCount(match.getConfig().getRoundCount());
-
+        state.setColorCount(getTargetConfig().getColorCount());
+        state.setSlotCount(getTargetConfig().getSlotCount());
+        state.setMaxTrialCount(getTargetConfig().getMaxTrialCount());
+        state.setTotalRoundCount(getTargetConfig().getRoundCount());
+        state.setAllowRepetition(getTargetConfig().isAllowRepetition());
+        state.setLocalStartsMakingCode(getTargetConfig().isLocalStartsMakingCode());
+        if (match == null) {
+            state.setMessage("Choose an enemy and start a game!");
+            state.setMatchStatus(UserGameState.MatchStatus.NOT_CREATED);
+            return state;
+        }
+        Round round = match.getCurrentRound();
         state.setLocalPlayerName(match.getLocalPlayer().getName());
         state.setEnemyPlayerName(match.getEnemyPlayer().getName());
         state.setLocalPlayerRole(match.getConfig().isLocalStartsMakingCode() ? UserGameState.Role.CODEMAKER : UserGameState.Role.CODEBREAKER);
@@ -232,35 +239,49 @@ public class GameService implements Service {
         return state;
     }
 
-    private MatchConfig getActiveMatchConfig() {
+    private MatchConfig getTargetConfig() {
+        if(getActiveMatch() == null) return getState().getEnviromentConfig();
         return getActiveMatch().getConfig();
     }
 
     /**
-     * @param colorCount The amount of colors available to make and break the code
+     * @param roundCount The number of rounds that the match will have
+     */
+    public void setRoundCount(int roundCount) {
+        getTargetConfig().setRoundCount(roundCount);
+    }
+    /**
+     * @param colorCount The number of colors available to make and break the code
      */
     public void setColorCount(int colorCount) {
-        getActiveMatchConfig().setColorCount(colorCount);
+        getTargetConfig().setColorCount(colorCount);
     }
 
     /**
      * @param slotCount Length of the code (and of the trials to break it)
      */
     public void setSlotCount(int slotCount) {
-        getActiveMatchConfig().setSlotCount(slotCount);
+        getTargetConfig().setSlotCount(slotCount);
     }
 
     /**
      * @param allowRepetition Whether element repetition in the same combination will be allowed
      */
     public void setAllowRepetition(boolean allowRepetition) {
-        getActiveMatchConfig().setAllowRepetition(allowRepetition);
+        getTargetConfig().setAllowRepetition(allowRepetition);
     }
 
     /**
      * @param localStartsMakingCode Whether the local or the enemy should begin making the code
      */
     public void setLocalStartsMakingCode(boolean localStartsMakingCode) {
-        getActiveMatchConfig().setLocalStartsMakingCode(localStartsMakingCode);
+        getTargetConfig().setLocalStartsMakingCode(localStartsMakingCode);
+    }
+
+    /**
+     * @param maxTrialCount The number of trials the player has to break the code before the codemaker wins
+     */
+    public void setMaxTrialCount(int maxTrialCount){
+        getTargetConfig().setMaxTrialCount(maxTrialCount);
     }
 }

@@ -5,7 +5,7 @@ import java.util.List;
 public class UserGameState {
     public enum Role {CODEMAKER, CODEBREAKER}
 
-    public enum MatchStatus {NOT_STARTED, IN_PROGRESS, FINISHED}
+    public enum MatchStatus {NOT_CREATED, NOT_STARTED, IN_PROGRESS, FINISHED}
 
     private int currentRound;
     private int totalRoundCount;
@@ -16,6 +16,7 @@ public class UserGameState {
     private int colorCount;
     private int slotCount;
     private boolean allowRepetition;
+    private boolean localStartsMakingCode;
     private Role localPlayerRole;
     private String localPlayerName;
     private String enemyPlayerName; // AI
@@ -97,6 +98,14 @@ public class UserGameState {
 
     public void setSlotCount(int slotCount) {
         this.slotCount = slotCount;
+    }
+
+    public boolean isLocalStartsMakingCode() {
+        return localStartsMakingCode;
+    }
+
+    public void setLocalStartsMakingCode(boolean localStartsMakingCode) {
+        this.localStartsMakingCode = localStartsMakingCode;
     }
 
     public String getLocalPlayerName() {
