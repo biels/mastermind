@@ -7,6 +7,7 @@ import com.mastermind.model.entities.types.RandomAIPlayer;
 import com.mastermind.model.persistence.RepositoryManager;
 import com.mastermind.model.persistence.repositories.PlayerRepository;
 import com.mastermind.services.Service;
+import com.mastermind.services.ServiceManager;
 import com.mastermind.services.players.responses.CreatePlayerResponse;
 import com.mastermind.services.players.responses.ListPlayersResponse;
 import com.mastermind.services.players.responses.types.PlayerRowData;
@@ -47,6 +48,9 @@ public class PlayersService implements Service {
      */
     public void removePlayer(int index) {
         Player target = getPlayerList().get(index);
+        if(target.equals(ServiceManager.getState().getLoggedInPlayer())){
+            ServiceManager.getLoginService().logout();
+        }
         playerRepository.delete(target);
     }
 
