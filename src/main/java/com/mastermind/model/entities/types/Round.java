@@ -175,6 +175,8 @@ public class Round extends Entity {
     }
 
     public Integer setElement(int index, Integer element) {
+        if(element >= getMatch().getConfig().getColorCount())
+            throw new RuntimeException(String.format("Element %d is not one of the elements allowed in this match", element));
         if(isCurrentTrialCommitted()) newTrial();
         Combination combination = getFocusedCombination();
         return combination.setElement(index, element);
