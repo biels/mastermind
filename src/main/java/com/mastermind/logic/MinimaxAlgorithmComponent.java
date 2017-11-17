@@ -6,11 +6,13 @@ import com.mastermind.model.entities.types.Round;
 import com.mastermind.model.entities.types.TrialEvaluation;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class MinimaxAlgorithmComponent extends AlgorithmComponent {
     EvaluatorComponent evaluator = ComponentManager.getEvaluatorComponent();
+
 
     @Override
     public void playAsCodemaker(Round round) {
@@ -40,7 +42,32 @@ public class MinimaxAlgorithmComponent extends AlgorithmComponent {
                     guess[i] = i / (allowRepetition ? 2 : 1);
                 }
             } else {
-                guess = possibilities.get(possibilities.size() / 2);
+                //guess = possibilities.get(possibilities.size() / 2);
+                int bestWorstCase = possibilities.size() + 100;
+                int worstCase;
+                int score;
+                Map<TrialEvaluation, Long> remaining;
+                for (int[] i : possibilities) {
+                    remaining = possibilities.parallelStream()
+                            .map(j -> evaluator.evaluate(
+                                    new Combination(IntStream.of(j).boxed().toArray(Integer[]::new)),
+                                    new Combination(IntStream.of(i).boxed().toArray(Integer[]::new)),
+                                    colorCount))
+                            .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+                    for(int[] j : possibilities){
+                        // score = score(j, i)
+                        // remaining[score] += 1
+                    }
+                    Optional<Map.Entry<TrialEvaluation, Long>> max = remaining.entrySet()
+                            .stream()
+                            .max(Map.Entry.comparingByValue());
+                    if(!max.isPresent())continue;
+                    worstCase = max.get().getValue().intValue();
+                    if(worstCase < bestWorstCase){
+                        bestWorstCase = worstCase;
+                        guess = i;
+                    }
+                }
             }
             //Play
             for (int i = 0; i < slotCount; i++) {
