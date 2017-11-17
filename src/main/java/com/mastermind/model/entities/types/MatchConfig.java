@@ -65,6 +65,7 @@ public class MatchConfig extends Entity {
     }
 
     public int getMaxTrialCount() {
+        if(maxTrialCount < 1) maxTrialCount = 1;
         return maxTrialCount;
     }
 
