@@ -106,7 +106,7 @@ public class Match extends Entity {
     }
 
     private double getK() {
-        return 32D;
+        return (localPlayer.getEloKHint() + enemyPlayer.getEloKHint() + (10 + Math.sqrt(getConfig().getRoundCount()) * 2)) / 3;
     }
 
     public Player getWinner() {
