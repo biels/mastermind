@@ -24,7 +24,11 @@ public class MinimaxAlgorithmComponent extends AlgorithmComponent {
 
     public ArrayList<int[]> getAllPossibilities(int length, int elements, boolean repetition) {
         ArrayList<int[]> combinations = new ArrayList<>();
-        permute(combinations, new int[length], elements, length, 0);
+        if (repetition) {
+            permute(combinations, new int[length], elements, length, 0);
+        } else {
+            combine(combinations, new int[length], new boolean[elements], elements, length, 0);
+        }
         return combinations;
     }
 
@@ -35,6 +39,19 @@ public class MinimaxAlgorithmComponent extends AlgorithmComponent {
             for (int i = 0; i < elements; i++) {
                 tmp[l] = i;
                 permute(list, tmp, elements, length, l + 1);
+            }
+        }
+    }
+    private void combine(ArrayList<int[]> list, int[] tmp, boolean[] used, int elements, int length, int l) {
+        if (l == length)
+            list.add(tmp.clone());
+        else {
+            for (int i = 0; i < elements; i++) {
+                if(used[i]) continue;
+                boolean usedTmp[] = used.clone();
+                usedTmp[i] = true;
+                tmp[l] = i;
+                combine(list, tmp, usedTmp, elements, length, l + 1);
             }
         }
     }

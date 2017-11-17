@@ -17,11 +17,24 @@ class MinimaxAlgorithmComponentTest {
     }
 
     @Test
-    void getAllPossibilities() {
-        ArrayList<int[]> list = component.getAllPossibilities(4, 4, true);
+    void getAllPossibilitiesRepetition() {
+        ArrayList<int[]> list = component.getAllPossibilities
+                (2, 4, true);
         list.stream()
                 .map(Arrays::toString)
                 .forEach(System.out::println);
         System.out.println(list.size());
     }
+
+    @Test
+    void getAllPossibilitiesNoRepetition() {
+        ArrayList<int[]> list = component.getAllPossibilities
+                (3, 6, false);
+        list.stream()
+                .map(Arrays::toString)
+                .forEach(System.out::println);
+        System.out.println(list.size());
+
+    }
+
 }
