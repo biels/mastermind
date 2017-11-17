@@ -250,7 +250,7 @@ class GameServiceTest {
         service.setLocalStartsMakingCode(false);
         assertFalse(service.getUserGameState().isLocalStartsMakingCode());
         service.newGame(0);
-        // Expect 4 because 3 is lower than the number of slots, which would be impossible
+        // Expect 4 because 3 is lower than the number of slots, which would be i
         assertEquals(4, service.getUserGameState().getColorCount());
         assertFalse(service.getUserGameState().isAllowRepetition());
         assertFalse(service.getUserGameState().isLocalStartsMakingCode());

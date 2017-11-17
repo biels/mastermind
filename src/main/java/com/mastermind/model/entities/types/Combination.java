@@ -45,7 +45,6 @@ public class Combination {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Combination that = (Combination) o;
-        // TODO Complete deep comparison
         return Objects.equals(elements, that.elements);
     }
 

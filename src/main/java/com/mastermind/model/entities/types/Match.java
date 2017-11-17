@@ -241,7 +241,6 @@ public class Match extends Entity {
         if (getCurrentRound().getLastCommittedTrial() == null) return null;
         return getCurrentRound().getLastCommittedTrial().getTrialEvaluation();
     }
-    //TODO Implement as next round with no committed trials
     public boolean isCurrentRoundFinished() {
         if(getCurrentRound() == null) throw new RuntimeException("There is no current round");
         return getCurrentRound().isFinished();
