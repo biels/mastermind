@@ -86,21 +86,21 @@ public class Match extends Entity {
                     .filter(enemyPlayerFilter)
                     .mapToInt(Round::getWinScore)
                     .sum();
-            if (localPlayerWinScore <= enemyPlayerWinScore){
+            if (localPlayerWinScore > enemyPlayerWinScore){
                 winner = localPlayer;
             }else{
                 winner = enemyPlayer;
             }
             return;
         }
-        winner = localPlayerWins < enemyPlayerWins ? localPlayer : enemyPlayer;
+        winner = localPlayerWins > enemyPlayerWins ? localPlayer : enemyPlayer;
 
     }
     private void exchangeElo(){
         EloExchangerComponent eloExchanger = ComponentManager.getEloExchangerComponent();
         Pair<Double, Double> exchangeAmount = eloExchanger.calculateExchangeAmount
                 (getWinner().getElo(), getLoser().getElo(), 1, getK(), false);
-        totalEloExchange = exchangeAmount.getFirst() + exchangeAmount.getSecond();
+        totalEloExchange = exchangeAmount.getFirst() + exchangeAmount.getSecond() * -1;
         getWinner().incrementElo(exchangeAmount.getFirst());
         getLoser().incrementElo(exchangeAmount.getSecond());
     }

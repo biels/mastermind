@@ -189,6 +189,24 @@ class GameServiceTest {
     }
 
     @Test
+    void playGameVsMinimaxWinning() {
+        createLocalPlayerAndLogIn();
+        playersService.createMinmiaxAIPlayer("minimax-ai", 6);
+        service.setMaxTrialCount(1);
+        service.setRoundCount(1);
+        service.setSlotCount(5);
+        service.setColorCount(8);
+        service.setLocalStartsMakingCode(true);
+        service.newGame(0);
+        for (int i = 0; i < 5; i++) {
+            service.placeColor(i, 0);
+        }
+        UserGameState state = service.commitMove();
+        assertEquals(UserGameState.MatchStatus.FINISHED, state.getMatchStatus());
+        assertTrue(state.getLocalWins());
+    }
+
+    @Test
     void listSavedGames() {
         createLocalPlayerAndLogIn();
         createSampleEnemy();
