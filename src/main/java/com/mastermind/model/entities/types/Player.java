@@ -39,6 +39,10 @@ public abstract class Player extends Entity {
         eloKHint = Math.max(eloKHint * 0.9, 20D);
     }
 
+    public Double getEloKHint() {
+        return eloKHint;
+    }
+
     public List<Match> getMatches() {
         if (matches == null) matches = RepositoryManager.getMatchRepository().findByPlayer(getId());
         return matches;
