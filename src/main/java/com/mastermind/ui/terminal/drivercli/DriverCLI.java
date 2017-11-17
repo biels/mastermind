@@ -1,15 +1,14 @@
-package com.mastermind.ui.terminal;
+package com.mastermind.ui.terminal.drivercli;
 
 import com.mastermind.model.persistence.RepositoryManager;
 import com.mastermind.model.persistence.repositories.impl.RepositoriesInMemoryImpl;
-import com.mastermind.services.players.PlayersService;
+import com.mastermind.ui.terminal.ConsoleUtils;
 
-import java.io.File;
 import java.util.Scanner;
 
-public class Main {
-    public static void main(String[] args){
-        RepositoryManager.attatchImplementation(new RepositoriesInMemoryImpl());
+public class DriverCLI {
+    public static void main(String[] args) {
+        RepositoryManager.attachImplementation(new RepositoriesInMemoryImpl());
         Scanner scanner = new Scanner(System.in);
         DriverManager driverManager = new DriverManager();
         ConsoleUtils.printBanner();

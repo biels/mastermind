@@ -1,8 +1,13 @@
 package com.mastermind.logic;
 
-import com.mastermind.model.entities.types.Combination;
+import com.mastermind.model.entities.types.Match;
 import com.mastermind.model.entities.types.Round;
 
+import java.util.stream.IntStream;
+
 public abstract class AlgorithmComponent {
-    abstract Combination nextTrial(Round round);
+    public abstract void playAsCodemaker(Round match);
+
+    public abstract void playAsCodebreaker(Round match);
+
 }

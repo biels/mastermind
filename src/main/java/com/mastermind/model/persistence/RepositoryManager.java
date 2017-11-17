@@ -3,7 +3,6 @@ package com.mastermind.model.persistence;
 import com.mastermind.model.persistence.repositories.MatchRepository;
 import com.mastermind.model.persistence.repositories.PlayerRepository;
 import com.mastermind.model.persistence.repositories.impl.RepositoriesImpl;
-import com.mastermind.model.persistence.repositories.impl.inmemory.MatchRepositoryInMemoryImpl;
 
 public class RepositoryManager {
 
@@ -12,7 +11,7 @@ public class RepositoryManager {
     private RepositoryManager() {
     }
 
-    public static void attatchImplementation(RepositoriesImpl impl){
+    public static void attachImplementation(RepositoriesImpl impl) {
         RepositoryManager.repositories = impl;
     }
 

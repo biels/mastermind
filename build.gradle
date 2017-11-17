@@ -4,6 +4,7 @@ version '1.0-SNAPSHOT'
 buildscript {
     dependencies {
         classpath group: 'de.dynamicfiles.projects.gradle.plugins', name: 'javafx-gradle-plugin', version: '8.8.2'
+        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.1'
     }
 
     repositories {
@@ -12,17 +13,62 @@ buildscript {
     }
 }
 
+ext.junit4Version = '4.12'
+ext.junitVintageVersion = '4.12.1'
+ext.junitPlatformVersion = '1.0.1'
+ext.junitJupiterVersion = '5.0.1'
+ext.log4jVersion = '2.9.0'
+
 apply plugin: 'java'
+apply plugin: 'org.junit.platform.gradle.plugin'
 
 sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
+    jcenter()
 }
-
+junitPlatform {
+    // platformVersion '1.0.1'
+    filters {
+        engines {
+            // include 'junit-jupiter', 'junit-vintage'
+            // exclude 'custom-engine'
+        }
+        tags {
+            // include 'fast'
+            exclude 'slow'
+        }
+        // includeClassNamePattern '.*Test'
+    }
+    // enableStandardTestTask true
+    // reportsDir file('build/test-results/junit-platform') // this is the default
+    //logManager 'org.apache.logging.log4j.jul.LogManager'
+}
 dependencies {
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    //testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    // JUnit Jupiter API and TestEngine implementation
+    testCompile("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
+    testRuntime("org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}")
+
+    testRuntime("org.junit.platform:junit-platform-launcher:${junitPlatformVersion}")
+
+    // To avoid compiler warnings about @API annotations in JUnit code
+    testCompileOnly('org.apiguardian:apiguardian-api:1.0.0')
+
+    // To use Log4J's LogManager
+    testRuntime("org.apache.logging.log4j:log4j-core:${log4jVersion}")
+    testRuntime("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
+
+    // Mockito
+    testCompile "org.mockito:mockito-core:2.+"
 }
-compileJava.options.compilerArgs.add '-parameters'
-compileTestJava.options.compilerArgs.add '-parameters'
+compileTestJava {
+    options.compilerArgs += '-parameters'
+}
+compileJava {
+    options.compilerArgs += '-parameters'
+}

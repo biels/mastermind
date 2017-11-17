@@ -1,4 +1,6 @@
-package com.mastermind.ui.terminal;
+package com.mastermind.ui.terminal.drivercli;
+
+import com.mastermind.ui.terminal.ConsoleUtils;
 
 import java.io.Serializable;
 import java.lang.reflect.*;
@@ -34,6 +36,7 @@ public class Driver {
             List<Method> methods;
             methods = Arrays.stream(clazz.getDeclaredMethods())
                     .filter(method -> Modifier.isPublic(method.getModifiers()))
+                    .sorted(Comparator.comparing(Method::getName))
                     .collect(Collectors.toList());
             if (needReprint) {
                 System.out.println(MessageFormat.format("Driver for {0}{1}{2}: (q to quit)",
@@ -54,7 +57,7 @@ public class Driver {
                 Method selected = methods.get(result.getOption());
                 Parameter[] parameters = selected.getParameters();
                 Optional<String> parameterString = Arrays.stream(parameters)
-                        .map(parameter -> parameter.toString())
+                        .map(Parameter::toString)
                         .reduce((s1, s2) -> s1 + ", " + s2);
                 System.out.println("Parameters: " + parameterString);
                 Object[] resolvedParams = new Object[parameters.length];
@@ -69,6 +72,10 @@ public class Driver {
                             res = null;
                             type = parameter.getType();
                             requested = false;
+                            if (type == boolean.class || type == Boolean.class) {
+                                requested = true;
+                                res = sc.nextBoolean();
+                            }
                             if (type == int.class || type == Integer.class) {
                                 requested = true;
                                 res = sc.nextInt();
@@ -115,7 +122,7 @@ public class Driver {
                 }
 
                 needReprint = true;
-                if(needPause) ConsoleUtils.requestEnter(sc);
+                if (needPause) ConsoleUtils.requestEnter(sc);
                 needPause = true;
             }
 
@@ -192,7 +199,7 @@ public class Driver {
     }
 
     public static List<Field> getAllFields(Class<?> type) {
-        List<Field> fields = new ArrayList<Field>();
+        List<Field> fields = new ArrayList<>();
         for (Class<?> c = type; c != null; c = c.getSuperclass()) {
             fields.addAll(Arrays.asList(c.getDeclaredFields()));
         }

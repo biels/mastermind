@@ -1,9 +1,9 @@
 package com.mastermind.services.players.responses.types;
 
 public class PlayerRowData {
-    String name;
-    String type;
-    boolean human;
+    private String name;
+    private String type;
+    private boolean human;
 
     public String getName() {
         return name;

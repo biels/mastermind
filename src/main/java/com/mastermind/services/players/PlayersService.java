@@ -23,9 +23,10 @@ public class PlayersService implements Service {
 
     /**
      * Lists the players registered in the system
+     *
      * @return The list of players in the system
      */
-    public ListPlayersResponse listPlayers(){
+    public ListPlayersResponse listPlayers() {
         ListPlayersResponse response = new ListPlayersResponse();
         response.setPlayerRows(getPlayerList().stream()
                 .map(player -> {
@@ -41,9 +42,10 @@ public class PlayersService implements Service {
 
     /**
      * Removes a player from the list of players, identified by its position on the list
+     *
      * @param index The position of the player in the list.
      */
-    public void removePlayer(int index){
+    public void removePlayer(int index) {
         Player target = getPlayerList().get(index);
         playerRepository.delete(target);
     }
@@ -54,22 +56,21 @@ public class PlayersService implements Service {
 
     /**
      * Creates a human player. Called from a registration form.
-     * @param name The name of the player.
+     *
+     * @param name     The name of the player.
      * @param password The password used to secure this player's account.
      * @return The created player if the operation was successful, or a list containing error messages.
      */
-    public CreatePlayerResponse<HumanPlayer> createHumanPlayer(String name, String password){
+    public CreatePlayerResponse<HumanPlayer> createHumanPlayer(String name, String password) {
         CreatePlayerResponse<HumanPlayer> response = new CreatePlayerResponse<>();
         if (checkExistenceByName(name, response)) return response;
-        if(password.length() < 4){
+        if (password.length() < 4) {
             response.setSuccess(false);
             response.getMessages().add("Password must have at least 4 characters");
             return response;
         }
 
-        HumanPlayer newPlayer = new HumanPlayer();
-        newPlayer.setName(name);
-        newPlayer.setPassword(password);
+        HumanPlayer newPlayer = new HumanPlayer(name, password);
         response.setCreatedPlayer(playerRepository.save(newPlayer));
         response.setSuccess(true);
         return response;
@@ -77,16 +78,15 @@ public class PlayersService implements Service {
 
     /**
      * Creates a random AI player. Called from an add AI player form.
+     *
      * @param name The name of the player.
      * @param seed The seed used by the random algorithm.
      * @return The created player if the operation was successful, or a list containing error messages.
      */
-    public CreatePlayerResponse<RandomAIPlayer> createRandomAIPlayer(String name, Long seed){
+    public CreatePlayerResponse<RandomAIPlayer> createRandomAIPlayer(String name, Long seed) {
         CreatePlayerResponse<RandomAIPlayer> response = new CreatePlayerResponse<>();
         if (checkExistenceByName(name, response)) return response;
-        RandomAIPlayer newPlayer = new RandomAIPlayer();
-        newPlayer.setName(name);
-        newPlayer.setSeed(seed);
+        RandomAIPlayer newPlayer = new RandomAIPlayer(name, seed);
         response.setCreatedPlayer(playerRepository.save(newPlayer));
         response.setSuccess(true);
         return response;
@@ -94,28 +94,27 @@ public class PlayersService implements Service {
 
     /**
      * Creates a minimax AI player. Called from an add AI player form.
-     * @param name The name of the player.
+     *
+     * @param name  The name of the player.
      * @param depth The depth of the minimax algorithm
      * @return The created player if the operation was successful, or a list containing error messages.
      */
-    public CreatePlayerResponse<MinimaxAIPlayer> createMinmiaxAIPlayer(String name, int depth){
+    public CreatePlayerResponse<MinimaxAIPlayer> createMinmiaxAIPlayer(String name, int depth) {
         CreatePlayerResponse<MinimaxAIPlayer> response = new CreatePlayerResponse<>();
         if (checkExistenceByName(name, response)) return response;
-        if(depth > 14 || depth < 1){
+        if (depth > 14 || depth < 1) {
             response.setSuccess(false);
             response.getMessages().add("Depth must be between 1 and 14");
             return response;
         }
-        MinimaxAIPlayer newPlayer = new MinimaxAIPlayer();
-        newPlayer.setName(name);
-        newPlayer.setDepth(depth);
+        MinimaxAIPlayer newPlayer = new MinimaxAIPlayer(name, depth);
         response.setCreatedPlayer(playerRepository.save(newPlayer));
         response.setSuccess(true);
         return response;
     }
 
     private boolean checkExistenceByName(String name, CreatePlayerResponse<? extends Player> response) {
-        if(playerRepository.findByName(name).isPresent()){
+        if (playerRepository.findByName(name).isPresent()) {
             response.setSuccess(false);
             response.getMessages().add(
                     MessageFormat.format("Player {0} already exists", name));
@@ -123,7 +122,6 @@ public class PlayersService implements Service {
         }
         return false;
     }
-
 
 
 }

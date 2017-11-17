@@ -1,15 +1,15 @@
 package com.mastermind.services.game.responses.types;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class CombinationData {
-    private ArrayList<Integer> positions;
+    private List<Integer> elements;
 
-    public ArrayList<Integer> getPositions() {
-        return positions;
+    public List<Integer> getElements() {
+        return elements;
     }
 
-    public void setPositions(ArrayList<Integer> positions) {
-        this.positions = positions;
+    public void setElements(List<Integer> elements) {
+        this.elements = elements;
     }
 }
