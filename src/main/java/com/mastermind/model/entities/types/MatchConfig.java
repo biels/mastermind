@@ -48,6 +48,7 @@ public class MatchConfig extends Entity {
     }
 
     public int getColorCount() {
+        if((colorCount < slotCount) && !allowRepetition) return slotCount;
         return colorCount;
     }
 

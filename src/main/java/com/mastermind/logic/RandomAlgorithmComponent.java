@@ -27,10 +27,10 @@ public class RandomAlgorithmComponent extends AlgorithmComponent {
     }
     private void setAllElementsRandomly(Round round) {
         MatchConfig config = round.getMatch().getConfig();
-        IntStream ints = ThreadLocalRandom.current()
-                .ints(0, config.getSlotCount());
+        IntStream ints = random
+                .ints(config.getSlotCount()+20,0, config.getColorCount());
         if(!round.getMatch().getConfig().isAllowRepetition()) ints = ints.distinct();
-        List<Integer> collect = ints.limit(config.getSlotCount()).boxed().collect(Collectors.toList());
+        List<Integer> collect = ints.boxed().collect(Collectors.toList());
         IntStream.range(0, config.getSlotCount())
                 .forEach(i -> round.setElement(i, collect.get(i)));
     }
