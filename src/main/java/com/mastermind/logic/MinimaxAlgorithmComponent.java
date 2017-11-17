@@ -36,7 +36,7 @@ public class MinimaxAlgorithmComponent extends AlgorithmComponent {
             if (first) {
                 first = false;
                 for (int i = 0; i < slotCount; i++) {
-                    guess[i] = i / 2;
+                    guess[i] = i / (allowRepetition ? 2 : 1);
                 }
             } else {
                 guess = possibilities.get(possibilities.size() / 2);
@@ -60,8 +60,11 @@ public class MinimaxAlgorithmComponent extends AlgorithmComponent {
         }
         guess = possibilities.get(0);
         if(possibilities.size() > 0){
-            for (int i = 0; i < slotCount; i++) {
-                round.setElement(i, guess[i]);
+            if(round.hasNextTrial()){
+                for (int i = 0; i < slotCount; i++) {
+                    round.setElement(i, guess[i]);
+                }
+                round.commitMove();
             }
         }else {
             throw new RuntimeException("Algorithm error");
