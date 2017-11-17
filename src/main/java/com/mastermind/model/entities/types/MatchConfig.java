@@ -4,6 +4,9 @@ import com.mastermind.model.entities.base.Entity;
 
 import java.util.Objects;
 
+/**
+ * Configuration for the match. Ensures sensible values will be provided. It will silently update any unexpected value
+ */
 public class MatchConfig extends Entity {
     private int roundCount;
     private int colorCount;
@@ -40,6 +43,7 @@ public class MatchConfig extends Entity {
     }
 
     public int getRoundCount() {
+        if(roundCount < 1) roundCount = 1;
         return roundCount;
     }
 
@@ -48,15 +52,17 @@ public class MatchConfig extends Entity {
     }
 
     public int getColorCount() {
-        if((colorCount < slotCount) && !allowRepetition) return slotCount;
+        if((colorCount < slotCount) && !allowRepetition) colorCount = slotCount;
         return colorCount;
     }
 
     public void setColorCount(int colorCount) {
+        if(colorCount < 2) colorCount = 2;
         this.colorCount = colorCount;
     }
 
     public int getSlotCount() {
+        if(slotCount < 2) slotCount = 2;
         return slotCount;
     }
 
