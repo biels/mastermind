@@ -72,6 +72,10 @@ public class Driver {
                             res = null;
                             type = parameter.getType();
                             requested = false;
+                            if (type == boolean.class || type == Boolean.class) {
+                                requested = true;
+                                res = sc.nextBoolean();
+                            }
                             if (type == int.class || type == Integer.class) {
                                 requested = true;
                                 res = sc.nextInt();
