@@ -1,5 +1,6 @@
 package com.mastermind.logic;
 
+import com.mastermind.model.entities.types.MatchConfig;
 import com.mastermind.model.entities.types.Round;
 
 import java.util.ArrayList;
@@ -15,13 +16,13 @@ public class MinimaxAlgorithmComponent extends AlgorithmComponent {
     }
 
     @Override
-    public void playAsCodebreaker(Round match) {
-        //ArrayList<ArrayList<Integer>> possibilities = getAllPossibilities();
+    public void playAsCodebreaker(Round round) {
+        MatchConfig config = round.getMatch().getConfig();
+        ArrayList<int[]> possibilities = getAllPossibilities(config.getSlotCount(), config.getColorCount(), config.isAllowRepetition());
 
     }
 
     public ArrayList<int[]> getAllPossibilities(int length, int elements, boolean repetition) {
-        Set<Integer> remaining = new HashSet<>();
         ArrayList<int[]> combinations = new ArrayList<>();
         permute(combinations, new int[length], elements, length, 0);
         return combinations;
@@ -31,7 +32,7 @@ public class MinimaxAlgorithmComponent extends AlgorithmComponent {
         if (l == length)
             list.add(tmp.clone());
         else {
-            for (int i = 0; i <= elements; i++) {
+            for (int i = 0; i < elements; i++) {
                 tmp[l] = i;
                 permute(list, tmp, elements, length, l + 1);
             }

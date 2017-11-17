@@ -18,7 +18,7 @@ class MinimaxAlgorithmComponentTest {
 
     @Test
     void getAllPossibilities() {
-        ArrayList<int[]> list = component.getAllPossibilities(8, 6, true);
+        ArrayList<int[]> list = component.getAllPossibilities(4, 4, true);
         list.stream()
                 .map(Arrays::toString)
                 .forEach(System.out::println);
