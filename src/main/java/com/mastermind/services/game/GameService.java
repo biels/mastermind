@@ -231,4 +231,36 @@ public class GameService implements Service {
         }
         return state;
     }
+
+    private MatchConfig getActiveMatchConfig() {
+        return getActiveMatch().getConfig();
+    }
+
+    /**
+     * @param colorCount The amount of colors available to make and break the code
+     */
+    public void setColorCount(int colorCount) {
+        getActiveMatchConfig().setColorCount(colorCount);
+    }
+
+    /**
+     * @param slotCount Length of the code (and of the trials to break it)
+     */
+    public void setSlotCount(int slotCount) {
+        getActiveMatchConfig().setSlotCount(slotCount);
+    }
+
+    /**
+     * @param allowRepetition Whether element repetition in the same combination will be allowed
+     */
+    public void setAllowRepetition(boolean allowRepetition) {
+        getActiveMatchConfig().setAllowRepetition(allowRepetition);
+    }
+
+    /**
+     * @param localStartsMakingCode Whether the local or the enemy should begin making the code
+     */
+    public void setLocalStartsMakingCode(boolean localStartsMakingCode) {
+        getActiveMatchConfig().setLocalStartsMakingCode(localStartsMakingCode);
+    }
 }
