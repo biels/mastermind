@@ -72,3 +72,8 @@ compileTestJava {
 compileJava {
     options.compilerArgs += '-parameters'
 }
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.mastermind.ui.terminal.drivercli.DriverCLI'
+    }
+}
