@@ -235,6 +235,7 @@ public class GameService implements Service {
         }).collect(Collectors.toList()));
         if (match.isFinished()) {
             state.setMatchStatus(UserGameState.MatchStatus.FINISHED);
+            state.setLocalWins(match.getWinner().equals(match.getLocalPlayer()));
         }
         return state;
     }
