@@ -12,16 +12,14 @@ import java.util.stream.IntStream;
 
 public class MinimaxAlgorithmComponent extends AlgorithmComponent {
     EvaluatorComponent evaluator = ComponentManager.getEvaluatorComponent();
-
+    RandomAlgorithmComponent randomAlgorithmComponent = ComponentManager.getRandomAlgorithmComponent();
 
     @Override
     public void playAsCodemaker(Round round) {
         MatchConfig config = round.getMatch().getConfig();
         int slotCount = config.getSlotCount();
         int colorCount = config.getColorCount();
-        for (int i = 0; i < slotCount; i++) {
-            round.setElement(i, i % colorCount);
-        }
+        randomAlgorithmComponent.setAllElementsRandomly(round);
         round.commitMove();
     }
 

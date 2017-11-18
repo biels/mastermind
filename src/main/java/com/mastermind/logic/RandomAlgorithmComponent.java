@@ -25,7 +25,7 @@ public class RandomAlgorithmComponent extends AlgorithmComponent {
             round.commitMove();
         }
     }
-    private void setAllElementsRandomly(Round round) {
+    public void setAllElementsRandomly(Round round) {
         MatchConfig config = round.getMatch().getConfig();
         IntStream ints = random
                 .ints(config.getSlotCount()+20,0, config.getColorCount());
