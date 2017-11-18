@@ -239,7 +239,6 @@ public class GameService implements Service {
         }
         return state;
     }
-
     private MatchConfig getTargetConfig() {
         if(getActiveMatch() == null) return getState().getEnviromentConfig();
         return getActiveMatch().getConfig();
