@@ -236,6 +236,7 @@ public class GameService implements Service {
         if (match.isFinished()) {
             state.setMatchStatus(UserGameState.MatchStatus.FINISHED);
             state.setLocalWins(match.getWinner().equals(match.getLocalPlayer()));
+            state.setLocalPlayerEloIncrement(match.getLocalPlayerEloIncrement());
         }
         return state;
     }
