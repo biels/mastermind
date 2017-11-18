@@ -20,7 +20,7 @@ public class Match extends Entity {
     private MatchConfig config;
     private Player localPlayer;
     private Player enemyPlayer;
-    private Double totalEloExchange;
+    private Double localPlayerEloIncrement;
     private int finishedRoundIndex = -1;
     private Player winner = null;
     private boolean modified = false;
@@ -100,7 +100,7 @@ public class Match extends Entity {
         EloExchangerComponent eloExchanger = ComponentManager.getEloExchangerComponent();
         Pair<Double, Double> exchangeAmount = eloExchanger.calculateExchangeAmount
                 (getWinner().getElo(), getLoser().getElo(), 1, getK(), false);
-        totalEloExchange = exchangeAmount.getFirst() + exchangeAmount.getSecond() * -1;
+        localPlayerEloIncrement = localPlayer == winner ? exchangeAmount.getFirst() : exchangeAmount.getSecond();
         getWinner().incrementElo(exchangeAmount.getFirst());
         getLoser().incrementElo(exchangeAmount.getSecond());
     }
@@ -258,4 +258,7 @@ public class Match extends Entity {
         return !isActivePlayerCodemaker();
     }
 
+    public Double getLocalPlayerEloIncrement() {
+        return localPlayerEloIncrement;
+    }
 }

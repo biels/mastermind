@@ -22,6 +22,7 @@ public class UserGameState {
     private String enemyPlayerName; // AI
     private Boolean localWins;
     private MatchStatus matchStatus;
+    private Double localPlayerEloIncrement;
     private String lastFinishedRoundWinner;
 
     public int getCurrentRound() {
@@ -162,5 +163,13 @@ public class UserGameState {
 
     public void setLastFinishedRoundWinner(String lastFinishedRoundWinner) {
         this.lastFinishedRoundWinner = lastFinishedRoundWinner;
+    }
+
+    public Double getLocalPlayerEloIncrement() {
+        return localPlayerEloIncrement;
+    }
+
+    public void setLocalPlayerEloIncrement(Double localPlayerEloIncrement) {
+        this.localPlayerEloIncrement = localPlayerEloIncrement;
     }
 }
