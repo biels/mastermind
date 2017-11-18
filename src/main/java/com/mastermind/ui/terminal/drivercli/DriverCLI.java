@@ -4,6 +4,7 @@ import com.mastermind.model.persistence.RepositoryManager;
 import com.mastermind.model.persistence.repositories.impl.RepositoriesInMemoryImpl;
 import com.mastermind.ui.terminal.ConsoleUtils;
 
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class DriverCLI {
@@ -12,6 +13,10 @@ public class DriverCLI {
         Scanner scanner = new Scanner(System.in);
         DriverManager driverManager = new DriverManager();
         ConsoleUtils.printBanner();
-        driverManager.interactiveMenu(scanner);
+        try {
+            driverManager.interactiveMenu(scanner);
+        } catch (NoSuchElementException e) {
+            // No action needed
+        }
     }
 }
