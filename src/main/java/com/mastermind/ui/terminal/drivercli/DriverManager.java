@@ -37,7 +37,7 @@ public class DriverManager {
         System.out.println(" " + b + "d" + r + ": open documentation");
         System.out.println(" " + b + "<option>d" + r + ": open documentation for option");
         System.out.println(" " + b + "q" + r + ": quit or go back");
-        while (true) {
+        while (sc.hasNext()) {
             List<Driver> drivers = null;
             drivers = driverList;
             if (needReprint) {
