@@ -32,7 +32,7 @@ public class Driver {
         boolean needPause = true;
         String b = ConsoleUtils.BOLD;
         String r = ConsoleUtils.RESET;
-        while (sc.hasNext()) {
+        while (interactive || sc.hasNext()) {
             List<Method> methods;
             methods = Arrays.stream(clazz.getDeclaredMethods())
                     .filter(method -> Modifier.isPublic(method.getModifiers()))

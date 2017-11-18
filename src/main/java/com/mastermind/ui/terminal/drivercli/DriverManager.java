@@ -39,7 +39,7 @@ public class DriverManager {
         System.out.println(" " + b + "<option>d" + r + ": open documentation for option");
         System.out.println(" " + b + "q" + r + ": quit or go back");
         System.out.println(" " + b + "ni" + r + ": enable non-interactive mode");
-        while (sc.hasNext()) {
+        while (interactive || sc.hasNext()) {
             List<Driver> drivers = null;
             drivers = driverList;
             if (needReprint) {
