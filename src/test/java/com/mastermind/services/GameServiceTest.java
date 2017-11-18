@@ -133,6 +133,7 @@ class GameServiceTest {
     void duplicatePreviousTrial() {
         createLocalPlayerAndLogIn();
         createSampleEnemy();
+        service.setLocalStartsMakingCode(true);
         service.newGame(0);
         IntStream.range(0, service.getUserGameState().getSlotCount())
                 .forEach(i -> service.placeColor(i, 1));
@@ -150,6 +151,7 @@ class GameServiceTest {
         createLocalPlayerAndLogIn();
         createSampleEnemy();
         // Set number of rounds, or maintain defaults
+        service.setLocalStartsMakingCode(true);
         UserGameState state = service.newGame(0);
         check(state);
         assertEquals(UserGameState.MatchStatus.NOT_STARTED, state.getMatchStatus());
@@ -226,6 +228,7 @@ class GameServiceTest {
     void removeSavedGame() {
         createLocalPlayerAndLogIn();
         createSampleEnemy();
+        service.setLocalStartsMakingCode(true);
         service.newGame(0);
         service.placeColor(0, 0);
         service.newGame(0);
@@ -245,6 +248,7 @@ class GameServiceTest {
         createSampleEnemy();
         String playerName = "random-ai-2";
         playersService.createRandomAIPlayer(playerName, 0x88AAAL);
+        service.setLocalStartsMakingCode(true);
         service.newGame(1);
         service.placeColor(0, 1);
         service.newGame(0);
