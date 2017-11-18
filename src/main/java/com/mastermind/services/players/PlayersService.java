@@ -5,9 +5,11 @@ import com.mastermind.model.entities.types.MinimaxAIPlayer;
 import com.mastermind.model.entities.types.Player;
 import com.mastermind.model.entities.types.RandomAIPlayer;
 import com.mastermind.model.persistence.RepositoryManager;
+import com.mastermind.model.persistence.repositories.MatchRepository;
 import com.mastermind.model.persistence.repositories.PlayerRepository;
 import com.mastermind.services.Service;
 import com.mastermind.services.ServiceManager;
+import com.mastermind.services.ServiceState;
 import com.mastermind.services.players.responses.CreatePlayerResponse;
 import com.mastermind.services.players.responses.ListPlayersResponse;
 import com.mastermind.services.players.responses.types.PlayerRowData;
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
  */
 public class PlayersService implements Service {
     private PlayerRepository playerRepository = RepositoryManager.getPlayerRepository();
+    private MatchRepository matchRepository;
 
     /**
      * Lists the players registered in the system
@@ -48,9 +51,16 @@ public class PlayersService implements Service {
      */
     public void removePlayer(int index) {
         Player target = getPlayerList().get(index);
-        if(target.equals(ServiceManager.getState().getLoggedInPlayer())){
+        ServiceState state = ServiceManager.getState();
+        if(target.equals(state.getLoggedInPlayer())){
             ServiceManager.getLoginService().logout();
         }
+        matchRepository = RepositoryManager.getMatchRepository();
+        if (state.getActiveMatch() != null && state.getActiveMatch().getLocalPlayer().equals(target))
+            state.setActiveMatch(null);
+        matchRepository.findByPlayer(target.getId())
+                .stream()
+                .forEach(match -> matchRepository.delete(match));
         playerRepository.delete(target);
     }
 
