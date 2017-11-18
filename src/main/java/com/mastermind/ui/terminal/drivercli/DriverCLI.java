@@ -16,6 +16,7 @@ public class DriverCLI {
         try {
             driverManager.interactiveMenu(scanner);
         } catch (NoSuchElementException e) {
+            // No action needed
         }
     }
 }
