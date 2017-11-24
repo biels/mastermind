@@ -282,4 +282,20 @@ class GameServiceTest {
         assertEquals(5, service.getUserGameState().getMaxTrialCount());
         // Create a game
     }
+
+    @Test
+    void deletesSavedGamesWhenPlayersAreDeleted() {
+        createLocalPlayerAndLogIn();
+        createSampleEnemy();
+        service.newGame(0);
+        service.placeColor(0, 1);
+        assertEquals(1, service.listSavedGames().getSavedGameRows().size());
+        service.newGame(0);
+        assertEquals(1, service.listSavedGames().getSavedGameRows().size());
+        service.placeColor(0, 0);
+        assertEquals(2, service.listSavedGames().getSavedGameRows().size());
+        playersService.removePlayer(1);
+        assertEquals(0, service.listSavedGames().getSavedGameRows().size());
+
+    }
 }
