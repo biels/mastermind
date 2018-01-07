@@ -21,14 +21,15 @@
 
     <TextField fx:id="txtUserName" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-    <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+    <Label fx:id="lblPassword" text="Password:" GridPane.rowIndex="2" />
 
-    <PasswordField fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+    <PasswordField fx:id="txtPassword" GridPane.columnIndex="1" GridPane.rowIndex="2" />
     <HBox alignment="bottom_right" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="4">
-        <Button text="Register" />
+        <Button fx:id="btnRegister" text="Register" />
     </HBox>
 
     <Text fx:id="actiontarget" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+   <Label fx:id="lblMessages" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="7" />
     <columnConstraints>
         <ColumnConstraints />
         <ColumnConstraints />
