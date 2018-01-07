@@ -3,15 +3,16 @@ package com.mastermind.ui.javafx;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
 
 public class MainWindowController {
     @FXML
-    private TextField userField;
+    private Pane pnlContent;
     @FXML
     private TextField passwordField;
 
-    @FXML
-    protected void handleSubmitButtonAction(ActionEvent event) {
+
+    public void displayRegister() {
 
     }
 }
