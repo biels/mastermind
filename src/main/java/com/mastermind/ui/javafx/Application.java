@@ -21,9 +21,6 @@ public class Application extends javafx.application.Application {
     {
         instance = this;
     }
-    private GameService gameService;
-    private LoginService loginService;
-    private PlayersService playersService;
 
     private Stack<Fragment> fragmentStack = new Stack<>();
 
@@ -34,6 +31,7 @@ public class Application extends javafx.application.Application {
     private Pane pnlContent;
     private Button btnBack;
     private Button btnNewGame;
+    private Label lblLoggedIn;
     @Override
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
@@ -43,16 +41,21 @@ public class Application extends javafx.application.Application {
         primaryStage.setMinWidth(400);
         primaryStage.setMinHeight(600);
         primaryStage.show();
+
         // References
         pnlContent = (Pane) primaryStage.getScene().lookup("#pnlContent");
         btnBack = (Button) primaryStage.getScene().lookup("#btnBack");
         btnNewGame = (Button) primaryStage.getScene().lookup("#btnNewGame");
+        lblLoggedIn = (Label) primaryStage.getScene().lookup("#lblLoggedIn");
 
+        // Handlers
         btnBack.setOnAction(event -> actionBack());
         btnNewGame.setOnAction(event -> actionNewGame());
 
+        // Startup actions
         startFromFragment(gameFragment);
         pushFragment(registerFragment);
+        updateLoggedInLabel();
     }
 
     private void actionBack(){
@@ -63,7 +66,15 @@ public class Application extends javafx.application.Application {
 
         ServiceManager.getGameService().newGame(1);
     }
-
+    public void updateLoggedInLabel(){
+        LoginService loginService = ServiceManager.getLoginService();
+        String loggedInText = "Not logged in";
+        if (loginService.isLoggedIn()) {
+             loggedInText = "Logged in as " + loginService.getLoggedInPlayerName();
+        }
+        lblLoggedIn.setText(loggedInText);
+    }
+    // Fragments
     public void pushFragment(Fragment fragment){
         if(isCurrentFragment(fragment.getClass())){
             swapFragment(fragment);

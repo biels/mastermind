@@ -34,8 +34,8 @@ public class RegisterFragment extends Fragment {
         CreatePlayerResponse<HumanPlayer> response =
                 ServiceManager.getPlayersService().createHumanPlayer(enteredUsername, enteredPassword);
         if (response.isSuccess()) {
-            close();
             lblMessages.setText("Success");
+            close();
         } else {
             if (!response.getMessages().isEmpty())
                 lblMessages.setText(response.getMessages().get(0));
