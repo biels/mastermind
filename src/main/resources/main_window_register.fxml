@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
 <GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8.0.121"
-          xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastermind.ui.javafx.SampleWindowController">
+          xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastermind.ui.javafx.MainWindowController">
     <padding>
         <Insets bottom="10" left="25" right="25" top="25"/>
     </padding>
@@ -13,7 +13,7 @@
 
     <Label text="User Name:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
 
-    <TextField fx:id="text1" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+    <TextField fx:id="userField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
     <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
 
