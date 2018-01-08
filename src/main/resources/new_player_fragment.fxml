@@ -17,9 +17,9 @@
    <ChoiceBox fx:id="cmbType" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
    <Label text="lblType" GridPane.columnIndex="1" GridPane.rowIndex="1" />
    <Label fx:id="lblDepth" text="Depth" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-   <Label fx:id="lblSeed" text="Seed" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+   <Label fx:id="lblSeed" text="Seed" GridPane.columnIndex="1" GridPane.rowIndex="2" />
    <TextField fx:id="txtDepth" text="14" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-   <TextField fx:id="txtSeed" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+   <TextField fx:id="txtSeed" GridPane.columnIndex="2" GridPane.rowIndex="2" />
    <columnConstraints>
       <ColumnConstraints />
       <ColumnConstraints />

@@ -7,7 +7,6 @@ import com.mastermind.services.game.responses.exceptions.UserNotLoggedInExceptio
 import com.mastermind.services.login.LoginService;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Orientation;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -73,7 +72,7 @@ public class Application extends javafx.application.Application {
         NEW_GAME(instance::actionNewGame, "New Game"),
         LOAD_SAVED_GAME(instance::actionLoadSavedGame, "Load saved game"),
         EDIT_PLAYERS(instance::actionEditPlayers, "Edit players"),
-        NEW_PLAYER(instance::actionEditPlayers, "New player"),
+        NEW_PLAYER(instance::actionNewPlayer, "New player"),
         EXIT(instance::actionExit, "Exit");
 
         private final String displayName;
@@ -114,7 +113,7 @@ public class Application extends javafx.application.Application {
     private void actionLogin(){
         pushFragment(new LoginFragment());
     }
-    private void actionNewGame(){
+    public void actionNewGame(){
         // Show new game fragment
 
         try {
@@ -123,13 +122,13 @@ public class Application extends javafx.application.Application {
             displayExceptionAlert(e);
         }
     }
-    private void actionEditPlayers(){
+    public void actionEditPlayers(){
         pushFragment(new PlayersFragment());
     }
-    private void actionNewPlayer() {
+    public void actionNewPlayer() {
         pushFragment(new NewPlayerFragment());
     }
-    private void actionExit(){
+    public void actionExit(){
         Platform.exit();
     }
 

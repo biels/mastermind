@@ -23,6 +23,7 @@ public class NewPlayerFragment extends Fragment{
         txtSeed = (TextField) lookup("#txtSeed");
         cmbType = (ChoiceBox) lookup("#cmbType");
         cmbType.setItems(FXCollections.<String>observableArrayList("Random", "Minimax"));
+        cmbType.setValue("Random");
         cmbType.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
             int previousIndex = oldValue.intValue();
             int selectedIndex = newValue.intValue();
@@ -48,6 +49,7 @@ public class NewPlayerFragment extends Fragment{
             txtDepth.setVisible(true);
         }
         if (previousIndex == 1){
+            lblDepth.setVisible(false);
             txtDepth.setVisible(false);
         }
         lastSelectedIndex = selectedIndex;
