@@ -26,6 +26,7 @@ public class Application extends javafx.application.Application {
 
     private Stage primaryStage;
     private RegisterFragment registerFragment = new RegisterFragment();
+    private LoginFragment loginFragment = new LoginFragment();
     private GameFragment gameFragment = new GameFragment();
     // References
     private Pane pnlContent;
@@ -54,7 +55,7 @@ public class Application extends javafx.application.Application {
 
         // Startup actions
         startFromFragment(gameFragment);
-        pushFragment(registerFragment);
+        pushFragment(loginFragment);
         updateLoggedInLabel();
     }
 
