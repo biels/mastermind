@@ -73,6 +73,7 @@ public class Application extends javafx.application.Application {
         NEW_GAME(instance::actionNewGame, "New Game"),
         LOAD_SAVED_GAME(instance::actionLoadSavedGame, "Load saved game"),
         EDIT_PLAYERS(instance::actionEditPlayers, "Edit players"),
+        NEW_PLAYER(instance::actionEditPlayers, "New player"),
         EXIT(instance::actionExit, "Exit");
 
         private final String displayName;
@@ -124,6 +125,9 @@ public class Application extends javafx.application.Application {
     }
     private void actionEditPlayers(){
         pushFragment(new PlayersFragment());
+    }
+    private void actionNewPlayer() {
+        pushFragment(new NewPlayerFragment());
     }
     private void actionExit(){
         Platform.exit();
@@ -204,6 +208,7 @@ public class Application extends javafx.application.Application {
 
         Menu menuPlayers = new Menu("Players");
         addMenuItem(menuPlayers, Action.EDIT_PLAYERS);
+        addMenuItem(menuPlayers, Action.NEW_PLAYER);
 
         menuBar.getMenus().addAll(menuGame, menuPlayers);
 
