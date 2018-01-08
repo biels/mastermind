@@ -114,13 +114,7 @@ public class Application extends javafx.application.Application {
         pushFragment(new LoginFragment());
     }
     public void actionNewGame(){
-        // Show new game fragment
-
-        try {
-            ServiceManager.getGameService().newGame(1);
-        } catch (UserNotLoggedInException e) {
-            displayExceptionAlert(e);
-        }
+        pushFragment(new NewGameFragment());
     }
     public void actionEditPlayers(){
         pushFragment(new PlayersFragment());
