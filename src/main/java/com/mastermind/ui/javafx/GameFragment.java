@@ -7,6 +7,9 @@ import com.mastermind.services.game.responses.types.EvaluationData;
 import com.mastermind.services.game.responses.types.TrialData;
 import com.mastermind.services.game.responses.types.UserGameState;
 import javafx.geometry.Pos;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -25,6 +28,7 @@ public class GameFragment extends Fragment {
     private Pane pnlCode;
     GameService gameService;
 
+    int selectedItem = 0;
     private Color neutralAccent = new Color(0.8, 0.8, 0.8, 1.0);;
 
     @Override
@@ -94,6 +98,17 @@ public class GameFragment extends Fragment {
         List<Circle> renderedElements = combinationElements.stream()
                 .map(this::renderElement)
                 .collect(Collectors.toList());
+        List<Circle> boundRenderedElements = new ArrayList<>();
+        for (int i = 0; i < renderedElements.size(); i++) {
+            Circle circle = renderedElements.get(i);
+            circle.setUserData(i);
+            circle.setOnMouseClicked(event -> {
+                Integer index = (Integer) circle.getUserData();
+                // Set [index] to [selectedItem]
+                gameService.placeColor(index, selectedItem);
+            });
+            boundRenderedElements.add(circle);
+        }
         EvaluationData evaluationData = trialData.getEvaluationData();
         Pane renderedEvaluation = renderEvaluation(evaluationData, combinationElements.size());
         HBox hBox = new HBox();
@@ -128,6 +143,18 @@ public class GameFragment extends Fragment {
         vbxItems.getChildren().clear();
         for (int i = 0; i < maxColors; i++) {
             Circle renderedElement = renderElement(i);
+            renderedElement.setUserData(i);
+            int finalI = i;
+            renderedElement.setOnMouseClicked(event -> {
+                setSelectedItem(finalI);
+            });
+            renderedElement.setOnDragDetected(event -> {
+                Dragboard db = renderedElement.startDragAndDrop(TransferMode.COPY);
+                ClipboardContent content = new ClipboardContent();
+                content.putString(Integer.toString((Integer) renderedElement.getUserData()));
+                db.setContent(content);
+                event.consume();
+            });
             vbxItems.getChildren().add(renderedElement);
         }
     }
@@ -140,5 +167,9 @@ public class GameFragment extends Fragment {
     private Color getElementColor(Integer element) {
         if(element == null) return neutralAccent;
         return new Color(1.0 - (element % 3) * 0.4, 0.1 + (element % 10) * 0.1, 0.1 + ((element + 2) % 5) * 0.1, 1.0);
+    }
+
+    public void setSelectedItem(int selectedItem) {
+        this.selectedItem = selectedItem;
     }
 }
