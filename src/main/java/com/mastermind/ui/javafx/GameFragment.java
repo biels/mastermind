@@ -6,7 +6,9 @@ import com.mastermind.services.game.responses.types.CombinationData;
 import com.mastermind.services.game.responses.types.EvaluationData;
 import com.mastermind.services.game.responses.types.TrialData;
 import com.mastermind.services.game.responses.types.UserGameState;
+import javafx.geometry.NodeOrientation;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
@@ -26,10 +28,12 @@ public class GameFragment extends Fragment {
     private VBox vbxTrials;
     private VBox vbxItems;
     private Pane pnlCode;
+    private Button btnCommit;
     GameService gameService;
 
     int selectedItem = 0;
-    private Color neutralAccent = new Color(0.8, 0.8, 0.8, 1.0);;
+    private Color neutralAccent = new Color(0.8, 0.8, 0.8, 1.0);
+    ;
 
     @Override
     protected void onLoad() {
@@ -37,7 +41,9 @@ public class GameFragment extends Fragment {
         vbxTrials = (VBox) lookup("#vbxTrials");
         vbxItems = (VBox) lookup("#vbxItems");
         pnlCode = (Pane) lookup("#pnlCode");
+        btnCommit = (Button) lookup("#btnCommit");
 
+        btnCommit.setOnAction(event -> onCommit());
         UserGameState test = new UserGameState();
         test.setColorCount(5);
 
@@ -80,19 +86,30 @@ public class GameFragment extends Fragment {
         trials.add(td3);
 
         test.setTrials(trials);
-        render(test);
+        UserGameState state = gameService.getUserGameState();
+        render(state.getTrials() == null ? test : state);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        render(gameService.getUserGameState());
     }
 
     public void render(UserGameState state) {
-        List<HBox> trialRows = state.getTrials().stream()
-                .map(this::renderTrialRow)
-                .collect(Collectors.toList());
-        vbxTrials.getChildren().clear();
-        vbxTrials.getChildren().addAll(trialRows);
+        if (state.getTrials() != null) {
+            List<HBox> trialRows = state.getTrials().stream()
+                    .map(this::renderTrialRow)
+                    .collect(Collectors.toList());
+            vbxTrials.getChildren().clear();
+            vbxTrials.getChildren().addAll(trialRows);
+        }
         vbxTrials.setSpacing(8);
         renderElementBar(state.getColorCount());
     }
-
+    private void onCommit() {
+        render(gameService.commitMove());
+    }
     public HBox renderTrialRow(TrialData trialData) {
         List<Integer> combinationElements = trialData.getCombinationData().getElements();
         List<Circle> renderedElements = combinationElements.stream()
@@ -105,13 +122,14 @@ public class GameFragment extends Fragment {
             circle.setOnMouseClicked(event -> {
                 Integer index = (Integer) circle.getUserData();
                 // Set [index] to [selectedItem]
-                gameService.placeColor(index, selectedItem);
+                render(gameService.placeColor(index, selectedItem));
             });
             boundRenderedElements.add(circle);
         }
         EvaluationData evaluationData = trialData.getEvaluationData();
         Pane renderedEvaluation = renderEvaluation(evaluationData, combinationElements.size());
         HBox hBox = new HBox();
+        hBox.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);
         hBox.getChildren().add(renderedEvaluation);
         hBox.getChildren().addAll(renderedElements);
         hBox.setSpacing(4);
@@ -119,16 +137,17 @@ public class GameFragment extends Fragment {
     }
 
     private Pane renderEvaluation(EvaluationData evaluationData, int combinationSize) {
+        GridPane grid = new GridPane();
+        if(evaluationData == null) return grid;
         int correctColorCount = evaluationData.getCorrectColorCount();
         int correctPlaceAndColorCount = evaluationData.getCorrectPlaceAndColorCount();
-        GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setStyle("-fx-background: #fff2c7;");
         grid.setHgap(4);
         grid.setVgap(4);
         grid.setPrefHeight(30);
         int columns = (int) Math.ceil(combinationSize / 2D);
-        grid.setPrefWidth(15*columns);
+        grid.setPrefWidth(15 * columns);
         for (int i = 0; i < combinationSize; i++) {
             Color fill = neutralAccent;
             if (correctColorCount + correctPlaceAndColorCount >= i) fill = new Color(1.0, 1.0, 1.0, 1.0);
@@ -138,7 +157,8 @@ public class GameFragment extends Fragment {
         }
         return grid;
     }
-    private void renderElementBar(int maxColors){
+
+    private void renderElementBar(int maxColors) {
         vbxItems.setSpacing(4);
         vbxItems.getChildren().clear();
         for (int i = 0; i < maxColors; i++) {
@@ -165,7 +185,7 @@ public class GameFragment extends Fragment {
     }
 
     private Color getElementColor(Integer element) {
-        if(element == null) return neutralAccent;
+        if (element == null) return neutralAccent;
         return new Color(1.0 - (element % 3) * 0.4, 0.1 + (element % 10) * 0.1, 0.1 + ((element + 2) % 5) * 0.1, 1.0);
     }
 

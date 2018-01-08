@@ -20,14 +20,13 @@
    <rowConstraints>
       <RowConstraints />
       <RowConstraints />
+      <RowConstraints />
    </rowConstraints>
    <children>
-      <VBox fx:id="vbxTrials" alignment="BOTTOM_CENTER" prefHeight="330.0" prefWidth="247.0" GridPane.rowIndex="1">
-         <children>
-            <Button mnemonicParsing="false" text="Button" />
-         </children></VBox>
+      <VBox fx:id="vbxTrials" alignment="BOTTOM_CENTER" nodeOrientation="RIGHT_TO_LEFT" prefHeight="330.0" prefWidth="247.0" GridPane.rowIndex="1" />
       <VBox fx:id="vbxItems" alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="51.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
       <Pane fx:id="pnlCode" prefHeight="80.0" prefWidth="308.0" GridPane.columnSpan="2" />
+      <Button fx:id="btnCommit" mnemonicParsing="false" prefHeight="25.0" prefWidth="104.0" text="Commit" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
    </children>
 
 
