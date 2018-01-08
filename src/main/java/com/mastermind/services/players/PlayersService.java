@@ -37,7 +37,7 @@ public class PlayersService implements Service {
                     PlayerRowData data = new PlayerRowData();
                     data.setName(player.getName());
                     data.setHuman(player instanceof HumanPlayer);
-                    data.setType(player.getClass().getName());
+                    data.setType(player.getClass().getSimpleName());
                     return data;
                 })
                 .collect(Collectors.toList()));
