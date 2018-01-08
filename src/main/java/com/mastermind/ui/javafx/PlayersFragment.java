@@ -26,10 +26,15 @@ public class PlayersFragment extends Fragment {
     protected void onLoad() {
         playersService = ServiceManager.getPlayersService();
         grid = (GridPane) getNode();
-        getData();
         btnAddPlayer = (Button) lookup("#btnAddPlayer");
         btnAddPlayer.setOnAction(event -> getApplication().actionNewPlayer());
         buildTable();
+    }
+
+    @Override
+    protected void onResume() {
+        getData();
+        tblPlayers.setItems(data);
     }
 
     private void getData() {
@@ -43,7 +48,6 @@ public class PlayersFragment extends Fragment {
         nameColumn.setCellValueFactory(p -> new ReadOnlyStringWrapper(p.getValue().getName()));
         TableColumn<PlayerRowData, String> typeColumn = new TableColumn<>("Type");
         typeColumn.setCellValueFactory(p -> new ReadOnlyStringWrapper(p.getValue().getType()));
-        tblPlayers.setItems(data);
         tblPlayers.getColumns().addAll(nameColumn, typeColumn);
         grid.add(tblPlayers, 1, 1, 1, 3);
     }

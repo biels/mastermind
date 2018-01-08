@@ -192,6 +192,7 @@ public class Application extends javafx.application.Application {
     }
     private void displayFragment(Fragment fragment) {
         fragment.displayIn(pnlContent);
+        fragment.onResume();
     }
     private boolean isCurrentFragment(Class<? extends Fragment> clazz){
         if(fragmentStack.empty()) return false;

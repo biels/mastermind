@@ -33,6 +33,9 @@ public abstract class Fragment {
     }
 
     protected abstract void onLoad();
+    protected void onResume(){
+
+    }
 
     protected Node lookup(String selector){
         return getNode().lookup(selector);
