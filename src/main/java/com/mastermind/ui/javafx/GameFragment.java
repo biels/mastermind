@@ -35,6 +35,7 @@ public class GameFragment extends Fragment {
         pnlCode = (Pane) lookup("#pnlCode");
 
         UserGameState test = new UserGameState();
+        test.setColorCount(5);
 
         List<TrialData> trials = new ArrayList<>();
         TrialData td1 = new TrialData();
@@ -85,6 +86,7 @@ public class GameFragment extends Fragment {
         vbxTrials.getChildren().clear();
         vbxTrials.getChildren().addAll(trialRows);
         vbxTrials.setSpacing(8);
+        renderElementBar(state.getColorCount());
     }
 
     public HBox renderTrialRow(TrialData trialData) {
@@ -120,6 +122,14 @@ public class GameFragment extends Fragment {
                 grid.add(new Circle(6, fill), i % columns, i >= columns ? 1 : 0);
         }
         return grid;
+    }
+    private void renderElementBar(int maxColors){
+        vbxItems.setSpacing(4);
+        vbxItems.getChildren().clear();
+        for (int i = 0; i < maxColors; i++) {
+            Circle renderedElement = renderElement(i);
+            vbxItems.getChildren().add(renderedElement);
+        }
     }
 
     private Circle renderElement(Integer element) {
