@@ -72,6 +72,7 @@ public class Application extends javafx.application.Application {
         LOGIN(instance::actionLogin, "Log in"),
         NEW_GAME(instance::actionNewGame, "New Game"),
         LOAD_SAVED_GAME(instance::actionLoadSavedGame, "Load saved game"),
+        EDIT_PLAYERS(instance::actionEditPlayers, "Edit players"),
         EXIT(instance::actionExit, "Exit");
 
         private final String displayName;
@@ -120,6 +121,9 @@ public class Application extends javafx.application.Application {
         } catch (UserNotLoggedInException e) {
             displayExceptionAlert(e);
         }
+    }
+    private void actionEditPlayers(){
+        pushFragment(new PlayersFragment());
     }
     private void actionExit(){
         Platform.exit();
@@ -198,7 +202,11 @@ public class Application extends javafx.application.Application {
         addMenuSeparator(menuGame);
         addMenuItem(menuGame, Action.EXIT);
 
-        menuBar.getMenus().add(menuGame);
+        Menu menuPlayers = new Menu("Players");
+        addMenuItem(menuPlayers, Action.EDIT_PLAYERS);
+
+        menuBar.getMenus().addAll(menuGame, menuPlayers);
+
     }
     private void addMenuItem(Menu menu, Action action){
         MenuItem item = new MenuItem(action.getDisplayName());
