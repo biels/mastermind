@@ -50,6 +50,7 @@ public class NewGameFragment extends Fragment{
     }
     private void onPlay(){
         int selectedIndex = tblEnemies.getSelectionModel().getSelectedIndex();
+        if(selectedIndex == -1) return;
         UserGameState state = gameService.newGame(selectedIndex);
         close();
     }

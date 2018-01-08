@@ -7,24 +7,33 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Text?>
 
-<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastermind.ui.javafx.MainWindowController">
+<GridPane alignment="TOP_CENTER" hgap="8.0" prefHeight="412.0" prefWidth="370.0" vgap="8.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastermind.ui.javafx.MainWindowController">
     <padding>
-        <Insets bottom="10" left="25" right="25" top="25" />
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
     </padding>
-    <Text text="Select your opponent" wrappingWidth="69.576171875" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="0" />
-   <Button fx:id="btnEditPlayers" mnemonicParsing="false" prefWidth="86.0" text="Edit Players" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
-   <Button fx:id="btnPlay" mnemonicParsing="false" text="Play" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.vgrow="ALWAYS" />
+    <Text text="Select your opponent" wrappingWidth="131.576171875" GridPane.columnIndex="1" GridPane.columnSpan="2">
+      <GridPane.margin>
+         <Insets left="8.0" />
+      </GridPane.margin></Text>
+   <Button fx:id="btnEditPlayers" mnemonicParsing="false" prefWidth="86.0" text="Edit Players" GridPane.columnIndex="2" GridPane.halignment="RIGHT">
+      <GridPane.margin>
+         <Insets />
+      </GridPane.margin></Button>
+   <Button fx:id="btnPlay" mnemonicParsing="false" prefHeight="25.0" prefWidth="62.0" text="Play" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.vgrow="ALWAYS">
+      <GridPane.margin>
+         <Insets />
+      </GridPane.margin></Button>
    <columnConstraints>
       <ColumnConstraints maxWidth="0.0" minWidth="0.0" prefWidth="0.0" />
-      <ColumnConstraints maxWidth="60.0" minWidth="60.0" prefWidth="60.0" />
-      <ColumnConstraints />
+      <ColumnConstraints maxWidth="60.0" minWidth="60.0" percentWidth="62.0" prefWidth="60.0" />
+      <ColumnConstraints percentWidth="38.0" />
       <ColumnConstraints />
    </columnConstraints>
    <rowConstraints>
-      <RowConstraints />
+      <RowConstraints percentHeight="10.0" />
       <RowConstraints />
       <RowConstraints minHeight="10.0" prefHeight="30.0" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" />
+      <RowConstraints minHeight="10.0" percentHeight="10.0" prefHeight="30.0" />
    </rowConstraints>
 
 

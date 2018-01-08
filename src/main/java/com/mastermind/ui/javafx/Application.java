@@ -63,6 +63,8 @@ public class Application extends javafx.application.Application {
 
         // Initial events
         onLoggedInChanged();
+
+
     }
 
     // Actions
@@ -73,6 +75,7 @@ public class Application extends javafx.application.Application {
         LOAD_SAVED_GAME(instance::actionLoadSavedGame, "Load saved game"),
         EDIT_PLAYERS(instance::actionEditPlayers, "Edit players"),
         NEW_PLAYER(instance::actionNewPlayer, "New player"),
+        TEST_REGISTER_AND_LOGIN(instance::actionTestRegisterAndLogin, "Register and login"),
         EXIT(instance::actionExit, "Exit");
 
         private final String displayName;
@@ -121,6 +124,11 @@ public class Application extends javafx.application.Application {
     }
     public void actionNewPlayer() {
         pushFragment(new NewPlayerFragment());
+    }
+    public void actionTestRegisterAndLogin(){
+        ServiceManager.getPlayersService().createHumanPlayer("biel", "1234");
+        ServiceManager.getLoginService().login("biel", "1234");
+        onLoggedInChanged();
     }
     public void actionExit(){
         Platform.exit();
@@ -204,7 +212,10 @@ public class Application extends javafx.application.Application {
         addMenuItem(menuPlayers, Action.EDIT_PLAYERS);
         addMenuItem(menuPlayers, Action.NEW_PLAYER);
 
-        menuBar.getMenus().addAll(menuGame, menuPlayers);
+        Menu menuTest = new Menu("Test");
+        addMenuItem(menuTest, Action.TEST_REGISTER_AND_LOGIN);
+
+        menuBar.getMenus().addAll(menuGame, menuPlayers, menuTest);
 
     }
     private void addMenuItem(Menu menu, Action action){
