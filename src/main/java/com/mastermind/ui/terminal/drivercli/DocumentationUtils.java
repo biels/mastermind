@@ -19,7 +19,7 @@ public class DocumentationUtils {
         try {
             Desktop.getDesktop().browse(getDocDirFor(clazz).getAbsoluteFile().toURI());
         } catch (IOException e) {
-            System.out.println("Please run ./gradlew javadoc to generate documentation");
+            System.out.println("Please execute ./gradlew javadoc to generate documentation");
             //e.printStackTrace();
         }
     }
