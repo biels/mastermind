@@ -3,8 +3,11 @@ package com.mastermind.ui.javafx;
 import com.mastermind.model.persistence.RepositoryManager;
 import com.mastermind.model.persistence.repositories.impl.RepositoriesInMemoryImpl;
 import com.mastermind.services.ServiceManager;
+import com.mastermind.services.game.responses.exceptions.UserNotLoggedInException;
 import com.mastermind.services.login.LoginService;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Orientation;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -31,6 +34,7 @@ public class Application extends javafx.application.Application {
     private Button btnBack;
     private Button btnPrimaryAction;
     private Label lblLoggedIn;
+    private MenuBar menuBar;
     // State
     private Action primaryAction;
     private boolean inGame;
@@ -49,14 +53,14 @@ public class Application extends javafx.application.Application {
         btnBack = (Button) primaryStage.getScene().lookup("#btnBack");
         btnPrimaryAction = (Button) primaryStage.getScene().lookup("#btnPrimaryAction");
         lblLoggedIn = (Label) primaryStage.getScene().lookup("#lblLoggedIn");
-
+        menuBar = (MenuBar) primaryStage.getScene().lookup("#menuBar");
+        buildMenu();
         // Handlers
-        btnBack.setOnAction(event -> actionBack());
-        btnPrimaryAction.setOnAction(event -> primaryAction());
+        attachAction(btnBack, Action.BACK);
+        btnPrimaryAction.setOnAction(event -> primaryAction.execute());
 
         // Startup actions
         startFromFragment(gameFragment);
-        pushFragment(loginFragment);
 
         // Initial events
         onLoggedInChanged();
@@ -64,9 +68,11 @@ public class Application extends javafx.application.Application {
 
     // Actions
     public enum Action {
-        BACK(instance::actionNewGame, "Back"),
+        BACK(instance::actionBack, "Back"),
         LOGIN(instance::actionLogin, "Log in"),
-        NEW_GAME(instance::actionNewGame, "New Game");
+        NEW_GAME(instance::actionNewGame, "New Game"),
+        LOAD_SAVED_GAME(instance::actionLoadSavedGame, "Load saved game"),
+        EXIT(instance::actionExit, "Exit");
 
         private final String displayName;
         private final Runnable handler;
@@ -93,6 +99,13 @@ public class Application extends javafx.application.Application {
             handler.run();
         }
     }
+
+    public void attachAction(ButtonBase buttonBase, Action action){
+        buttonBase.setOnAction(event -> action.execute());
+    }
+    public void attachAction(MenuItem menuItem, Action action){
+        menuItem.setOnAction(event -> action.execute());
+    }
     private void actionBack(){
         popFragment();
     }
@@ -102,7 +115,20 @@ public class Application extends javafx.application.Application {
     private void actionNewGame(){
         // Show new game fragment
 
-        ServiceManager.getGameService().newGame(1);
+        try {
+            ServiceManager.getGameService().newGame(1);
+        } catch (UserNotLoggedInException e) {
+            displayExceptionAlert(e);
+        }
+    }
+    private void actionExit(){
+        Platform.exit();
+    }
+
+
+    private void actionLoadSavedGame() {
+        // TODO Open saved game fragment
+
     }
     public void onLoggedInChanged(){
         LoginService loginService = ServiceManager.getLoginService();
@@ -113,9 +139,7 @@ public class Application extends javafx.application.Application {
         lblLoggedIn.setText(loggedInText);
         updatePrimaryAction();
     }
-    public void primaryAction(){
-        primaryAction.execute();
-    }
+
     public void setPrimaryAction(Action primaryAction) {
         btnPrimaryAction.setText(primaryAction.getDisplayName());
         this.primaryAction = primaryAction;
@@ -167,7 +191,27 @@ public class Application extends javafx.application.Application {
         return fragmentStack.lastElement().getClass().isAssignableFrom(clazz);
     }
 
+    private void buildMenu(){
+        Menu menuGame = new Menu("Game");
+        addMenuItem(menuGame, Action.NEW_GAME);
+        addMenuItem(menuGame, Action.LOAD_SAVED_GAME);
+        addMenuSeparator(menuGame);
+        addMenuItem(menuGame, Action.EXIT);
 
+        menuBar.getMenus().add(menuGame);
+    }
+    private void addMenuItem(Menu menu, Action action){
+        MenuItem item = new MenuItem(action.getDisplayName());
+        attachAction(item, action);
+        menu.getItems().add(item);
+    }
+    private void addMenuSeparator(Menu menu){
+        menu.getItems().add(new SeparatorMenuItem());
+    }
+    private void displayExceptionAlert(Exception e) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, e.getMessage());
+        alert.show();
+    }
     public static void main(String[] args) {
         // Initialize repositories with an in-memory implementation
         RepositoryManager.attachImplementation(new RepositoriesInMemoryImpl());
