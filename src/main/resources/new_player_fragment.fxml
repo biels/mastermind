@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
@@ -16,10 +17,14 @@
     <Text text="New AI Player" wrappingWidth="154.576171875" GridPane.columnIndex="1" GridPane.columnSpan="3" />
    <ChoiceBox fx:id="cmbType" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
    <Label text="lblType" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-   <Label fx:id="lblDepth" text="Depth" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-   <Label fx:id="lblSeed" text="Seed" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-   <TextField fx:id="txtDepth" text="14" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-   <TextField fx:id="txtSeed" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+   <Label fx:id="lblDepth" text="Depth" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+   <Label fx:id="lblSeed" text="Seed" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+   <TextField fx:id="txtDepth" text="14" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+   <TextField fx:id="txtSeed" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+   <Button fx:id="btnCreate" alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" text="Create" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
+   <Label text="Name" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+   <TextField fx:id="txtName" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+   <Label fx:id="lblMessages" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4" />
    <columnConstraints>
       <ColumnConstraints />
       <ColumnConstraints />
@@ -27,6 +32,8 @@
       <ColumnConstraints />
    </columnConstraints>
    <rowConstraints>
+      <RowConstraints />
+      <RowConstraints />
       <RowConstraints />
       <RowConstraints />
       <RowConstraints />
