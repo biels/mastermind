@@ -9,6 +9,7 @@ import com.mastermind.services.game.responses.types.UserGameState;
 import javafx.geometry.NodeOrientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
@@ -29,6 +30,7 @@ public class GameFragment extends Fragment {
     private VBox vbxItems;
     private Pane pnlCode;
     private Button btnCommit;
+    private Label lblMessage, lblRound;
     GameService gameService;
 
     int selectedItem = 0;
@@ -42,6 +44,8 @@ public class GameFragment extends Fragment {
         vbxItems = (VBox) lookup("#vbxItems");
         pnlCode = (Pane) lookup("#pnlCode");
         btnCommit = (Button) lookup("#btnCommit");
+        lblMessage = (Label) lookup("#lblMessage");
+        lblRound = (Label) lookup("#lblRound");
 
         btnCommit.setOnAction(event -> onCommit());
         UserGameState test = new UserGameState();
@@ -105,6 +109,12 @@ public class GameFragment extends Fragment {
             vbxTrials.getChildren().addAll(trialRows);
         }
         vbxTrials.setSpacing(8);
+        lblMessage.setText(state.getMessage());
+        if(state.getMatchStatus() == UserGameState.MatchStatus.IN_PROGRESS)
+            lblRound.setText("Round: " + state.getCurrentRound() + " / " + state.getTotalRoundCount()
+         + ", Opponent: " + state.getEnemyPlayerName()
+        );
+
         renderElementBar(state.getColorCount());
     }
     private void onCommit() {
