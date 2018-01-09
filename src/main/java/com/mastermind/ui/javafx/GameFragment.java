@@ -19,9 +19,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import sun.plugin.javascript.navig.Array;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,6 +36,7 @@ public class GameFragment extends Fragment {
     GameService gameService;
 
     int selectedItem = 0;
+    boolean needToshow = true;
     private Color neutralAccent = new Color(0.8, 0.8, 0.8, 1.0);
     ;
 
@@ -91,7 +94,7 @@ public class GameFragment extends Fragment {
 
         test.setTrials(trials);
         UserGameState state = gameService.getUserGameState();
-        render(state.getTrials() == null ? test : state);
+        render(state);
     }
 
     @Override
@@ -105,6 +108,13 @@ public class GameFragment extends Fragment {
             List<HBox> trialRows = state.getTrials().stream()
                     .map(this::renderTrialRow)
                     .collect(Collectors.toList());
+//            if(true){
+//                TrialData trialData = new TrialData();
+//                CombinationData cd = new CombinationData();
+//                cd.setElements(new ArrayList<>(Collections.nCopies(state.getSlotCount(), null)));
+//                trialData.setCombinationData(cd);
+//                trialRows.add(renderTrialRow(trialData));
+//            }
             vbxTrials.getChildren().clear();
             vbxTrials.getChildren().addAll(trialRows);
         }
@@ -119,6 +129,7 @@ public class GameFragment extends Fragment {
     }
     private void onCommit() {
         render(gameService.commitMove());
+        needToshow = true;
     }
     public HBox renderTrialRow(TrialData trialData) {
         List<Integer> combinationElements = trialData.getCombinationData().getElements();
@@ -177,6 +188,10 @@ public class GameFragment extends Fragment {
             int finalI = i;
             renderedElement.setOnMouseClicked(event -> {
                 setSelectedItem(finalI);
+                if(needToshow){
+                    needToshow = false;
+                    render(gameService.placeColor(0, selectedItem));
+                }
             });
             renderedElement.setOnDragDetected(event -> {
                 Dragboard db = renderedElement.startDragAndDrop(TransferMode.COPY);
