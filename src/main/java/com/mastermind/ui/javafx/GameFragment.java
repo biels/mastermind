@@ -19,7 +19,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import sun.plugin.javascript.navig.Array;
 
 import java.util.ArrayList;
 import java.util.Arrays;
