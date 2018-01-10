@@ -6,6 +6,7 @@ import com.mastermind.services.ServiceManager;
 import com.mastermind.services.game.responses.exceptions.UserNotLoggedInException;
 import com.mastermind.services.login.LoginService;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -42,9 +43,13 @@ public class Application extends javafx.application.Application {
         this.primaryStage = primaryStage;
         primaryStage.setTitle("Window");
         Parent root = FXMLLoader.load(getClass().getResource("/main_window.fxml"));
-        primaryStage.setScene(new Scene(root));
+        Scene scene = new Scene(root);
+        primaryStage.setScene(scene);
         primaryStage.setMinWidth(400);
         primaryStage.setMinHeight(600);
+        ChangeListener<Number> numberChangeListener = (observable, oldValue, newValue) -> fragmentStack.lastElement().onResize();
+        primaryStage.widthProperty().addListener(numberChangeListener);
+        primaryStage.heightProperty().addListener(numberChangeListener);
         primaryStage.show();
 
         // References

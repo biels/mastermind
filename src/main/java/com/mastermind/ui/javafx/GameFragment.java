@@ -122,8 +122,11 @@ public class GameFragment extends Fragment {
             lblRound.setText("Round: " + state.getCurrentRound() + " / " + state.getTotalRoundCount()
          + ", Opponent: " + state.getEnemyPlayerName()
         );
-
-        renderElementBar(state.getColorCount());
+        if(state.getMatchStatus() == UserGameState.MatchStatus.NOT_CREATED){
+            lblRound.setVisible(false);
+            lblMessage.setVisible(false);
+        }
+            renderElementBar(state.getColorCount());
     }
     private void onCommit() {
         render(gameService.commitMove());

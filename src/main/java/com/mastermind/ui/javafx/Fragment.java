@@ -10,6 +10,7 @@ import java.io.IOException;
 public abstract class Fragment {
     private Application application;
     private Node node;
+    private Pane parent;
     private String getFXMLName() {
         String regex = "([a-z])([A-Z]+)";
         String replacement = "$1_$2";
@@ -43,9 +44,18 @@ public abstract class Fragment {
 
     public void displayIn(Pane parent) {
         loadFXML();
+        this.parent = parent;
         parent.getChildren().setAll(getNode());
+        onResize();
     }
-
+    public void onResize(){
+        Node node = getNode();
+        if(node instanceof Pane){
+            Pane pane = (Pane) node;
+            pane.setPrefWidth(parent.getWidth());
+            pane.setPrefHeight(parent.getHeight());
+        }
+    }
     protected Application getApplication() {
         return Application.instance;
     }
