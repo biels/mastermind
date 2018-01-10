@@ -102,27 +102,32 @@ public class GameFragment extends Fragment {
     }
 
     public void render(UserGameState state) {
+        UserGameState.MatchStatus status = state.getMatchStatus();
+        boolean notStarted = status == UserGameState.MatchStatus.NOT_STARTED;
+        boolean finished = status == UserGameState.MatchStatus.FINISHED;
+        boolean inProgress = status == UserGameState.MatchStatus.IN_PROGRESS;
+        boolean notCreated = status == UserGameState.MatchStatus.NOT_CREATED;
         if (state.getTrials() != null) {
             List<HBox> trialRows = state.getTrials().stream()
                     .map(this::renderTrialRow)
                     .collect(Collectors.toList());
-//            if(true){
-//                TrialData trialData = new TrialData();
-//                CombinationData cd = new CombinationData();
-//                cd.setElements(new ArrayList<>(Collections.nCopies(state.getSlotCount(), null)));
-//                trialData.setCombinationData(cd);
-//                trialRows.add(renderTrialRow(trialData));
-//            }
+            if(true){
+                TrialData trialData = new TrialData();
+                CombinationData cd = new CombinationData();
+                cd.setElements(new ArrayList<>(Collections.nCopies(state.getSlotCount(), null)));
+                trialData.setCombinationData(cd);
+                trialRows.add(renderTrialRow(trialData));
+            }
             vbxTrials.getChildren().clear();
             vbxTrials.getChildren().addAll(trialRows);
         }
         vbxTrials.setSpacing(8);
         lblMessage.setText(state.getMessage());
-        if(state.getMatchStatus() == UserGameState.MatchStatus.IN_PROGRESS)
+        if(status == UserGameState.MatchStatus.IN_PROGRESS)
             lblRound.setText("Round: " + state.getCurrentRound() + " / " + state.getTotalRoundCount()
          + ", Opponent: " + state.getEnemyPlayerName()
         );
-        if(state.getMatchStatus() == UserGameState.MatchStatus.NOT_CREATED){
+        if(status == UserGameState.MatchStatus.NOT_CREATED){
             lblRound.setVisible(false);
             lblMessage.setVisible(false);
         }
