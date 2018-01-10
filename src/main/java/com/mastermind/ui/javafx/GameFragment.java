@@ -37,7 +37,6 @@ public class GameFragment extends Fragment {
     int selectedItem = 0;
     boolean needToshow = true;
     private Color neutralAccent = new Color(0.8, 0.8, 0.8, 1.0);
-    ;
 
     @Override
     protected void onLoad() {
