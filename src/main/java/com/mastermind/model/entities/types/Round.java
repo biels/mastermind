@@ -62,6 +62,7 @@ public class Round extends Entity {
     }
     private void enforceMoveCorrectness(){
         Combination combination = getFocusedCombination();
+        if(combination == null) return;
         if (!combination.isComplete()) throw new RuntimeException("Combination must not have empty slots");
         if(!getMatch().getConfig().isAllowRepetition()){
             if(combination.getElements().stream().distinct().count() != combination.getElements().stream().count())
@@ -171,7 +172,7 @@ public class Round extends Entity {
     }
 
     private Combination getFocusedCombination() {
-        return isActivePlayerCodemaker ? getCode() : getCurrentTrial().getCombination();
+        return isActivePlayerCodemaker ? getCode() : (getCurrentTrial() == null ? null : getCurrentTrial().getCombination());
     }
 
     public Integer setElement(int index, Integer element) {

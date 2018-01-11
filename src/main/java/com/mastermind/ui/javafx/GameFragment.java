@@ -158,7 +158,7 @@ public class GameFragment extends Fragment {
         if (band) {
             boolean localWins = state.getLocalWins();
             String color = localWins ? "#11ffa3" : "#ff7351";
-            pnlBand.setStyle("-fx-background: " + color + ";");
+            //pnlBand.setStyle("-fx-background: " + color + ";");
             if (finished) {
                 lblBandTitle.setText(localWins ? " Victory" : "Defeat");
                 lblBandSubtitle.setText(state.getLocalPlayerEloIncrement() + " ELO");
@@ -176,12 +176,14 @@ public class GameFragment extends Fragment {
             List<Circle> circles = renderCombination(state.getCode().getElements());
             HBox hBox = new HBox();
             hBox.getChildren().addAll(circles);
+            hBox.setSpacing(4);
             pnlCode.getChildren().add(hBox);
         }
     }
 
     private void onCommit() {
-        render(gameService.commitMove());
+        gameService.commitMove();
+        render(gameService.getUserGameState());
         needToshow = true;
     }
 
@@ -231,8 +233,8 @@ public class GameFragment extends Fragment {
         grid.setPrefWidth(15 * columns);
         for (int i = 0; i < combinationSize; i++) {
             Color fill = neutralAccent;
-            if (correctColorCount + correctPlaceAndColorCount >= i) fill = new Color(1.0, 1.0, 1.0, 1.0);
-            if (correctPlaceAndColorCount >= i) fill = new Color(0.0, 0.0, 0.0, 1.0);
+            if (correctColorCount + correctPlaceAndColorCount > i) fill = new Color(1.0, 1.0, 1.0, 1.0);
+            if (correctPlaceAndColorCount > i) fill = new Color(0.0, 0.0, 0.0, 1.0);
             if (fill != null)
                 grid.add(new Circle(6, fill), i % columns, i >= columns ? 1 : 0);
         }
