@@ -24,6 +24,9 @@ public class UserGameState {
     private MatchStatus matchStatus;
     private Double localPlayerEloIncrement;
     private String lastFinishedRoundWinner;
+    private boolean currentRoundFinished;
+
+
 
     public int getCurrentRound() {
         return currentRound;
@@ -171,5 +174,12 @@ public class UserGameState {
 
     public void setLocalPlayerEloIncrement(Double localPlayerEloIncrement) {
         this.localPlayerEloIncrement = localPlayerEloIncrement;
+    }
+    public boolean isCurrentRoundFinished() {
+        return currentRoundFinished;
+    }
+
+    public void setCurrentRoundFinished(boolean currentRoundFinished) {
+        this.currentRoundFinished = currentRoundFinished;
     }
 }
