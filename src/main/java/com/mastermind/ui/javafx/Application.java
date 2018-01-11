@@ -154,7 +154,9 @@ public class Application extends javafx.application.Application {
         ServiceManager.getPlayersService().createMinmiaxAIPlayer("TestMinimax", 14);
 
         GameService gameService = ServiceManager.getGameService();
-        gameService.setMaxTrialCount(4);
+        gameService.setMaxTrialCount(2);
+        gameService.setSlotCount(5);
+        gameService.setColorCount(4);
         gameService.newGame(0);
         gameFragment.onResume();
     }

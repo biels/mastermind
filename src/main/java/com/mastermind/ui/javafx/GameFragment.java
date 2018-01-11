@@ -39,7 +39,6 @@ public class GameFragment extends Fragment {
     boolean needToshow = true;
     private Color neutralAccent = new Color(0.8, 0.8, 0.8, 1.0);
     boolean bandEnabled = false;
-
     @Override
     protected void onLoad() {
         gameService = ServiceManager.getGameService();
@@ -56,10 +55,7 @@ public class GameFragment extends Fragment {
         lblBandSubtitle = (Label) lookup("#lblBandSubtitle");
 
         btnCommit.setOnAction(event -> onCommit());
-        btnBandDismiss.setOnAction(event -> {
-            pnlBand.setVisible(false);
-            bandEnabled = false;
-        });
+
 
         UserGameState test = new UserGameState();
         test.setColorCount(5);
@@ -135,12 +131,11 @@ public class GameFragment extends Fragment {
         }
         vbxTrials.setSpacing(8);
         lblMessage.setText(status.name() + ": " + state.getMessage() + " be: " + bandEnabled);
-        String roundText = "Round: " + (state.getCurrentRound() + 1) + " / " + state.getTotalRoundCount();
         if (notStarted || inProgress || finished) {
             int trialCount = 0;
             if (state.getTrials() != null) trialCount = state.getTrials().size();
             lblFooter.setText(state.getLocalPlayerName() + " vs " + state.getEnemyPlayerName()
-                    + " - " + "Trials: " + trialCount + " / " + state.getMaxTrialCount() + " - " +  roundText);
+                    + " - " + "Trials: " + trialCount + " / " + state.getMaxTrialCount() + " - " + ("Round: " + (state.getCurrentRound() + 1) + " / " + state.getTotalRoundCount()));
             renderElementBar(state, state.getColorCount());
             btnCommit.setVisible(true);
         } else {
@@ -154,7 +149,7 @@ public class GameFragment extends Fragment {
             //lblMessage.setVisible(false);
         }
         boolean band = state.isCurrentRoundFinished();
-        pnlBand.setVisible(state.isCurrentRoundFinished() && bandEnabled);
+        pnlBand.setVisible((state.isCurrentRoundFinished() || finished) && bandEnabled);
         if (band) {
             boolean localWins = state.getLocalWins();
             String color = localWins ? "#11ffa3" : "#ff7351";
@@ -162,13 +157,22 @@ public class GameFragment extends Fragment {
             if (finished) {
                 lblBandTitle.setText(localWins ? " Victory" : "Defeat");
                 lblBandSubtitle.setText(state.getLocalPlayerEloIncrement() + " ELO");
-                btnBandDismiss.setText("Dismiss");
-
+                btnBandDismiss.setText("Play Again");
+                btnBandDismiss.setOnAction(event -> {
+                    pnlBand.setVisible(false);
+                    bandEnabled = false;
+                    gameService.repeatGame();
+                    render(gameService.getUserGameState());
+                });
             } else {
                 lblBandTitle.setText(state.getLastFinishedRoundWinner() + " wins this round!");
 
-                lblBandSubtitle.setText(roundText);
+                lblBandSubtitle.setText("Round: " + (state.getCurrentRound()) + " / " + state.getTotalRoundCount());
                 btnBandDismiss.setText("Next Round");
+                btnBandDismiss.setOnAction(event -> {
+                    pnlBand.setVisible(false);
+                    bandEnabled = false;
+                });
             }
 
         }
@@ -184,9 +188,10 @@ public class GameFragment extends Fragment {
 
     private void onCommit() {
         gameService.commitMove();
+        bandEnabled = true;
         render(gameService.getUserGameState());
         needToshow = true;
-        bandEnabled = true;
+
     }
 
     public HBox renderTrialRow(TrialData trialData) {
