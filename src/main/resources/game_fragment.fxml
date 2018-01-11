@@ -51,15 +51,15 @@
       </StackPane>
       <GridPane fx:id="pnlBand" maxHeight="500.0" opacity="0.9" prefHeight="80.0" prefWidth="368.0" style="-fx-background-color: powderblue;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="190.0">
          <children>
-            <Label fx:id="lblTitle" alignment="CENTER" layoutX="43.0" layoutY="92.0" prefHeight="17.0" prefWidth="381.0" text="You win! / Round won" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <Label fx:id="lblBandTitle" alignment="CENTER" layoutX="43.0" layoutY="92.0" prefHeight="17.0" prefWidth="381.0" text="You win! / Round won" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <font>
                   <Font size="28.0" />
                </font></Label>
-            <Label text="+36 ELO" textFill="#1db531" GridPane.columnIndex="1" GridPane.rowIndex="3">
+            <Label fx:id="lblBandSubtitle" text="+36 ELO" textFill="#1db531" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <font>
                   <Font name="System Bold" size="13.0" />
                </font></Label>
-            <Button mnemonicParsing="false" text="Dismiss / Next round" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Button fx:id="btnBandDismiss" mnemonicParsing="false" text="Dismiss / Next round" GridPane.columnIndex="1" GridPane.rowIndex="4" />
          </children>
          <columnConstraints>
             <ColumnConstraints />

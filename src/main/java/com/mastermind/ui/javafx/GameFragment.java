@@ -30,11 +30,12 @@ public class GameFragment extends Fragment {
     private VBox vbxTrials;
     private VBox vbxItems;
     private Pane pnlCode, pnlBand;
-    private Button btnCommit;
-    private Label lblMessage, lblRound, lblFooter;
+    private Button btnCommit, btnBandDismiss;
+    private Label lblMessage, lblRound, lblFooter, lblBandTitle, lblBandSubtitle;
     GameService gameService;
 
     int selectedItem = 0;
+    int selectedSlot = 0;
     boolean needToshow = true;
     private Color neutralAccent = new Color(0.8, 0.8, 0.8, 1.0);
 
@@ -46,9 +47,12 @@ public class GameFragment extends Fragment {
         pnlCode = (Pane) lookup("#pnlCode");
         pnlBand = (Pane) lookup("#pnlBand");
         btnCommit = (Button) lookup("#btnCommit");
+        btnBandDismiss = (Button) lookup("#btnBandDismiss");
         lblMessage = (Label) lookup("#lblMessage");
         lblRound = (Label) lookup("#lblRound");
         lblFooter = (Label) lookup("#lblFooter");
+        lblBandTitle = (Label) lookup("#lblBandTitle");
+        lblBandSubtitle = (Label) lookup("#lblBandSubtitle");
 
         btnCommit.setOnAction(event -> onCommit());
         UserGameState test = new UserGameState();
@@ -128,17 +132,34 @@ public class GameFragment extends Fragment {
         if(notStarted || inProgress || finished) {
             lblFooter.setText(state.getLocalPlayerName() + " vs " + state.getEnemyPlayerName()
             + " - " + "Round: " + state.getCurrentRound() + " / " + state.getTotalRoundCount());
-            renderElementBar(state.getColorCount());
+            renderElementBar(state, state.getColorCount());
         }else{
             lblFooter.setText("Ready to start a new game");
-            renderElementBar(0);
+            renderElementBar(state, 0);
         }
         pnlBand.setVisible(finished);
         if(status == UserGameState.MatchStatus.NOT_CREATED){
             //lblRound.setVisible(false);
             //lblMessage.setVisible(false);
         }
+        boolean band = state.isCurrentRoundFinished();
+        pnlBand.setVisible(band);
+        if(band){
+            boolean localWins = state.getLocalWins();
+            String color = localWins ? "##11ffa3" : "#ff7351";
+            pnlBand.setStyle("-fx-background: " + color + ";");
+            if(finished){
+                lblBandTitle.setText(localWins ? " Victory" : "Defeat");
+                lblBandSubtitle.setText(state.getLocalPlayerEloIncrement() + " ELO");
+                btnBandDismiss.setText("Dismiss");
 
+            }else{
+                lblBandTitle.setText(state.getLastFinishedRoundWinner() + " wins this round!");
+                lblBandSubtitle.setText("Round: " + state.getCurrentRound() + " / " + state.getTotalRoundCount());
+                btnBandDismiss.setText("Next Round");
+            }
+
+        }
     }
     private void onCommit() {
         render(gameService.commitMove());
@@ -192,7 +213,7 @@ public class GameFragment extends Fragment {
         return grid;
     }
 
-    private void renderElementBar(int maxColors) {
+    private void renderElementBar(UserGameState state, int maxColors) {
         vbxItems.setSpacing(4);
         vbxItems.getChildren().clear();
         for (int i = 0; i < maxColors; i++) {
@@ -201,10 +222,11 @@ public class GameFragment extends Fragment {
             int finalI = i;
             renderedElement.setOnMouseClicked(event -> {
                 setSelectedItem(finalI);
-                if(needToshow){
-                    needToshow = false;
-                    render(gameService.placeColor(0, selectedItem));
-                }
+                //if(needToshow){
+                    //needToshow = false;
+                    render(gameService.placeColor(selectedSlot, selectedItem));
+                    selectedSlot = (selectedSlot + 1) % state.getSlotCount();
+                //}
             });
             renderedElement.setOnDragDetected(event -> {
                 Dragboard db = renderedElement.startDragAndDrop(TransferMode.COPY);
