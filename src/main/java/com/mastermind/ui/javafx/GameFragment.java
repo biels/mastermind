@@ -130,8 +130,10 @@ public class GameFragment extends Fragment {
         vbxTrials.setSpacing(8);
         lblMessage.setText(status.name() + ": " + state.getMessage());
         if(notStarted || inProgress || finished) {
+            int trialCount = 0;
+            if(state.getTrials() != null)trialCount = state.getTrials().size();
             lblFooter.setText(state.getLocalPlayerName() + " vs " + state.getEnemyPlayerName()
-            + " - " + "Round: " + state.getCurrentRound() + " / " + state.getTotalRoundCount());
+            + " - " + "Trials: " + trialCount + " / " + state.getMaxTrialCount() + " - " + "Round: " + state.getCurrentRound() + " / " + state.getTotalRoundCount());
             renderElementBar(state, state.getColorCount());
         }else{
             lblFooter.setText("Ready to start a new game");
