@@ -20,7 +20,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -39,7 +38,7 @@ public class GameFragment extends Fragment {
     int selectedSlot = 0;
     boolean needToshow = true;
     private Color neutralAccent = new Color(0.8, 0.8, 0.8, 1.0);
-    boolean dismissed = false;
+    boolean bandEnabled = false;
 
     @Override
     protected void onLoad() {
@@ -59,7 +58,7 @@ public class GameFragment extends Fragment {
         btnCommit.setOnAction(event -> onCommit());
         btnBandDismiss.setOnAction(event -> {
             pnlBand.setVisible(false);
-            dismissed = true;
+            bandEnabled = false;
         });
 
         UserGameState test = new UserGameState();
@@ -135,12 +134,13 @@ public class GameFragment extends Fragment {
             vbxTrials.getChildren().addAll(trialRows);
         }
         vbxTrials.setSpacing(8);
-        lblMessage.setText(status.name() + ": " + state.getMessage());
+        lblMessage.setText(status.name() + ": " + state.getMessage() + " be: " + bandEnabled);
+        String roundText = "Round: " + (state.getCurrentRound() + 1) + " / " + state.getTotalRoundCount();
         if (notStarted || inProgress || finished) {
             int trialCount = 0;
             if (state.getTrials() != null) trialCount = state.getTrials().size();
             lblFooter.setText(state.getLocalPlayerName() + " vs " + state.getEnemyPlayerName()
-                    + " - " + "Trials: " + trialCount + " / " + state.getMaxTrialCount() + " - " + "Round: " + state.getCurrentRound() + " / " + state.getTotalRoundCount());
+                    + " - " + "Trials: " + trialCount + " / " + state.getMaxTrialCount() + " - " +  roundText);
             renderElementBar(state, state.getColorCount());
             btnCommit.setVisible(true);
         } else {
@@ -148,13 +148,13 @@ public class GameFragment extends Fragment {
             renderElementBar(state, 0);
             btnCommit.setVisible(false);
         }
-        pnlBand.setVisible(state.isCurrentRoundFinished() && !dismissed);
+
         if (status == UserGameState.MatchStatus.NOT_CREATED) {
             //lblRound.setVisible(false);
             //lblMessage.setVisible(false);
         }
         boolean band = state.isCurrentRoundFinished();
-        pnlBand.setVisible(band);
+        pnlBand.setVisible(state.isCurrentRoundFinished() && bandEnabled);
         if (band) {
             boolean localWins = state.getLocalWins();
             String color = localWins ? "#11ffa3" : "#ff7351";
@@ -166,7 +166,8 @@ public class GameFragment extends Fragment {
 
             } else {
                 lblBandTitle.setText(state.getLastFinishedRoundWinner() + " wins this round!");
-                lblBandSubtitle.setText("Round: " + state.getCurrentRound() + " / " + state.getTotalRoundCount());
+
+                lblBandSubtitle.setText(roundText);
                 btnBandDismiss.setText("Next Round");
             }
 
@@ -185,6 +186,7 @@ public class GameFragment extends Fragment {
         gameService.commitMove();
         render(gameService.getUserGameState());
         needToshow = true;
+        bandEnabled = true;
     }
 
     public HBox renderTrialRow(TrialData trialData) {
@@ -211,7 +213,7 @@ public class GameFragment extends Fragment {
             circle.setOnMouseClicked(event -> {
                 Integer index = (Integer) circle.getUserData();
                 // Set [index] to [selectedItem]
-                dismissed = false;
+
                 render(gameService.placeColor(index, selectedItem));
             });
             boundRenderedElements.add(circle);
@@ -254,7 +256,6 @@ public class GameFragment extends Fragment {
                 //needToshow = false;
                 render(gameService.placeColor(selectedSlot, selectedItem));
                 selectedSlot = (selectedSlot + 1) % state.getSlotCount();
-                dismissed = false;
                 //}
             });
             renderedElement.setOnDragDetected(event -> {
