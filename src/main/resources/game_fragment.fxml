@@ -10,6 +10,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="pnlContent" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastermind.ui.javafx.MainWindowController">
    <children>
@@ -28,6 +29,7 @@
                       <RowConstraints />
                       <RowConstraints />
                       <RowConstraints />
+                  <RowConstraints />
                   </rowConstraints>
                   <children>
                       <VBox fx:id="vbxTrials" alignment="BOTTOM_CENTER" nodeOrientation="RIGHT_TO_LEFT" prefHeight="330.0" prefWidth="247.0" GridPane.rowIndex="1" />
@@ -36,23 +38,27 @@
                           <children>
                               <Label fx:id="lblMessage" alignment="CENTER" layoutX="14.0" layoutY="32.0" prefHeight="25.0" prefWidth="292.0" />
                               <Label fx:id="lblRound" contentDisplay="CENTER" layoutY="49.0" prefHeight="17.0" prefWidth="308.0" />
+                              <Button fx:id="btnCommit" layoutX="206.0" layoutY="14.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="72.0" text="Commit" />
                           </children>
                       </Pane>
-                      <AnchorPane GridPane.halignment="CENTER" GridPane.rowIndex="2">
-                          <children>
-                              <Button fx:id="btnCommit" mnemonicParsing="false" prefHeight="25.0" prefWidth="247.0" text="Commit" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                          </children>
-                      </AnchorPane>
+                      <AnchorPane GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                  <Label fx:id="lblFooter" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
                   </children>
 
 
               </GridPane>
           </children>
       </StackPane>
-      <GridPane maxHeight="500.0" opacity="0.9" prefHeight="97.0" prefWidth="368.0" style="-fx-background-color: powderblue;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="190.0">
+      <GridPane fx:id="pnlBand" maxHeight="500.0" opacity="0.9" prefHeight="80.0" prefWidth="368.0" style="-fx-background-color: powderblue;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="190.0">
          <children>
-            <Label fx:id="lblTitle" alignment="CENTER" layoutX="43.0" layoutY="92.0" prefHeight="17.0" prefWidth="381.0" text="You win! / Round won" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Label text="+36 ELO" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label fx:id="lblTitle" alignment="CENTER" layoutX="43.0" layoutY="92.0" prefHeight="17.0" prefWidth="381.0" text="You win! / Round won" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <font>
+                  <Font size="28.0" />
+               </font></Label>
+            <Label text="+36 ELO" textFill="#1db531" GridPane.columnIndex="1" GridPane.rowIndex="3">
+               <font>
+                  <Font name="System Bold" size="13.0" />
+               </font></Label>
             <Button mnemonicParsing="false" text="Dismiss / Next round" GridPane.columnIndex="1" GridPane.rowIndex="4" />
          </children>
          <columnConstraints>
@@ -61,10 +67,13 @@
          </columnConstraints>
          <rowConstraints>
             <RowConstraints />
-            <RowConstraints valignment="CENTER" vgrow="NEVER" />
+            <RowConstraints valignment="CENTER" vgrow="ALWAYS" />
             <RowConstraints />
             <RowConstraints />
             <RowConstraints />
-         </rowConstraints></GridPane>
+         </rowConstraints>
+         <padding>
+            <Insets bottom="4.0" top="2.0" />
+         </padding></GridPane>
    </children>
 </AnchorPane>

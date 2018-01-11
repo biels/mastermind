@@ -29,9 +29,9 @@ import java.util.stream.Collectors;
 public class GameFragment extends Fragment {
     private VBox vbxTrials;
     private VBox vbxItems;
-    private Pane pnlCode;
+    private Pane pnlCode, pnlBand;
     private Button btnCommit;
-    private Label lblMessage, lblRound;
+    private Label lblMessage, lblRound, lblFooter;
     GameService gameService;
 
     int selectedItem = 0;
@@ -44,9 +44,11 @@ public class GameFragment extends Fragment {
         vbxTrials = (VBox) lookup("#vbxTrials");
         vbxItems = (VBox) lookup("#vbxItems");
         pnlCode = (Pane) lookup("#pnlCode");
+        pnlBand = (Pane) lookup("#pnlBand");
         btnCommit = (Button) lookup("#btnCommit");
         lblMessage = (Label) lookup("#lblMessage");
         lblRound = (Label) lookup("#lblRound");
+        lblFooter = (Label) lookup("#lblFooter");
 
         btnCommit.setOnAction(event -> onCommit());
         UserGameState test = new UserGameState();
@@ -122,16 +124,21 @@ public class GameFragment extends Fragment {
             vbxTrials.getChildren().addAll(trialRows);
         }
         vbxTrials.setSpacing(8);
-        lblMessage.setText(state.getMessage());
-        if(status == UserGameState.MatchStatus.IN_PROGRESS)
-            lblRound.setText("Round: " + state.getCurrentRound() + " / " + state.getTotalRoundCount()
-         + ", Opponent: " + state.getEnemyPlayerName()
-        );
-        if(status == UserGameState.MatchStatus.NOT_CREATED){
-            lblRound.setVisible(false);
-            lblMessage.setVisible(false);
-        }
+        lblMessage.setText(status.name() + ": " + state.getMessage());
+        if(notStarted || inProgress || finished) {
+            lblFooter.setText(state.getLocalPlayerName() + " vs " + state.getEnemyPlayerName()
+            + " - " + "Round: " + state.getCurrentRound() + " / " + state.getTotalRoundCount());
             renderElementBar(state.getColorCount());
+        }else{
+            lblFooter.setText("Ready to start a new game");
+            renderElementBar(0);
+        }
+        pnlBand.setVisible(finished);
+        if(status == UserGameState.MatchStatus.NOT_CREATED){
+            //lblRound.setVisible(false);
+            //lblMessage.setVisible(false);
+        }
+
     }
     private void onCommit() {
         render(gameService.commitMove());
