@@ -150,7 +150,7 @@ public class GameFragment extends Fragment {
         pnlBand.setVisible(band);
         if(band){
             boolean localWins = state.getLocalWins();
-            String color = localWins ? "##11ffa3" : "#ff7351";
+            String color = localWins ? "#11ffa3" : "#ff7351";
             pnlBand.setStyle("-fx-background: " + color + ";");
             if(finished){
                 lblBandTitle.setText(localWins ? " Victory" : "Defeat");

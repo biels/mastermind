@@ -3,6 +3,7 @@ package com.mastermind.ui.javafx;
 import com.mastermind.model.persistence.RepositoryManager;
 import com.mastermind.model.persistence.repositories.impl.RepositoriesInMemoryImpl;
 import com.mastermind.services.ServiceManager;
+import com.mastermind.services.game.GameService;
 import com.mastermind.services.login.LoginService;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -48,7 +49,9 @@ public class Application extends javafx.application.Application {
         primaryStage.setScene(scene);
         primaryStage.setMinWidth(400);
         primaryStage.setMinHeight(600);
-        ChangeListener<Number> numberChangeListener = (observable, oldValue, newValue) -> fragmentStack.lastElement().onResize();
+        ChangeListener<Number> numberChangeListener = (observable, oldValue, newValue) -> {
+            if (fragmentStack.size() > 0) fragmentStack.lastElement().onResize();
+        };
         primaryStage.widthProperty().addListener(numberChangeListener);
         primaryStage.heightProperty().addListener(numberChangeListener);
         primaryStage.show();
@@ -149,13 +152,16 @@ public class Application extends javafx.application.Application {
     public void actionTestCreatePlayerAndStartGame() {
         if(!ServiceManager.getLoginService().isLoggedIn())return;
         ServiceManager.getPlayersService().createMinmiaxAIPlayer("TestMinimax", 14);
-        ServiceManager.getGameService().newGame(0);
+
+        GameService gameService = ServiceManager.getGameService();
+        gameService.setMaxTrialCount(4);
+        gameService.newGame(0);
+        gameFragment.onResume();
     }
 
     public void actionTestLoginAndPlay() {
         actionTestRegisterAndLogin();
         actionTestCreatePlayerAndStartGame();
-        gameFragment.onResume();
     }
 
     public void actionExit() {

@@ -198,7 +198,11 @@ public class GameService implements Service {
         state.setEnemyPlayerName(match.getEnemyPlayer().getName());
         state.setLocalPlayerRole(match.getConfig().isLocalStartsMakingCode() ? UserGameState.Role.CODEMAKER : UserGameState.Role.CODEBREAKER);
         state.setCurrentRound(match.getRounds().size() - 1);
-        state.setCurrentRoundFinished(match.isCurrentRoundFinished());
+        boolean middleFinishLine = false;
+        if(match.getLastFinishedRound() != null
+                && match.getCurrentRound() != null && match.getCurrentRound().getTrials().size() == 0)
+            middleFinishLine = true;
+        state.setCurrentRoundFinished(middleFinishLine || match.isCurrentRoundFinished());
         if (!match.isModified()) {
             state.setMatchStatus(UserGameState.MatchStatus.NOT_STARTED);
             state.setMessage("Start by placing your pegs!");
