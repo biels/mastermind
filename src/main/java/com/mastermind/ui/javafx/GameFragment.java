@@ -135,9 +135,11 @@ public class GameFragment extends Fragment {
             lblFooter.setText(state.getLocalPlayerName() + " vs " + state.getEnemyPlayerName()
             + " - " + "Trials: " + trialCount + " / " + state.getMaxTrialCount() + " - " + "Round: " + state.getCurrentRound() + " / " + state.getTotalRoundCount());
             renderElementBar(state, state.getColorCount());
+            btnCommit.setVisible(true);
         }else{
             lblFooter.setText("Ready to start a new game");
             renderElementBar(state, 0);
+            btnCommit.setVisible(false);
         }
         pnlBand.setVisible(finished);
         if(status == UserGameState.MatchStatus.NOT_CREATED){
