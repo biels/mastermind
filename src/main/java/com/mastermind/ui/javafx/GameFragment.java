@@ -20,6 +20,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -38,6 +39,7 @@ public class GameFragment extends Fragment {
     int selectedSlot = 0;
     boolean needToshow = true;
     private Color neutralAccent = new Color(0.8, 0.8, 0.8, 1.0);
+    boolean dismissed = false;
 
     @Override
     protected void onLoad() {
@@ -55,6 +57,11 @@ public class GameFragment extends Fragment {
         lblBandSubtitle = (Label) lookup("#lblBandSubtitle");
 
         btnCommit.setOnAction(event -> onCommit());
+        btnBandDismiss.setOnAction(event -> {
+            pnlBand.setVisible(false);
+            dismissed = true;
+        });
+
         UserGameState test = new UserGameState();
         test.setColorCount(5);
 
@@ -117,7 +124,7 @@ public class GameFragment extends Fragment {
             List<HBox> trialRows = state.getTrials().stream()
                     .map(this::renderTrialRow)
                     .collect(Collectors.toList());
-            if(true){
+            if (true) {
                 TrialData trialData = new TrialData();
                 CombinationData cd = new CombinationData();
                 cd.setElements(new ArrayList<>(Collections.nCopies(state.getSlotCount(), null)));
@@ -129,62 +136,58 @@ public class GameFragment extends Fragment {
         }
         vbxTrials.setSpacing(8);
         lblMessage.setText(status.name() + ": " + state.getMessage());
-        if(notStarted || inProgress || finished) {
+        if (notStarted || inProgress || finished) {
             int trialCount = 0;
-            if(state.getTrials() != null)trialCount = state.getTrials().size();
+            if (state.getTrials() != null) trialCount = state.getTrials().size();
             lblFooter.setText(state.getLocalPlayerName() + " vs " + state.getEnemyPlayerName()
-            + " - " + "Trials: " + trialCount + " / " + state.getMaxTrialCount() + " - " + "Round: " + state.getCurrentRound() + " / " + state.getTotalRoundCount());
+                    + " - " + "Trials: " + trialCount + " / " + state.getMaxTrialCount() + " - " + "Round: " + state.getCurrentRound() + " / " + state.getTotalRoundCount());
             renderElementBar(state, state.getColorCount());
             btnCommit.setVisible(true);
-        }else{
+        } else {
             lblFooter.setText("Ready to start a new game");
             renderElementBar(state, 0);
             btnCommit.setVisible(false);
         }
-        pnlBand.setVisible(finished);
-        if(status == UserGameState.MatchStatus.NOT_CREATED){
+        pnlBand.setVisible(state.isCurrentRoundFinished() && !dismissed);
+        if (status == UserGameState.MatchStatus.NOT_CREATED) {
             //lblRound.setVisible(false);
             //lblMessage.setVisible(false);
         }
         boolean band = state.isCurrentRoundFinished();
         pnlBand.setVisible(band);
-        if(band){
+        if (band) {
             boolean localWins = state.getLocalWins();
             String color = localWins ? "#11ffa3" : "#ff7351";
             pnlBand.setStyle("-fx-background: " + color + ";");
-            if(finished){
+            if (finished) {
                 lblBandTitle.setText(localWins ? " Victory" : "Defeat");
                 lblBandSubtitle.setText(state.getLocalPlayerEloIncrement() + " ELO");
                 btnBandDismiss.setText("Dismiss");
 
-            }else{
+            } else {
                 lblBandTitle.setText(state.getLastFinishedRoundWinner() + " wins this round!");
                 lblBandSubtitle.setText("Round: " + state.getCurrentRound() + " / " + state.getTotalRoundCount());
                 btnBandDismiss.setText("Next Round");
             }
 
         }
+        if(state.getCode() != null){
+            pnlCode.getChildren().clear();
+            List<Circle> circles = renderCombination(state.getCode().getElements());
+            HBox hBox = new HBox();
+            hBox.getChildren().addAll(circles);
+            pnlCode.getChildren().add(hBox);
+        }
     }
+
     private void onCommit() {
         render(gameService.commitMove());
         needToshow = true;
     }
+
     public HBox renderTrialRow(TrialData trialData) {
         List<Integer> combinationElements = trialData.getCombinationData().getElements();
-        List<Circle> renderedElements = combinationElements.stream()
-                .map(this::renderElement)
-                .collect(Collectors.toList());
-        List<Circle> boundRenderedElements = new ArrayList<>();
-        for (int i = 0; i < renderedElements.size(); i++) {
-            Circle circle = renderedElements.get(i);
-            circle.setUserData(i);
-            circle.setOnMouseClicked(event -> {
-                Integer index = (Integer) circle.getUserData();
-                // Set [index] to [selectedItem]
-                render(gameService.placeColor(index, selectedItem));
-            });
-            boundRenderedElements.add(circle);
-        }
+        List<Circle> renderedElements = renderCombination(combinationElements);
         EvaluationData evaluationData = trialData.getEvaluationData();
         Pane renderedEvaluation = renderEvaluation(evaluationData, combinationElements.size());
         HBox hBox = new HBox();
@@ -195,9 +198,28 @@ public class GameFragment extends Fragment {
         return hBox;
     }
 
+    private List<Circle> renderCombination(List<Integer> combinationElements) {
+        List<Circle> renderedElements = combinationElements.stream()
+                .map(this::renderElement)
+                .collect(Collectors.toList());
+        List<Circle> boundRenderedElements = new ArrayList<>();
+        for (int i = 0; i < renderedElements.size(); i++) {
+            Circle circle = renderedElements.get(i);
+            circle.setUserData(i);
+            circle.setOnMouseClicked(event -> {
+                Integer index = (Integer) circle.getUserData();
+                // Set [index] to [selectedItem]
+                dismissed = false;
+                render(gameService.placeColor(index, selectedItem));
+            });
+            boundRenderedElements.add(circle);
+        }
+        return renderedElements;
+    }
+
     private Pane renderEvaluation(EvaluationData evaluationData, int combinationSize) {
         GridPane grid = new GridPane();
-        if(evaluationData == null) return grid;
+        if (evaluationData == null) return grid;
         int correctColorCount = evaluationData.getCorrectColorCount();
         int correctPlaceAndColorCount = evaluationData.getCorrectPlaceAndColorCount();
         grid.setAlignment(Pos.CENTER);
@@ -227,9 +249,10 @@ public class GameFragment extends Fragment {
             renderedElement.setOnMouseClicked(event -> {
                 setSelectedItem(finalI);
                 //if(needToshow){
-                    //needToshow = false;
-                    render(gameService.placeColor(selectedSlot, selectedItem));
-                    selectedSlot = (selectedSlot + 1) % state.getSlotCount();
+                //needToshow = false;
+                render(gameService.placeColor(selectedSlot, selectedItem));
+                selectedSlot = (selectedSlot + 1) % state.getSlotCount();
+                dismissed = false;
                 //}
             });
             renderedElement.setOnDragDetected(event -> {
