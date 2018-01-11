@@ -20,7 +20,7 @@ public class UserGameState {
     private Role localPlayerRole;
     private String localPlayerName;
     private String enemyPlayerName; // AI
-    private Boolean localWins;
+    private boolean localWins;
     private MatchStatus matchStatus;
     private Double localPlayerEloIncrement;
     private String lastFinishedRoundWinner;
