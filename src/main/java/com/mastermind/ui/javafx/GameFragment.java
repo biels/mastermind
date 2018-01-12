@@ -130,7 +130,7 @@ public class GameFragment extends Fragment {
             vbxTrials.getChildren().addAll(trialRows);
         }
         vbxTrials.setSpacing(8);
-        lblMessage.setText(status.name() + ": " + state.getMessage() + " be: " + bandEnabled);
+        lblMessage.setText(state.getMessage());
         if (notStarted || inProgress || finished) {
             int trialCount = 0;
             if (state.getTrials() != null) trialCount = state.getTrials().size();
@@ -184,6 +184,12 @@ public class GameFragment extends Fragment {
             pnlCode.getChildren().add(hBox);
         }
     }
+
+    @Override
+    public void onResize() {
+        super.onResize();
+    }
+
 
     private void onCommit() {
         gameService.commitMove();
