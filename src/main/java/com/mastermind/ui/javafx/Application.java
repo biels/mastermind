@@ -33,7 +33,7 @@ public class Application extends javafx.application.Application {
     // References
     private Pane pnlContent;
     private Button btnBack;
-    private Button btnPrimaryAction;
+    private Button btnPrimaryAction, btnSettings;
     private Label lblLoggedIn;
     private MenuBar menuBar;
     private ComboBox cmbSlots;
@@ -61,15 +61,16 @@ public class Application extends javafx.application.Application {
         // References
         pnlContent = (Pane) primaryStage.getScene().lookup("#pnlContent");
         btnBack = (Button) primaryStage.getScene().lookup("#btnBack");
+        btnSettings = (Button) primaryStage.getScene().lookup("#btnSettings");
         btnPrimaryAction = (Button) primaryStage.getScene().lookup("#btnPrimaryAction");
         lblLoggedIn = (Label) primaryStage.getScene().lookup("#lblLoggedIn");
         menuBar = (MenuBar) primaryStage.getScene().lookup("#menuBar");
         cmbSlots = (ComboBox) primaryStage.getScene().lookup("#cmbSlots");
         cmbColors = (ComboBox) primaryStage.getScene().lookup("#cmbColors");
-        buildToolBar();
         buildMenu();
         // Handlers
         attachAction(btnBack, Action.BACK);
+        attachAction(btnSettings, Action.SETTINGS);
         btnPrimaryAction.setOnAction(event -> primaryAction.execute());
 
         // Startup actions
@@ -81,15 +82,6 @@ public class Application extends javafx.application.Application {
 
     }
 
-    private void buildToolBar() {
-        for (int i = 1; i < 8; i++) {
-            cmbSlots.getItems().add(i + " slots");
-        }
-        for (int i = 2; i < 8; i++) {
-            cmbColors.getItems().add(i + " colors");
-        }
-    }
-
     // Actions
     public enum Action {
         BACK(instance::actionBack, "Back"),
@@ -98,6 +90,7 @@ public class Application extends javafx.application.Application {
         LOAD_SAVED_GAME(instance::actionLoadSavedGame, "Load saved game"),
         EDIT_PLAYERS(instance::actionEditPlayers, "Edit players"),
         NEW_PLAYER(instance::actionNewPlayer, "New player"),
+        SETTINGS(instance::actionSettings, "Settings"),
         TEST_REGISTER_AND_LOGIN(instance::actionTestRegisterAndLogin, "Register and login"),
         TEST_START_GAME(instance::actionTestCreatePlayerAndStartGame, "Create enemy and start game"),
         TEST_LOGIN_AND_PLAY(instance::actionTestLoginAndPlay, "Login and play"),
@@ -156,6 +149,9 @@ public class Application extends javafx.application.Application {
     public void actionNewPlayer() {
         pushFragment(new NewPlayerFragment());
     }
+    public void actionSettings() {
+        pushFragment(new SettingsMenuFragment());
+    }
 
     public void actionTestRegisterAndLogin() {
         ServiceManager.getPlayersService().createHumanPlayer("biel", "1234");
@@ -169,8 +165,9 @@ public class Application extends javafx.application.Application {
 
         GameService gameService = ServiceManager.getGameService();
         gameService.setMaxTrialCount(2);
-        gameService.setSlotCount(5);
-        gameService.setColorCount(4);
+        gameService.setSlotCount(7);
+        gameService.setColorCount(6);
+        gameService.setLocalStartsMakingCode(true);
         gameService.newGame(0);
         gameFragment.onResume();
     }
@@ -263,6 +260,8 @@ public class Application extends javafx.application.Application {
         Menu menuGame = new Menu("Game");
         addMenuItem(menuGame, Action.NEW_GAME);
         addMenuItem(menuGame, Action.LOAD_SAVED_GAME);
+        addMenuSeparator(menuGame);
+        addMenuItem(menuGame, Action.SETTINGS);
         addMenuSeparator(menuGame);
         addMenuItem(menuGame, Action.EXIT);
 

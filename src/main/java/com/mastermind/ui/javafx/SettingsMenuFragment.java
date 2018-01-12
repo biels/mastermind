@@ -3,6 +3,8 @@ package com.mastermind.ui.javafx;
 import com.mastermind.services.ServiceManager;
 import com.mastermind.services.game.GameService;
 import com.mastermind.services.game.responses.types.UserGameState;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ToggleButton;
@@ -42,18 +44,23 @@ public class SettingsMenuFragment extends Fragment {
     }
 
     private void fillMenus() {
-        for (int i = 2; i < 8; i++) {
+        for (int i = 2; i <= 8; i++) {
             cmbSlotCount.getItems().add(i + " slots");
         }
-        for (int i = 2; i < 8; i++) {
+        for (int i = 2; i <= 7; i++) {
             cmbElementCount.getItems().add(i + " colors");
         }
-        for (int i = 2; i < 8; i++) {
+        for (int i = 2; i < 15; i++) {
             cmbMaxTrials.getItems().add(i + " trials");
         }
-        for (int i = 2; i < 8; i++) {
+        for (int i = 2; i < 20; i++) {
             cmbRoundCount.getItems().add(i + " rounds");
         }
+        chkStartingRole.selectedProperty().addListener((observable, oldValue, newValue) ->
+                chkStartingRole.setText(newValue ? "Codemaker" : "Codebreaker"));
+        chkAllowElementRepetition.selectedProperty().addListener((observable, oldValue, newValue) ->
+                chkAllowElementRepetition.setText(newValue ? "Enabled" : "Disabled"));
+
     }
 
     private void loadSettings(){

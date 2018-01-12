@@ -2,7 +2,6 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.ToolBar?>
@@ -21,10 +20,8 @@
         <items>
           <Button fx:id="btnBack" mnemonicParsing="false" text="Back" />
             <Button fx:id="btnPrimaryAction" mnemonicParsing="false" text="New Game" />
-            <Pane prefHeight="25.0" prefWidth="85.0" />
-            <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="27.0" text="Button" />
-            <ComboBox fx:id="cmbSlots" prefHeight="25.0" prefWidth="75.0" />
-            <ComboBox fx:id="cmbColors" prefHeight="25.0" prefWidth="79.0" promptText="Keys" />
+            <Pane prefHeight="25.0" prefWidth="191.0" />
+            <Button fx:id="btnSettings" mnemonicParsing="false" text="Settings" />
         </items>
       </ToolBar>
       <Pane fx:id="pnlContent" layoutY="60.0" prefHeight="381.0" prefWidth="288.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="60.0" />
