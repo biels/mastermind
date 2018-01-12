@@ -36,6 +36,8 @@ public class Application extends javafx.application.Application {
     private Button btnPrimaryAction;
     private Label lblLoggedIn;
     private MenuBar menuBar;
+    private ComboBox cmbSlots;
+    private ComboBox cmbColors;
     // State
     private Action primaryAction;
     private boolean inGame;
@@ -62,6 +64,9 @@ public class Application extends javafx.application.Application {
         btnPrimaryAction = (Button) primaryStage.getScene().lookup("#btnPrimaryAction");
         lblLoggedIn = (Label) primaryStage.getScene().lookup("#lblLoggedIn");
         menuBar = (MenuBar) primaryStage.getScene().lookup("#menuBar");
+        cmbSlots = (ComboBox) primaryStage.getScene().lookup("#cmbSlots");
+        cmbColors = (ComboBox) primaryStage.getScene().lookup("#cmbColors");
+        buildToolBar();
         buildMenu();
         // Handlers
         attachAction(btnBack, Action.BACK);
@@ -74,6 +79,15 @@ public class Application extends javafx.application.Application {
         onLoggedInChanged();
 
 
+    }
+
+    private void buildToolBar() {
+        for (int i = 1; i < 8; i++) {
+            cmbSlots.getItems().add(i + " slots");
+        }
+        for (int i = 2; i < 8; i++) {
+            cmbColors.getItems().add(i + " colors");
+        }
     }
 
     // Actions
@@ -150,7 +164,7 @@ public class Application extends javafx.application.Application {
     }
 
     public void actionTestCreatePlayerAndStartGame() {
-        if(!ServiceManager.getLoginService().isLoggedIn())return;
+        if (!ServiceManager.getLoginService().isLoggedIn()) return;
         ServiceManager.getPlayersService().createMinmiaxAIPlayer("TestMinimax", 14);
 
         GameService gameService = ServiceManager.getGameService();

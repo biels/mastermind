@@ -166,7 +166,6 @@ public class GameFragment extends Fragment {
                 });
             } else {
                 lblBandTitle.setText(state.getLastFinishedRoundWinner() + " wins this round!");
-
                 lblBandSubtitle.setText("Round: " + (state.getCurrentRound()) + " / " + state.getTotalRoundCount());
                 btnBandDismiss.setText("Next Round");
                 btnBandDismiss.setOnAction(event -> {
