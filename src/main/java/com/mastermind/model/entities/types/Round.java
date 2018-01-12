@@ -29,8 +29,8 @@ public class Round extends Entity {
 
     public Round(Match match, String s) {
         this.match = match;
-        String s2 = "-";
-        String s3 = ":";
+        String s2 = "[-]";
+        String s3 = "[:]";
         String[] split = s.split(s2);
         PlayerRepository playerRepository = RepositoryManager.getPlayerRepository();
         this.codemaker = playerRepository.findOne(Long.parseLong(split[0])).get();
@@ -213,9 +213,9 @@ public class Round extends Entity {
         String s3 = ":";
         return codemaker.getId() + s2 + // 0
                 codebreaker.getId() + s2 + // 1
-                winner.getId() + s2 + // 2
+                (winner == null ? "null" : winner.getId()) + s2 + // 2
                 winScore + s2 + // 3
-                code.serialize() + s2 + // 4
+                (code == null ? "null" : code.serialize()) + s2 + // 4
                 committedTrialIndex + s2 + // 5
                 isActivePlayerCodemaker + s2 + // 6
                 trials.stream().map(Trial::serialize)

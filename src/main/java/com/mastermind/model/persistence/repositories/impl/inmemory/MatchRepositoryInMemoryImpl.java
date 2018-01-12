@@ -25,11 +25,11 @@ public class MatchRepositoryInMemoryImpl extends CrudRepositoryInMemoryImpl<Matc
 
     @Override
     public String serialize(Match entity) {
-        return null;
+        return entity.serialize();
     }
 
     @Override
     public Match deserialize(String serialized) {
-        return null;
+        return new Match(serialized);
     }
 }

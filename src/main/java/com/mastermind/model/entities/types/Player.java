@@ -64,10 +64,11 @@ public abstract class Player extends Entity {
         String type = getClass().getSimpleName();
         String s2 = "-";
         return type + s2 + // 0
-                name + s2 + // 1
-                Double.toString(elo) + s2 + // 2
-                Double.toString(eloKHint) + s2 + // 3
-                serializeSpecific(); // 4
+                getId() + s2 + // 1
+                name + s2 + // 2
+                Double.toString(elo) + s2 + // 3
+                Double.toString(eloKHint) + s2 + // 4
+                serializeSpecific(); // 5
 
     }
 
@@ -75,10 +76,11 @@ public abstract class Player extends Entity {
         String s2 = "-";
         String[] split = s.split(s2);
         String type = split[0];
-        String name = split[1];
-        Double elo = Double.parseDouble(split[2]);
-        Double eloKHint = Double.parseDouble(split[3]);
-        String specific = split[4];
+        Long id = Long.parseLong(split[1]);
+        String name = split[2];
+        Double elo = Double.parseDouble(split[3]);
+        Double eloKHint = Double.parseDouble(split[4]);
+        String specific = split[5];
         Player result = null;
         if(type.equals("MinimaxAIPlayer")){
             result = new MinimaxAIPlayer(name, 0);
@@ -93,6 +95,7 @@ public abstract class Player extends Entity {
             result = new FillAIPlayer();
         }
         if(result != null){
+            result.setId(id);
             result.setName(name);
             result.setElo(elo);
             result.setEloKHint(eloKHint);

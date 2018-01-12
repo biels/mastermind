@@ -293,7 +293,7 @@ public class Match extends Entity {
                 localPlayer.getId() + s1 + // 3
                 enemyPlayer.getId() + s1 + // 4
                 finishedRoundIndex + s1 + // 5
-                winner.getId() + s1 + // 6
+                (winner == null ? "null" : winner.getId()) + s1 + // 6
                 modified; // 7
 
 

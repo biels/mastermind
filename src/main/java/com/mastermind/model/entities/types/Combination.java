@@ -21,7 +21,10 @@ public class Combination {
 
     public Combination(String s) {
         String s4 = ",";
-        this.elements.addAll(Arrays.stream(s.split(s4)).mapToInt(Integer::parseInt).boxed().collect(Collectors.toList()));
+        this.elements.addAll(Arrays.stream(s.split(s4)).map(st -> {
+            if(st.equals("null")) return null;
+            return Integer.parseInt(st);
+        }).collect(Collectors.toList()));
     }
 
     public boolean isComplete() {
@@ -60,6 +63,6 @@ public class Combination {
     }
     public String serialize(){
         String s4 = ",";
-        return elements.stream().map(i -> i.toString()).collect(Collectors.joining(s4));
+        return elements.stream().map(i -> i == null ? "null" : i.toString()).collect(Collectors.joining(s4));
     }
 }
