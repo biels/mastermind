@@ -91,6 +91,7 @@ public class Application extends javafx.application.Application {
         EDIT_PLAYERS(instance::actionEditPlayers, "Edit players"),
         NEW_PLAYER(instance::actionNewPlayer, "New player"),
         SETTINGS(instance::actionSettings, "Settings"),
+        RANKING(instance::actionRanking, "Ranking"),
         TEST_REGISTER_AND_LOGIN(instance::actionTestRegisterAndLogin, "Register and login"),
         TEST_START_GAME(instance::actionTestCreatePlayerAndStartGame, "Create enemy and start game"),
         TEST_LOGIN_AND_PLAY(instance::actionTestLoginAndPlay, "Login and play"),
@@ -151,6 +152,9 @@ public class Application extends javafx.application.Application {
     }
     public void actionSettings() {
         pushFragment(new SettingsMenuFragment());
+    }
+    public void actionRanking() {
+        pushFragment(new RankingFragment());
     }
 
     public void actionTestRegisterAndLogin() {
@@ -268,6 +272,9 @@ public class Application extends javafx.application.Application {
         Menu menuPlayers = new Menu("Players");
         addMenuItem(menuPlayers, Action.EDIT_PLAYERS);
         addMenuItem(menuPlayers, Action.NEW_PLAYER);
+        addMenuSeparator(menuPlayers);
+        addMenuItem(menuPlayers, Action.RANKING);
+
 
         Menu menuTest = new Menu("Test");
         addMenuItem(menuTest, Action.TEST_REGISTER_AND_LOGIN);
