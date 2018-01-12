@@ -36,6 +36,7 @@ public class Match extends Entity {
         PlayerRepository playerRepository = RepositoryManager.getPlayerRepository();
         this.finished = Boolean.parseBoolean(split[0]);
         this.rounds = Arrays.stream(split[1].split(s2))
+                .filter(st -> st.length() > 0)
                 .map(serial -> new Round(this, serial))
                 .collect(Collectors.toList());
         this.config = new MatchConfig(split[2]);

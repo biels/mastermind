@@ -24,6 +24,11 @@ public class MatchRepositoryInMemoryImpl extends CrudRepositoryInMemoryImpl<Matc
     }
 
     @Override
+    protected boolean isPersistent() {
+        return false;
+    }
+
+    @Override
     public String serialize(Match entity) {
         return entity.serialize();
     }

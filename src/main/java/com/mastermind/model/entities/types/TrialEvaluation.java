@@ -12,8 +12,8 @@ public class TrialEvaluation extends Entity {
     private int correctColorCount;
 
     public TrialEvaluation(String s){
-        String s5 = "[*]";
-        String[] split = s.split(s5);
+        String s6 = "[*]";
+        String[] split = s.split(s6);
         correctPlaceAndColorCount = Integer.parseInt(split[0]);
         correctColorCount = Integer.parseInt(split[1]);
     }
@@ -54,7 +54,7 @@ public class TrialEvaluation extends Entity {
     }
 
     public String serialize() {
-        String s5 = "*";
-        return correctPlaceAndColorCount + s5 + correctColorCount;
+        String s6 = "*";
+        return correctPlaceAndColorCount + s6 + correctColorCount;
     }
 }

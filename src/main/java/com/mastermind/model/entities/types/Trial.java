@@ -15,8 +15,8 @@ public class Trial extends Entity {
 
     public Trial(Round round, String s) {
         this.round = round;
-        String s4 = "[+]";
-        String[] split = s.split(s4);
+        String s5 = "[+]";
+        String[] split = s.split(s5);
         combination = new Combination(split[0]);
         if (!split[1].equals("null"))
             trialEvaluation = new TrialEvaluation(split[1]);
@@ -51,9 +51,9 @@ public class Trial extends Entity {
     }
 
     public String serialize() {
-        String s4 = "+";
+        String s5 = "+";
 
-        return combination.serialize() + s4 + (trialEvaluation == null ? "null" : trialEvaluation.serialize());
+        return combination.serialize() + s5 + (trialEvaluation == null ? "null" : trialEvaluation.serialize());
     }
 
 }

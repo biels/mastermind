@@ -20,8 +20,9 @@ public class Combination {
     }
 
     public Combination(String s) {
-        String s4 = ",";
-        this.elements.addAll(Arrays.stream(s.split(s4)).map(st -> {
+        String s6 = "[*]";
+        this.elements = new ArrayList<>();
+        this.elements.addAll(Arrays.stream(s.split(s6)).map(st -> {
             if(st.equals("null")) return null;
             return Integer.parseInt(st);
         }).collect(Collectors.toList()));
@@ -62,7 +63,7 @@ public class Combination {
         return Objects.hash(elements);
     }
     public String serialize(){
-        String s4 = ",";
-        return elements.stream().map(i -> i == null ? "null" : i.toString()).collect(Collectors.joining(s4));
+        String s6 = "*";
+        return elements.stream().map(i -> i == null ? "null" : i.toString()).collect(Collectors.joining(s6));
     }
 }

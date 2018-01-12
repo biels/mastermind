@@ -29,20 +29,22 @@ public class Round extends Entity {
 
     public Round(Match match, String s) {
         this.match = match;
-        String s2 = "[-]";
-        String s3 = "[:]";
-        String[] split = s.split(s2);
+        String s3 = ":";
+        String s4 = "[.]";
+        String[] split = s.split(s3);
         PlayerRepository playerRepository = RepositoryManager.getPlayerRepository();
         this.codemaker = playerRepository.findOne(Long.parseLong(split[0])).get();
         this.codebreaker = playerRepository.findOne(Long.parseLong(split[1])).get();;
-        this.winner = playerRepository.findOne(Long.parseLong(split[2])).get();
-        this.winScore = Integer.parseInt(split[3]);
-        this.code = new Combination(split[4]);
+        if(!split[2].equals("null"))this.winner = playerRepository.findOne(Long.parseLong(split[2])).get();
+        if(!split[3].equals("null"))this.winScore = Integer.parseInt(split[3]);
+        if(!split[4].equals("null"))this.code = new Combination(split[4]);
         this.committedTrialIndex = Integer.parseInt(split[5]);
         this.isActivePlayerCodemaker = Boolean.parseBoolean(split[6]);
-        this.trials = Arrays.stream(split[7].split(s3))
-                .map(serial -> new Trial(this, serial))
-                .collect(Collectors.toList());
+        if(!split[7].equals("empty")){
+            this.trials = Arrays.stream(split[7].split(s4))
+                    .map(serial -> new Trial(this, serial))
+                    .collect(Collectors.toList());
+        }
     }
 
     public Round(Match match, Player codemaker, Player codebreaker) {
@@ -209,17 +211,18 @@ public class Round extends Entity {
         return combination.setElement(index, element);
     }
     public String serialize(){
-        String s2 = "-";
         String s3 = ":";
-        return codemaker.getId() + s2 + // 0
-                codebreaker.getId() + s2 + // 1
-                (winner == null ? "null" : winner.getId()) + s2 + // 2
-                winScore + s2 + // 3
-                (code == null ? "null" : code.serialize()) + s2 + // 4
-                committedTrialIndex + s2 + // 5
-                isActivePlayerCodemaker + s2 + // 6
-                trials.stream().map(Trial::serialize)
-                        .collect(Collectors.joining(s3))// 7
+        String s4 = ".";
+        return codemaker.getId() + s3 + // 0
+                codebreaker.getId() + s3 + // 1
+                (winner == null ? "null" : winner.getId()) + s3 + // 2
+                (winScore == null ? "null" : winScore) + s3 + // 3
+                (code == null ? "null" : code.serialize()) + s3 + // 4
+                committedTrialIndex + s3 + // 5
+                isActivePlayerCodemaker + s3 + // 6
+
+                (trials.isEmpty() ? "empty" : trials.stream().map(Trial::serialize)
+                        .collect(Collectors.joining(s4)))// 7
 
                 ;
     }

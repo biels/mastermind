@@ -21,12 +21,13 @@ public abstract class CrudRepositoryInMemoryImpl<T extends Entity> implements Cr
     List<T> collection = new ArrayList<>();
     private Long lastAutoIncremental = 0L;
 
+
     private Long getNextAutoIncremental() {
         return lastAutoIncremental++;
     }
 
     public CrudRepositoryInMemoryImpl() {
-        readFromFile();
+        if(isPersistent())readFromFile();
     }
 
     @Override
@@ -39,7 +40,7 @@ public abstract class CrudRepositoryInMemoryImpl<T extends Entity> implements Cr
         Optional<T> findResult = findOne(id);
         findResult.ifPresent(t -> collection.remove(t));
         boolean added = collection.add(entity);
-        flushToFile();
+        if(isPersistent())flushToFile();
         return (added ? entity : null);
     }
 
@@ -78,7 +79,7 @@ public abstract class CrudRepositoryInMemoryImpl<T extends Entity> implements Cr
     private String getFileName() {
         return getClass().getSimpleName() + ".txt";
     }
-
+    protected abstract boolean isPersistent();
     public void readFromFile(){
         String filename = getFileName();
         if(!Files.exists(Paths.get(filename))) return;

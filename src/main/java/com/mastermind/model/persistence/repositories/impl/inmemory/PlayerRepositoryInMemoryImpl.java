@@ -38,4 +38,9 @@ public class PlayerRepositoryInMemoryImpl extends CrudRepositoryInMemoryImpl<Pla
     public Player deserialize(String serialized) {
         return Player.deserialize(serialized);
     }
+
+    @Override
+    protected boolean isPersistent() {
+        return true;
+    }
 }
