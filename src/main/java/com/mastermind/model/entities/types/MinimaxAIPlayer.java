@@ -31,4 +31,18 @@ public class MinimaxAIPlayer extends AIPlayer {
     public void playAsCodebreaker(Round match) {
         ComponentManager.getMinimaxAlgorithmComponent().playAsCodebreaker(match);
     }
+
+    @Override
+    public void deserializeSpecific(String specific) {
+        String s3 = ":";
+        depth = Integer.parseInt(specific);
+    }
+
+    @Override
+    protected String serializeSpecific() {
+        String s3 = ":";
+        return Integer.toString(depth);
+    }
+
+
 }

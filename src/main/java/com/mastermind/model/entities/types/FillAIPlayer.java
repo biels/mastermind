@@ -35,4 +35,15 @@ public class FillAIPlayer extends AIPlayer {
         IntStream.range(0, config.getSlotCount())
                 .forEach(i -> round.setElement(i, e));
     }
+
+    @Override
+    protected void deserializeSpecific(String specific) {
+        codeElement = 0;
+        trialElement = 1;
+    }
+
+    @Override
+    protected String serializeSpecific() {
+        return "[Transient]";
+    }
 }

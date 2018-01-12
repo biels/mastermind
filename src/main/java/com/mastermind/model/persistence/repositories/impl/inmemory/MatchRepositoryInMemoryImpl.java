@@ -22,4 +22,14 @@ public class MatchRepositoryInMemoryImpl extends CrudRepositoryInMemoryImpl<Matc
                 .filter(match -> !match.isFinished())
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public String serialize(Match entity) {
+        return null;
+    }
+
+    @Override
+    public Match deserialize(String serialized) {
+        return null;
+    }
 }

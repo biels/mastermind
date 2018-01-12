@@ -6,7 +6,7 @@ import com.mastermind.model.persistence.repositories.impl.inmemory.PlayerReposit
 
 public class RepositoriesInMemoryImpl extends RepositoriesImpl {
     public RepositoriesInMemoryImpl() {
-        matchRepository = new MatchRepositoryInMemoryImpl();
         playerRepository = new PlayerRepositoryInMemoryImpl();
+        matchRepository = new MatchRepositoryInMemoryImpl();
     }
 }

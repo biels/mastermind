@@ -13,6 +13,14 @@ public class Trial extends Entity {
     private Combination combination;
     private TrialEvaluation trialEvaluation;
 
+    public Trial(Round round, String s) {
+        this.round = round;
+        String s4 = "[+]";
+        String[] split = s.split(s4);
+        combination = new Combination(split[0]);
+        trialEvaluation = new TrialEvaluation(split[1]);
+    }
+
     public Trial(Round round) {
         this.round = round;
         combination = new Combination(round.getMatch().getConfig().getSlotCount());
@@ -40,4 +48,11 @@ public class Trial extends Entity {
     public String toString() {
         return "T{" + combination + ", " + trialEvaluation + "}";
     }
+
+    public String serialize() {
+        String s4 = "+";
+
+        return combination.serialize() + s4 + trialEvaluation.serialize();
+    }
+
 }

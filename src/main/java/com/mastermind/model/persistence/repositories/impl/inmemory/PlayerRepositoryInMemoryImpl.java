@@ -29,4 +29,13 @@ public class PlayerRepositoryInMemoryImpl extends CrudRepositoryInMemoryImpl<Pla
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public String serialize(Player entity) {
+        return entity.serialize();
+    }
+
+    @Override
+    public Player deserialize(String serialized) {
+        return Player.deserialize(serialized);
+    }
 }

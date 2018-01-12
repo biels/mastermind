@@ -10,6 +10,8 @@ public class HumanPlayer extends Player {
         this(name, "default");
     }
 
+
+
     public HumanPlayer(String name, String password) {
         super(name);
         this.password = password;
@@ -21,5 +23,15 @@ public class HumanPlayer extends Player {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    protected void deserializeSpecific(String specific) {
+        password = specific;
+    }
+
+    @Override
+    protected String serializeSpecific() {
+        return password;
     }
 }

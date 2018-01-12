@@ -1,6 +1,7 @@
 package com.mastermind.model.entities.types;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Combination {
     private int size;
@@ -16,6 +17,11 @@ public class Combination {
         this.size = elements.length;
         this.elements = new ArrayList<>(size);
         this.elements.addAll(Arrays.asList(elements));
+    }
+
+    public Combination(String s) {
+        String s4 = ",";
+        this.elements.addAll(Arrays.stream(s.split(s4)).mapToInt(Integer::parseInt).boxed().collect(Collectors.toList()));
     }
 
     public boolean isComplete() {
@@ -51,5 +57,9 @@ public class Combination {
     @Override
     public int hashCode() {
         return Objects.hash(elements);
+    }
+    public String serialize(){
+        String s4 = ",";
+        return elements.stream().map(i -> i.toString()).collect(Collectors.joining(s4));
     }
 }

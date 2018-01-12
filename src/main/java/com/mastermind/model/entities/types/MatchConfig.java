@@ -1,6 +1,7 @@
 package com.mastermind.model.entities.types;
 
 import com.mastermind.model.entities.base.Entity;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import java.util.Objects;
 
@@ -14,6 +15,19 @@ public class MatchConfig extends Entity {
     private int maxTrialCount;
     private boolean allowRepetition;
     private boolean localStartsMakingCode;
+
+
+    public MatchConfig(String s) {
+        String s3 = ":";
+        String[] split = s.split(s3);
+        this.roundCount = Integer.parseInt(split[0]);
+        this.colorCount = Integer.parseInt(split[1]);
+        this.slotCount = Integer.parseInt(split[2]);
+        this.maxTrialCount = Integer.parseInt(split[3]);
+        this.allowRepetition = Boolean.parseBoolean(split[4]);
+        this.localStartsMakingCode = Boolean.parseBoolean(split[5]);
+    }
+
 
     public MatchConfig() {
         roundCount = 4;
@@ -111,5 +125,14 @@ public class MatchConfig extends Entity {
     @Override
     public int hashCode() {
         return Objects.hash(roundCount, colorCount, slotCount, maxTrialCount, allowRepetition, localStartsMakingCode);
+    }
+    public String serialize(){
+        String s3 = ":";
+        return roundCount + s3 + // 0
+                colorCount + s3 + // 1
+                slotCount + s3 + // 2
+                maxTrialCount + s3 + // 3
+                allowRepetition + s3 + // 4
+                localStartsMakingCode; // 5
     }
 }

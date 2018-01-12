@@ -27,4 +27,14 @@ public class RandomAIPlayer extends AIPlayer {
     public void playAsCodebreaker(Round match) {
         ComponentManager.getRandomAlgorithmComponent().playAsCodebreaker(match);
     }
+
+    @Override
+    protected void deserializeSpecific(String specific) {
+        seed = Long.parseLong(specific);
+    }
+
+    @Override
+    protected String serializeSpecific() {
+        return Long.toString(seed);
+    }
 }

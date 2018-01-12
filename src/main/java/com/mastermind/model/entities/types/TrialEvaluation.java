@@ -11,6 +11,12 @@ public class TrialEvaluation extends Entity {
     private int correctPlaceAndColorCount;
     private int correctColorCount;
 
+    public TrialEvaluation(String s){
+        String s5 = "[*]";
+        String[] split = s.split(s5);
+        correctPlaceAndColorCount = Integer.parseInt(split[0]);
+        correctColorCount = Integer.parseInt(split[1]);
+    }
     public TrialEvaluation(int correctPlaceAndColorCount, int correctColorCount) {
         this.correctPlaceAndColorCount = correctPlaceAndColorCount;
         this.correctColorCount = correctColorCount;
@@ -45,5 +51,10 @@ public class TrialEvaluation extends Entity {
                 "" + correctPlaceAndColorCount +
                 ", " + correctColorCount +
                 '}';
+    }
+
+    public String serialize() {
+        String s5 = "*";
+        return correctPlaceAndColorCount + s5 + correctColorCount;
     }
 }

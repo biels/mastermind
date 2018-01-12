@@ -5,11 +5,14 @@ import com.mastermind.logic.EloExchangerComponent;
 import com.mastermind.logic.types.Pair;
 import com.mastermind.model.entities.base.Entity;
 import com.mastermind.model.persistence.RepositoryManager;
+import com.mastermind.model.persistence.repositories.PlayerRepository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * Represents a game between a localPlayer and the AI
@@ -26,6 +29,22 @@ public class Match extends Entity {
     private boolean modified = false;
     // Add playAITurnIfNeeded to begin games when AI goes first
 
+    public Match(String s){
+        String s1 = ";";
+        String s2 = "-";
+        String[] split = s.split(s1);
+        PlayerRepository playerRepository = RepositoryManager.getPlayerRepository();
+        this.finished = Boolean.parseBoolean(split[0]);
+        this.rounds = Arrays.stream(split[1].split(s2))
+                .map(serial -> new Round(this, serial))
+                .collect(Collectors.toList());
+        this.config = new MatchConfig(split[2]);
+        this.localPlayer = playerRepository.findOne(Long.parseLong(split[3])).get();
+        this.enemyPlayer = playerRepository.findOne(Long.parseLong(split[4])).get();
+        this.finishedRoundIndex = Integer.parseInt(split[5]);
+        this.winner = playerRepository.findOne(Long.parseLong(split[6])).get();
+        this.modified = Boolean.parseBoolean(split[7]);
+    }
     public Match(Player localPlayer, Player enemyPlayer) {
         this(localPlayer, enemyPlayer, new MatchConfig());
     }
@@ -260,5 +279,23 @@ public class Match extends Entity {
 
     public Double getLocalPlayerEloIncrement() {
         return localPlayerEloIncrement;
+    }
+
+    public String serialize(){
+        String s1 = ";";
+        String s2 = "-";
+        String s3 = ":";
+        String s4 = ".";
+        return finished + s1 + // 0
+                rounds.stream().map(Round::serialize)
+                        .collect(Collectors.joining(s2)) + s1 + // 1
+                config.serialize() + s1 + // 2
+                localPlayer.getId() + s1 + // 3
+                enemyPlayer.getId() + s1 + // 4
+                finishedRoundIndex + s1 + // 5
+                winner.getId() + s1 + // 6
+                modified; // 7
+
+
     }
 }

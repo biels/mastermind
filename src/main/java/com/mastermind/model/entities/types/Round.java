@@ -1,10 +1,15 @@
 package com.mastermind.model.entities.types;
 
 import com.mastermind.model.entities.base.Entity;
+import com.mastermind.model.persistence.RepositoryManager;
+import com.mastermind.model.persistence.repositories.MatchRepository;
+import com.mastermind.model.persistence.repositories.PlayerRepository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Represents a round in a Match.
@@ -20,6 +25,25 @@ public class Round extends Entity {
     private int committedTrialIndex = -1;
     private boolean isActivePlayerCodemaker = true;
     private List<Trial> trials = new ArrayList<>();
+
+
+    public Round(Match match, String s) {
+        this.match = match;
+        String s2 = "-";
+        String s3 = ":";
+        String[] split = s.split(s2);
+        PlayerRepository playerRepository = RepositoryManager.getPlayerRepository();
+        this.codemaker = playerRepository.findOne(Long.parseLong(split[0])).get();
+        this.codebreaker = playerRepository.findOne(Long.parseLong(split[1])).get();;
+        this.winner = playerRepository.findOne(Long.parseLong(split[2])).get();
+        this.winScore = Integer.parseInt(split[3]);
+        this.code = new Combination(split[4]);
+        this.committedTrialIndex = Integer.parseInt(split[5]);
+        this.isActivePlayerCodemaker = Boolean.parseBoolean(split[6]);
+        this.trials = Arrays.stream(split[7].split(s3))
+                .map(serial -> new Trial(this, serial))
+                .collect(Collectors.toList());
+    }
 
     public Round(Match match, Player codemaker, Player codebreaker) {
         this.match = match;
@@ -184,4 +208,20 @@ public class Round extends Entity {
         Combination combination = getFocusedCombination();
         return combination.setElement(index, element);
     }
+    public String serialize(){
+        String s2 = "-";
+        String s3 = ":";
+        return codemaker.getId() + s2 + // 0
+                codebreaker.getId() + s2 + // 1
+                winner.getId() + s2 + // 2
+                winScore + s2 + // 3
+                code.serialize() + s2 + // 4
+                committedTrialIndex + s2 + // 5
+                isActivePlayerCodemaker + s2 + // 6
+                trials.stream().map(Trial::serialize)
+                        .collect(Collectors.joining(s3))// 7
+
+                ;
+    }
+
 }
