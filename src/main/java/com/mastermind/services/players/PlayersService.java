@@ -56,7 +56,9 @@ public class PlayersService implements Service {
             ServiceManager.getLoginService().logout();
         }
         matchRepository = RepositoryManager.getMatchRepository();
-        if (state.getActiveMatch() != null && state.getActiveMatch().getLocalPlayer().equals(target))
+        if (state.getActiveMatch() != null &&
+                (state.getActiveMatch().getLocalPlayer().equals(target) ||
+                state.getActiveMatch().getEnemyPlayer().equals(target)))
             state.setActiveMatch(null);
         matchRepository.findByPlayer(target.getId())
                 .stream()

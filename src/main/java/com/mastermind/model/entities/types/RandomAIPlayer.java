@@ -5,6 +5,11 @@ import com.mastermind.logic.ComponentManager;
 public class RandomAIPlayer extends AIPlayer {
     private Long seed;
 
+
+    public RandomAIPlayer() {
+        this("random-ai", 0x1L);
+    }
+
     public RandomAIPlayer(String name, Long seed) {
         super(name);
         this.seed = seed;

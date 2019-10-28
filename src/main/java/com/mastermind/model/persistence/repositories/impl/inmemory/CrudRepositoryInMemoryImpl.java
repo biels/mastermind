@@ -70,7 +70,7 @@ public abstract class CrudRepositoryInMemoryImpl<T extends Entity> implements Cr
 
     @Override
     public boolean exists(Long primaryKey) {
-        return false;
+        return findOne(primaryKey).isPresent();
     }
 
     public abstract String serialize(T entity);
